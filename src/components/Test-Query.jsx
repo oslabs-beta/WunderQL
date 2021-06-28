@@ -63,7 +63,7 @@ const TestQuery = () => {
       },
       // body: JSON.stringify({ query: query }),
     })
-    .then((res) => res.json())
+    .then((res) => res.text())
     .then((res) => setResponse(res))
     // client.query({
     //   query: gql`${query}`

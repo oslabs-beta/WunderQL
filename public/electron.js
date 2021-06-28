@@ -1,8 +1,11 @@
 const path = require("path");
 const url = require('url');
 
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require('electron');
+const { channels } = require('../src/shared/constants');
 const isDev = require("electron-is-dev");
+
+const startUrl = process.env.ELECTRON_START_URL;
 
 function createWindow() {
   // Create the browser window.
@@ -18,7 +21,7 @@ function createWindow() {
   // win.loadFile("index.html");
   win.loadURL(
     isDev
-      ? "http://localhost:3000"
+      ? startUrl
       : `file://${path.join(__dirname, "../build/index.html")}`
   );
 
@@ -62,4 +65,26 @@ app.on("activate", () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+// mock a database call (or a file system), by just returning an object to the renderer process.
+const products = {
+  notebook: {
+    name: 'notebook',
+    price: '2500',
+    color: 'gray',
+  },
+  headphone: {
+    name: 'headphone',
+    price: '700',
+    color: 'black',
+  },
+};
+
+// Receiving the data in the main process
+// The ipcMain.on method, also receives the channel as the first parameter, and a function as the second, that function has an event, and an arg arguments. The arg is the data we've sent from the renderer process.
+ipcMain.on(channels.GET_DATA, (event, arg) => {
+  const { product } = arg;
+  event.sender.send(channels.GET_DATA, products[product]);
+});
+// This will send an event back to the renderer process, for the get_data channel.
 

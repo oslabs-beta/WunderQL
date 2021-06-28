@@ -4,6 +4,8 @@ import TestQuery from './components/Test-Query'
 import Header from './components/Header'
 import Playground from './components/Playground';
 import './stylesheets/index.css';
+import { channels } from '../shared/constants';
+const { ipcRenderer } = window.require('electron');
 
 import {
   BrowserRouter as Router,
@@ -12,6 +14,11 @@ import {
 } from "react-router-dom";
 
 function App() {
+  const getData = () => {
+    // Sends the message to Electron main process
+    ipcRenderer.send(channels.GET_DATA, { product: 'notebook' });
+  };
+
   return (
     <div id="App">
       {/* <h1>Hello Worldddddd</h1> */}
@@ -23,6 +30,7 @@ function App() {
             <div id='landing'>
               <h1>Welcome back, beautiful!</h1>
               <h3>Click a tab to get started...</h3>
+              <button onClick={getData}>Get data</button>
             </div>
           </Route>
           <Route path="/dashboard">
