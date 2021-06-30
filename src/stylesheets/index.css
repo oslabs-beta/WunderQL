@@ -1,0 +1,37 @@
+#App {
+  display: grid;
+  grid-template-columns: 200px 300px 300px;
+  grid-template-rows: 1fr 5fr 5fr;
+  grid-template-areas:
+    "header header header"
+    "nav main main"
+    "nav main main";
+}
+
+#header {
+  grid-area: header;
+  padding: 1rem;
+  margin: 1rem;
+}
+
+#nav-bar {
+  grid-area: nav;
+  padding: 1rem;
+  margin: 1rem;
+}
+
+#nav-bar ul {
+  list-style-type: none;
+}
+
+#dashboard {
+  grid-area: main;
+  padding: 1rem;
+  margin: 1rem;
+}
+
+#test-query {
+  grid-area: main;
+  padding: 1rem;
+  margin: 1rem;
+}
