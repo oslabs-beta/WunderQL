@@ -1,6 +1,6 @@
 const Header = () => {
   return (
-    <div id='header'>maybe some user info?</div>
+    <div id='header'>maybe some user info up here?</div>
   )
 }
 
