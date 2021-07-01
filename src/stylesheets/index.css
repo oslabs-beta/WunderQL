@@ -1,28 +1,74 @@
 #App {
+  background-color: #0E3149;
+  color: white;
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  letter-spacing: 1px;
   display: grid;
-  grid-template-columns: 200px 300px 300px;
-  grid-template-rows: 1fr 5fr 5fr;
+  grid-template-columns: 2fr 5fr 5fr;
+  grid-template-rows: 1fr 3fr 3fr;
   grid-template-areas:
     "header header header"
     "nav main main"
     "nav main main";
-}
+  width: 100%;
+  height: 100%;
+  }
+  
+/*/////////////////////////////////////////////////////*/
+/*////////////////////// Header ///////////////////////*/
+/*/////////////////////////////////////////////////////*/
 
-#header {
-  grid-area: header;
-  padding: 1rem;
-  margin: 1rem;
-}
+  #header {
+    grid-area: header;
+    padding: 1rem;
+    margin: 1rem;
+    /* border: 1px solid black; */
+  }
 
+#landing {
+  grid-area: main;
+}
+/*/////////////////////////////////////////////////////*/
+/*///////////////////// Nav Bar ///////////////////////*/
+/*/////////////////////////////////////////////////////*/
 #nav-bar {
   grid-area: nav;
-  padding: 1rem;
-  margin: 1rem;
+  padding: 0rem;
+  margin-left: 1rem;
+  /* border: 2px dashed red; */
 }
 
-#nav-bar ul {
+#nav-list {
   list-style-type: none;
+  margin: 0;
+  padding: 10px 0 0 0;
+  /* border: 2px dotted red; */
 }
+
+.nav-list-item {
+  margin: 1rem 0;
+  /* border: 1px solid yellow; */
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-list-item a {
+  display: block;
+  padding: 1rem 0;
+  text-decoration: none;
+  color: white;
+}
+
+.nav-list-item a:hover {
+  cursor: pointer;
+}
+
+/*/////////////////////////////////////////////////////*/
+/*//////////////////// Dashboard //////////////////////*/
+/*/////////////////////////////////////////////////////*/
 
 #dashboard {
   grid-area: main;
@@ -30,7 +76,85 @@
   margin: 1rem;
 }
 
+/*/////////////////////////////////////////////////////*/
+/*/////////////////// Test Query //////////////////////*/
+/*/////////////////////////////////////////////////////*/
+
 #test-query {
+  grid-area: main;
+  padding: 1rem;
+  margin: 1rem;
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 10% 40% 40%;
+  grid-template-areas:
+    "uri uri"
+    "input runtime"
+    "input num-reqs"
+}
+
+#uri {
+  grid-area: uri;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#uri-input {
+  padding: 0.5rem;
+  margin-right: 1rem;
+  width: 78%;
+}
+
+#send-uri {
+  padding: 0.5rem 0.9rem;
+}
+
+#query-space {
+  /* border: 1px solid black; */
+  grid-area: input;
+  display: grid;
+  grid-template-rows: 4fr 0.5fr;
+  -webkit-box-shadow: 3px 4px 3px 2px rgba(5,5,5,5);
+  box-shadow: 3px 4px 3px 2px rgba(5,5,5,5);
+}
+
+#text-area {
+  padding: 1rem;
+}
+
+#response-time, #num-requests {
+  grid-area: runtime;
+  /* border: 2px dotted blue; */
+  -webkit-box-shadow: 3px 4px 3px 2px rgba(5,5,5,5);
+  box-shadow: 3px 4px 3px 2px rgba(5,5,5,5);  
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+#runtime-title, #num-req-title {
+  font-weight: 900;
+}
+
+#runtime-number, #num-req-number {
+  font-size: 4rem;
+}
+
+#num-requests {
+  grid-area: num-reqs;
+  /* border: 2px dashed red; */
+  -webkit-box-shadow: 3px 4px 3px 2px rgba(5,5,5,5);
+  box-shadow: 3px 4px 3px 2px rgba(5,5,5,5);
+}
+
+/*/////////////////////////////////////////////////////*/
+/*/////////////////// Playground //////////////////////*/
+/*/////////////////////////////////////////////////////*/
+
+#playground {
   grid-area: main;
   padding: 1rem;
   margin: 1rem;
