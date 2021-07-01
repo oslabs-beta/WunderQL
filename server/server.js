@@ -27,6 +27,9 @@ app.use(express.urlencoded({ extended: true }));
 
 //parse incoming requests with JSON payloads. 
 app.use(express.json()); 
+app.use(cookieParser()); 
+
+app.use(express.static(path.resolve(__dirname, '../build')));
 
 //add catch-all route handler for any requests to an unknown route
 app.use('*', (req, res) => {
