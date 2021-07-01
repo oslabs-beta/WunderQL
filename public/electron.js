@@ -1,4 +1,5 @@
 const path = require("path");
+const url = require('url');
 
 const { app, BrowserWindow } = require("electron");
 const isDev = require("electron-is-dev");
@@ -26,6 +27,15 @@ function createWindow() {
     win.webContents.openDevTools({ mode: "detach" });
     // win.webContents.openDevTools({ detach: false });
   }
+  // else {
+  //   require(path.join(__dirname, 'server/server'));
+  // };
+
+  win.loadURL(isDev ? 'http://localhost:3000' : url.format({
+    pathname: path.join(__dirname, 'build/index.html'),
+    protocol: 'file:',
+    slashes: true,
+}));
 }
 
 // This method will be called when Electron has finished
@@ -52,3 +62,4 @@ app.on("activate", () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
