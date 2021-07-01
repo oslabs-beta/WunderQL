@@ -9,6 +9,8 @@ const TestQuery = () => {
   const [uri, setUri] = useState('');
   const [query, setQuery] = useState('');
   const [runtime, setRuntime] = useState(0);
+  // to test fetch to backend
+  const [response, setResponse] = useState('');
 
   const client = new ApolloClient({
     uri: `${uri}`,
@@ -39,7 +41,7 @@ const TestQuery = () => {
 
   const submitQuery = () => {
     console.log('QUERY fetch request started');
-    const startTime = performance.now();
+    // const startTime = performance.now();
     //const startTime = Date.now();
     // fetch(`${uri}`, {
     //   method: 'POST',
@@ -53,15 +55,25 @@ const TestQuery = () => {
     //   console.log(res)
     //   res.json()
     // })
-    client.query({
-      query: gql`${query}`
-    }).then(result => {
-      let responseTime = (performance.now() - startTime)
-      //let responseTime = (Date.now() - startTime)
-      setRuntime(Number(responseTime.toFixed(1)));
-      console.log(responseTime)
-      //console.log(result)
+    fetch('http://localhost:5000/test', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json,text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+      // body: JSON.stringify({ query: query }),
     })
+    .then((res) => res.json())
+    .then((res) => setResponse(res))
+    // client.query({
+    //   query: gql`${query}`
+    // }).then(result => {
+    //   let responseTime = (performance.now() - startTime)
+    //   //let responseTime = (Date.now() - startTime)
+    //   setRuntime(Number(responseTime.toFixed(1)));
+    //   console.log(responseTime)
+    //   //console.log(result)
+    // })
   }
 
   return (
@@ -88,7 +100,8 @@ const TestQuery = () => {
       <div id='response-time'>
         <div id='runtime-title'>Query Runtime (ms)</div>
         {/* <div id='runtime-number'>150</div> */}
-        <div id='runtime-number'>{`${runtime}`}</div>
+        {/* <div id='runtime-number'>{`${runtime}`}</div> */}
+        <div id='runtime-number'>{`${response}`}</div>
       </div>
       <div id='num-requests'>
         <div id='num-req-title'>Query Rate (req/sec)</div>

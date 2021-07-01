@@ -9,6 +9,7 @@ const PORT = 5000;
 const cookieParser = require('cookie-parser');
 const cors = require('cors')
 
+app.use(cors());
 //connect to mongoDB database using mongoose
 const mongoose = require('mongoose');
 //get URI from userModel
@@ -30,6 +31,13 @@ app.use(express.json());
 app.use(cookieParser()); 
 
 app.use(express.static(path.resolve(__dirname, '../build')));
+
+
+app.get('/test', (req, res) => {
+  console.log('im in the get req')
+  res.send('wsergwsreg')
+});
+
 
 //add catch-all route handler for any requests to an unknown route
 app.use('*', (req, res) => {
