@@ -1,70 +1,96 @@
-# Getting Started with Create React App
+<!-- PROJECT LOGO -->
+<br />
+<p align="center">
+  <a href="https://github.com/oslabs-beta/WunderQL">
+    <img src="https://i.imgur.com/3acwbvG.png" alt="Logo" length="350px" width="350px">
+  </a>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+  <h3 align="center">WunderQL</h3> 
 
-## Available Scripts
+  <p align="center">
+    Performance Testing with WunderQL
+    <br /><br />
+    <a href=""><strong>WunderQL.com</strong></a>
+    <br />
+    <br />
+   
+  </p>
+</p>
 
-In the project directory, you can run:
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+<!-- TABLE OF CONTENTS -->
+<details open="open">
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#demo">Demo</a>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#contributors">Contributors</a></li>
+    <li><a href="#looking-ahead">Looking Ahead</a></li>
+  </ol>
+</details>
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
 
-### `npm test`
+<!-- ABOUT THE PROJECT -->
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## About The Project
 
-### `npm run build`
+We are wonderful WunderQL. That is all.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Built With
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- [React](https://reactjs.org/)
+- [Webpack](https://webpack.js.org/)
+- [Node.js/Express](https://nodejs.dev)
+- [Electron](https://electronjs.org/)
+- [GraphQL](https://graphql.org/)
+- [Cypress](https://www.cypress.io/)
+- [Next.js](https://nextjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+## Demo
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+DEMO!
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Getting Started
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+To get a local copy up and running, follow these steps:
 
-## Learn More
+1. Fork and/or clone this repo to get started
+2. `npm install` in the root directory 
+3. Use either `npm run dev` or `run build`, then `npm start` 
+4. Navigate to [localhost:8080](http://localhost:8080) (or [localhost:3000](http://localhost:3000) depending on startup method, respectively)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Prerequisites
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
+## Contributors
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Frank Lin - [GitHub](https://github.com/flin1105) - [LinkedIn](www.linkedin.com/in/frank-lin-1105)
 
-### Analyzing the Bundle Size
+Raubern Totanes - [GitHub](https://github.com/rauberntotanes) - [LinkedIn](https://www.linkedin.com/in/rauberntotanes/)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Patrick Ziegler - [GitHub](https://github.com/pziggy3) - [LinkedIn](https://www.linkedin.com/in/patrickziegler/)
 
-### Making a Progressive Web App
+Laura Llano - [GitHub](https://github.com/ldllano) - [LinkedIn](https://www.linkedin.com/in/laura-llano/)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-### Advanced Configuration
+## Looking Ahead
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Never look ahead. Only look at TODAY. #cheesy

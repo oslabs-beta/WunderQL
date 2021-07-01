@@ -5,13 +5,13 @@ const NavBar = () => {
     <div id='nav-bar'>
       <nav>
           <ul id='nav-list'>
-            <li class='nav-list-item'>
+            <li className='nav-list-item'>
               <Link to="/dashboard">Dashboard</Link>
             </li>
-            <li class='nav-list-item'>
+            <li className='nav-list-item'>
               <Link to="/testquery">Test Query</Link>
             </li>
-            <li class='nav-list-item'>
+            <li className='nav-list-item'>
               <Link to="/playground">Playground</Link>
             </li>
           </ul>
