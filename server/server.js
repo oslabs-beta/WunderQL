@@ -11,17 +11,7 @@ const cors = require('cors')
 
 app.use(cors());
 //connect to mongoDB database using mongoose
-const mongoose = require('mongoose');
-//get URI from userModel
-const myURI = 'mongodb+srv://wunderql:flrp@cluster0.xrmkm.mongodb.net/wunderql?retryWrites=true&w=majority';
-//connect to database
-mongoose.connect(myURI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false,});
 
-//once connected console.log 
-const db = mongoose.connection;
-db.once('open', () => {
-  console.log('Database connected!');
-});
 
 //Parse URL-encoded bodies, will extract data from the <form> element and add them to the body property in the request object.
 app.use(express.urlencoded({ extended: true })); 
