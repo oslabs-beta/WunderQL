@@ -4,6 +4,14 @@ const url = require('url');
 const { app, BrowserWindow, Menu, ipcMain, screen } = require("electron");
 const { channels } = require('../src/shared/constants');
 const isDev = require("electron-is-dev");
+const User = require('../models/User');
+const connectDB = require('../config/db')
+
+
+// Connnect to mongo database
+connectDB();
+
+let win;
 
 // const screenElectron = screen;
 // const display = screenElectron.getPrimaryDisplay();
@@ -27,7 +35,8 @@ function createWindow() {
     // frame: false,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
+      enableRemoteModule: true
     }
 });
 
@@ -152,6 +161,7 @@ const mainMenuTemplate =  [
 app.whenReady().then(createWindow);
 // app.on('ready', createWindow)
 
+
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
@@ -169,23 +179,9 @@ app.on("activate", () => {
   }
 });
 
-const products = {
-  notebook: {
-    name: 'notebook',
-    price: '2500',
-    color: 'gray',
-  },
-  headphone: {
-    name: 'headphone',
-    price: '700',
-    color: 'black',
-  },
-};
-
 
 // Receiving the data in the main process
 ipcMain.on(channels.GET_DATA, (event, arg) => {
-  // const { product } = arg;
   // Sending a response back to the renderer process (React)
   console.log('Data is within main process')
   event.sender.send(channels.GET_DATA, arg);
@@ -197,6 +193,44 @@ ipcMain.on(channels.GET_RESPONSE, (event, arg) => {
   console.log('Query is within main process')
   event.sender.send(channels.GET_RESPONSE, arg + ' This was sent to main process on electron.js, and sent back to Test-Query');
 });
+
+
+// import { ApolloClient, InMemoryCache, gql, ApolloProvider } from '@apollo/client';
+
+// const client = new ApolloClient({
+//   uri: 'https://api.spacex.land/graphql/',
+//   cache: new InMemoryCache(),
+// });
+
+// query {
+//   launchesPast(limit: 10) {
+//     mission_name
+//     launch_date_local
+//     launch_site {
+//       site_name_long
+//     }
+//   }
+// }
+// https://api.spacex.land/graphql/
+
+// client.query({
+//   query: gql`
+// query {
+//   launchesPast(limit: 10) {
+//     mission_name
+//     launch_date_local
+//     launch_site {
+//       site_name_long
+//     }
+//   }
+// }
+
+
+//----------------------------------------
+// traversy example code 
+//https://github.com/bradtraversy/electron-course-files/blob/master/buglogger/main.js
+//----------------------------------------
+
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
