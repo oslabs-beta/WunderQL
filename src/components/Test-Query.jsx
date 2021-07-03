@@ -34,6 +34,39 @@ const TestQuery = () => {
 
   // const submitQuery = () => {
   //   console.log('QUERY fetch request started');
+  //   // const startTime = performance.now();
+  //   //const startTime = Date.now();
+  //   // fetch(`${uri}`, {
+  //   //   method: 'POST',
+  //   //   headers: {
+  //   //     'Accept': 'application/json,text/plain, */*',
+  //   //     'Content-Type': 'application/json'
+  //   //   },
+  //   //   body: JSON.stringify({ query: query }),
+  //   // })
+  //   // .then((res) => {
+  //   //   console.log(res)
+  //   //   res.json()
+  //   // })
+  //   fetch('http://localhost:5000/test', {
+  //     method: 'GET',
+  //     headers: {
+  //       'Accept': 'application/json,text/plain, */*',
+  //       'Content-Type': 'application/json'
+  //     },
+  //     // body: JSON.stringify({ query: query }),
+  //   })
+  //   .then((res) => res.json())
+  //   .then((res) => setResponse(res))
+  //   // client.query({
+  //   //   query: gql`${query}`
+  //   // }).then(result => {
+  //   //   let responseTime = (performance.now() - startTime)
+  //   //   //let responseTime = (Date.now() - startTime)
+  //   //   setRuntime(Number(responseTime.toFixed(1)));
+  //   //   console.log(responseTime)
+  //   //   //console.log(result)
+  //   // })
   // }
   
   const getResponse = () => {
@@ -75,14 +108,15 @@ const TestQuery = () => {
           // cols='50'
         ></textarea>
         <button id='send-query' onClick={getResponse}>Submit Query</button>
+        {/* <button id='send-query' onClick={submitQuery}>Submit Query</button> */}
       </div>
       <div id='response-time'>
         <div id='runtime-title'>Query Runtime (ms)</div>
         {/* <div id='runtime-number'>150</div> */}
         {/* <div id='runtime-number'>{`${runtime}`}</div> */}
         {runtime && (
-          // <div id='runtime-number'>{`${runtime}`}</div>
           <p>{`${runtime}`}</p>
+          // <div id='runtime-number'>{`${runtime}`}</div>
         )}
       </div>
       <div id='num-requests'>
