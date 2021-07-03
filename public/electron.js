@@ -1,22 +1,46 @@
 const path = require("path");
 const url = require('url');
 
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, Menu, ipcMain, screen } = require("electron");
 const { channels } = require('../src/shared/constants');
 const isDev = require("electron-is-dev");
+
+// const screenElectron = screen;
+// const display = screenElectron.getPrimaryDisplay();
+// const dimensions = display.workAreaSize;
 
 // let win;
 function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1100,
+    height: 700,
+  //   width: parseInt(dimensions.width * 0.8),
+  //   height: parseInt(dimensions.height * 0.8),
+    // minWidth: parseInt(dimensions.width * 0.8),
+    // minHeight: parseInt(dimensions.height * 0.8),
+    minWidth: 1100,
+    minHeight: 700,
+    // maxWidth: dimensions.width,
+    // maxHeight: dimensions.height,
+    icon: `${__dirname}/assets/icon.png`,
+    // frame: false,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false
     }
-  });
+});
 
+  // Quit app when closed; closes all children windows too
+  win.on('closed', function(){
+    app.quit();
+  });
+  
+   // Build menu from template
+  const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
+  // Insert menu
+  Menu.setApplicationMenu(mainMenu);
+  
   // and load the index.html of the app.
   // win.loadFile("index.html");
   win.loadURL(
@@ -38,13 +62,95 @@ function createWindow() {
     pathname: path.join(__dirname, 'build/index.html'),
     protocol: 'file:',
     slashes: true,
-}));
+    })
+  );
 }
+
+// Create menu template
+const mainMenuTemplate =  [
+  // Each object is a dropdown
+  {
+    label: 'Raubern',
+    submenu:[
+      {
+        label:'Add Item',
+        click(){
+          createAddWindow();
+        }
+      },
+      {
+        label:'Clear Items',
+        click(){
+          // doesnt need a second argument cause we're just clearing; not sending any data
+          mainWindow.webContents.send('item:clear');
+        }
+      },
+      {
+        label: 'Quit',
+        accelerator:process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q',
+        click(){
+          app.quit();
+        }
+      }
+    ]
+  },
+  {
+    label: 'is',
+    submenu:[
+      {
+        label:'Add Item',
+        click(){
+          createAddWindow();
+        }
+      },
+      {
+        label:'Clear Items',
+        click(){
+          // doesnt need a second argument cause we're just clearing; not sending any data
+          mainWindow.webContents.send('item:clear');
+        }
+      },
+      {
+        label: 'Quit',
+        accelerator:process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q',
+        click(){
+          app.quit();
+        }
+      }
+    ]
+  },
+  {
+    label: 'dumdum',
+    submenu:[
+      {
+        label:'Add Item',
+        click(){
+          createAddWindow();
+        }
+      },
+      {
+        label:'Clear Items',
+        click(){
+          // doesnt need a second argument cause we're just clearing; not sending any data
+          mainWindow.webContents.send('item:clear');
+        }
+      },
+      {
+        label: 'Quit',
+        accelerator:process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q',
+        click(){
+          app.quit();
+        }
+      }
+    ]
+  }
+];
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(createWindow);
+// app.on('ready', createWindow)
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits

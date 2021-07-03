@@ -1,6 +1,7 @@
 // import React from 'react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 // import TestQuery from './Test-Query';
+import ScatterPlotTest from './ScatterPlotTest'
 
 const Dashboard = () => {
   const data = [
@@ -51,25 +52,36 @@ const Dashboard = () => {
     <div id='dashboard'>
       <h1>Your Application Summary</h1>
       {/* <ResponsiveContainer width="100%" height="100%"> */}
-        <LineChart
-          width={500}
-          height={300}
-          data={data}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{ r: 8 }} />
-          <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-        </LineChart>
+        <div id='top-left'>
+          <LineChart
+            width={500}
+            height={300}
+            data={data}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 5,
+            }}
+            >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{ r: 8 }} />
+            <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+          </LineChart>
+        </div>
+        <div id='top-right'>
+          <ScatterPlotTest />
+        </div>
+        <div id='bottom-left'>
+          <ScatterPlotTest />
+        </div>
+        <div id='bottom-right'>
+          <ScatterPlotTest />
+        </div>
       {/* </ResponsiveContainer> */}
     </div>
   )

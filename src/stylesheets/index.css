@@ -1,5 +1,5 @@
 #App {
-  background-color: #0E3149;
+  background-color: #174a6c;
   color: white;
   margin: 0;
   padding: 0;
@@ -15,17 +15,24 @@
   width: 100%;
   height: 100%;
   }
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+
+}
   
 /*/////////////////////////////////////////////////////*/
 /*////////////////////// Header ///////////////////////*/
 /*/////////////////////////////////////////////////////*/
 
-  #header {
-    grid-area: header;
-    padding: 1rem;
-    margin: 1rem;
-    /* border: 1px solid black; */
-  }
+#header {
+  grid-area: header;
+  padding: 1rem;
+  margin: 1rem;
+  /* border: 1px solid black; */
+}
 
 #landing {
   grid-area: main;
@@ -74,7 +81,30 @@
   grid-area: main;
   padding: 1rem;
   margin: 1rem;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 50% 50%;
+  grid-template-areas:
+    "one two"
+    "three four";
 }
+
+#top-left {
+  grid-area: one;
+}
+
+#top-right {
+  grid-area: two;
+}
+
+#bottom-left {
+  grid-area: three;
+}
+
+#bottom-right {
+  grid-area: four;
+}
+
 
 /*/////////////////////////////////////////////////////*/
 /*/////////////////// Test Query //////////////////////*/
