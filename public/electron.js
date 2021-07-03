@@ -1,16 +1,19 @@
 const path = require("path");
 const url = require('url');
 
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
+const { channels } = require('../src/shared/constants');
 const isDev = require("electron-is-dev");
 
+// let win;
 function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      contextIsolation: false
     }
   });
 
@@ -60,6 +63,34 @@ app.on("activate", () => {
   }
 });
 
+const products = {
+  notebook: {
+    name: 'notebook',
+    price: '2500',
+    color: 'gray',
+  },
+  headphone: {
+    name: 'headphone',
+    price: '700',
+    color: 'black',
+  },
+};
+
+
+// Receiving the data in the main process
+ipcMain.on(channels.GET_DATA, (event, arg) => {
+  // const { product } = arg;
+  // Sending a response back to the renderer process (React)
+  console.log('Data is within main process')
+  event.sender.send(channels.GET_DATA, arg);
+});
+
+// Receiving the data in the main process
+ipcMain.on(channels.GET_RESPONSE, (event, arg) => {
+  // Sending a response back to the renderer process (React)
+  console.log('Query is within main process')
+  event.sender.send(channels.GET_RESPONSE, arg + ' This was sent to main process on electron.js, and sent back to Test-Query');
+});
+
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-
