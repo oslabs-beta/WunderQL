@@ -1,17 +1,18 @@
 const path = require("path");
 const url = require('url');
 
-const { app, BrowserWindow, Menu, ipcMain, screen } = require("electron");
+const { app, BrowserWindow, Menu, ipcMain } = require("electron");
+// const { getCurrentWindow } = require("electron");
 const { channels } = require('../src/shared/constants');
 const isDev = require("electron-is-dev");
-const User = require('../models/User');
+// const User = require('../models/User');
 const connectDB = require('../config/db')
 
 
 // Connnect to mongo database
 connectDB();
 
-let win;
+// let win;
 
 // const screenElectron = screen;
 // const display = screenElectron.getPrimaryDisplay();
@@ -21,24 +22,26 @@ let win;
 function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 1100,
+    width: 1000,
     height: 700,
   //   width: parseInt(dimensions.width * 0.8),
   //   height: parseInt(dimensions.height * 0.8),
     // minWidth: parseInt(dimensions.width * 0.8),
     // minHeight: parseInt(dimensions.height * 0.8),
-    minWidth: 1100,
+    minWidth: 1000,
     minHeight: 700,
     // maxWidth: dimensions.width,
     // maxHeight: dimensions.height,
     icon: `${__dirname}/assets/icon.png`,
-    // frame: false,
+    frame: true,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true
     }
-});
+  });
+
+  win.setResizable(true);
 
   // Quit app when closed; closes all children windows too
   win.on('closed', function(){
@@ -84,19 +87,25 @@ const mainMenuTemplate =  [
       {
         label:'Add Item',
         click(){
-          createAddWindow();
+          // createAddWindow();
         }
       },
       {
         label:'Clear Items',
         click(){
           // doesnt need a second argument cause we're just clearing; not sending any data
-          mainWindow.webContents.send('item:clear');
+          // mainWindow.webContents.send('item:clear');
         }
       },
       {
+        label: 'Refresh',
+        // click(){
+        //   getCurrentWindow().reload();
+        // }
+      },
+      {
         label: 'Quit',
-        accelerator:process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q',
+        accelerator: process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q',
         click(){
           app.quit();
         }
@@ -107,21 +116,8 @@ const mainMenuTemplate =  [
     label: 'is',
     submenu:[
       {
-        label:'Add Item',
-        click(){
-          createAddWindow();
-        }
-      },
-      {
-        label:'Clear Items',
-        click(){
-          // doesnt need a second argument cause we're just clearing; not sending any data
-          mainWindow.webContents.send('item:clear');
-        }
-      },
-      {
         label: 'Quit',
-        accelerator:process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q',
+        accelerator: process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q',
         click(){
           app.quit();
         }
@@ -132,21 +128,8 @@ const mainMenuTemplate =  [
     label: 'dumdum',
     submenu:[
       {
-        label:'Add Item',
-        click(){
-          createAddWindow();
-        }
-      },
-      {
-        label:'Clear Items',
-        click(){
-          // doesnt need a second argument cause we're just clearing; not sending any data
-          mainWindow.webContents.send('item:clear');
-        }
-      },
-      {
         label: 'Quit',
-        accelerator:process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q',
+        accelerator: process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q',
         click(){
           app.quit();
         }

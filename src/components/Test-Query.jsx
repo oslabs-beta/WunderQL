@@ -1,6 +1,7 @@
 // will have to wrap this component in Apollo client provider thing
 // import React from 'react';
 import { useState, useEffect } from "react";
+import LineChartComponent from "./LineChart";
 import { ApolloClient, InMemoryCache, gql, ApolloProvider } from '@apollo/client';
 import { channels } from '../shared/constants';
 const { ipcRenderer } = window.require("electron");
@@ -97,7 +98,7 @@ const TestQuery = () => {
           placeholder='input for URI'
           onChange={handleURI}
         ></input>
-        <span><button id='send-uri' onClick={submitUri}>Submit URI</button></span>
+        <button id='send-uri' onClick={submitUri}>Submit URI</button>
       </header>
       <div id='query-space'>
         <textarea 
@@ -112,17 +113,15 @@ const TestQuery = () => {
       </div>
       <div id='response-time'>
         <div id='runtime-title'>Query Runtime (ms)</div>
-        {/* <div id='runtime-number'>150</div> */}
+        <div id='runtime-number'>150</div>
         {/* <div id='runtime-number'>{`${runtime}`}</div> */}
         {runtime && (
           <p>{`${runtime}`}</p>
           // <div id='runtime-number'>{`${runtime}`}</div>
         )}
       </div>
-      <div id='num-requests'>
-        <div id='num-req-title'>Query Rate (req/sec)</div>
-        <div id='num-req-number'>523</div>
-        {/* <div>{`${runtime} ms`}</div> */}
+      <div id='response-chart'> 
+        <LineChartComponent />
       </div>
     </div>
   ) 

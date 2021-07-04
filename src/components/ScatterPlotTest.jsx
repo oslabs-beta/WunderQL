@@ -3,12 +3,6 @@ import * as d3 from 'd3';
 
 const ScatterPlotTest = () => {
 
-
-    // this.props.fetchData();
-    // if (this.props.data.length > 0) {
-    //   this.createScatterplot();
-    // }
-
   const data = [
     {
       "Time": "36:50",
