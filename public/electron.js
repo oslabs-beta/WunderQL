@@ -1,3 +1,5 @@
+const { fetch } = require('cross-fetch');
+const { ApolloClient, InMemoryCache, gql, ApolloProvider, HttpLink } = require('@apollo/client');
 const path = require("path");
 const url = require('url');
 const { app, BrowserWindow, ipcMain } = require("electron");
@@ -5,13 +7,20 @@ const { channels } = require('../src/shared/constants');
 const isDev = require("electron-is-dev");
 const User = require('../models/User');
 const connectDB = require('../config/db')
-
+const client = new ApolloClient({
+  link: new HttpLink({ uri: 'https://api.spacex.land/graphql/', fetch }),
+  cache: new InMemoryCache(),
+});
+const {performance} = require('perf_hooks');
+// const client = new ApolloClient({
+//   uri: 'https://api.spacex.land/graphql/',
+//   cache: new InMemoryCache(),
+// });
 
 // Connnect to mongo database
 connectDB();
 
 let win;
-
 function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
@@ -80,19 +89,52 @@ ipcMain.on(channels.GET_DATA, (event, arg) => {
 });
 
 // Receiving the data in the main process
-ipcMain.on(channels.GET_RESPONSE, (event, arg) => {
+ipcMain.on(channels.GET_RESPONSE, async (event, arg) => {
   // Sending a response back to the renderer process (React)
   console.log('Query is within main process')
-  event.sender.send(channels.GET_RESPONSE, arg + ' This was sent to main process on electron.js, and sent back to Test-Query');
+  let t0 = performance.now();
+  await client.query({
+    query: gql`
+      ${arg}
+    `
+  }).then(function(result) {
+    let time2 = performance.now();
+    event.sender.send(channels.GET_RESPONSE, time2-t0);
+  })
+// }).then(result => event.sender.send(channels.GET_RESPONSE, JSON.stringify(result)));
+
+  // event.sender.send(channels.GET_RESPONSE, arg + ' This was sent to main process on electron.js, and sent back to Test-Query');
 });
 
 
-// import { ApolloClient, InMemoryCache, gql, ApolloProvider } from '@apollo/client';
+// async function checkResponseTime(arg) {
+//   let time1 = performance.now()
+//   await fetch('https://api.spacex.land/graphql/', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({
+//       query: `
+//         ${arg}
+//       `,
+//       // variables: {
+//       //   now: new Date().toISOString(),
+//       // },
+//     }),
+//   });
+//   let time2 = performance.now();
+//   return time2 - time1;
+// };
 
-// const client = new ApolloClient({
-//   uri: 'https://api.spacex.land/graphql/',
-//   cache: new InMemoryCache(),
+// // wait for function to finish before ipcMain sends back response
+// ipcMain.on(channels.GET_RESPONSE, async (event, arg) => {
+//   // Sending a response back to the renderer process (React)
+  
+//   let responseTime = await checkResponseTime(arg);
+//   event.sender.send(channels.GET_RESPONSE, responseTime);
 // });
+
 
 // query {
 //   launchesPast(limit: 10) {
@@ -107,15 +149,17 @@ ipcMain.on(channels.GET_RESPONSE, (event, arg) => {
 
 // client.query({
 //   query: gql`
-// query {
-//   launchesPast(limit: 10) {
-//     mission_name
-//     launch_date_local
-//     launch_site {
-//       site_name_long
+//     query {
+//       launchesPast(limit: 10) {
+//         mission_name
+//         launch_date_local
+//         launch_site {
+//           site_name_long
+//         }
+//       }
 //     }
-//   }
-// }
+//   `
+// }).then(result => console.log(result))
 
 
 //----------------------------------------
