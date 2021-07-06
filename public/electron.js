@@ -24,35 +24,22 @@ function createWindow() {
   const win = new BrowserWindow({
     width: 1000,
     height: 700,
-  //   width: parseInt(dimensions.width * 0.8),
-  //   height: parseInt(dimensions.height * 0.8),
-    // minWidth: parseInt(dimensions.width * 0.8),
-    // minHeight: parseInt(dimensions.height * 0.8),
     minWidth: 1000,
     minHeight: 700,
-    // maxWidth: dimensions.width,
-    // maxHeight: dimensions.height,
     icon: `${__dirname}/assets/icon.png`,
     frame: true,
     webPreferences: {
       nodeIntegration: true,
+      // defaults to true; allows separation btw main and renderer
+      // right now only works if false
       contextIsolation: false,
-      enableRemoteModule: true
+      enableRemoteModule: true,
+      preload: path.join(__dirname, 'preload.js')
     }
   });
 
   win.setResizable(true);
 
-  // Quit app when closed; closes all children windows too
-  win.on('closed', function(){
-    app.quit();
-  });
-  
-   // Build menu from template
-  const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
-  // Insert menu
-  Menu.setApplicationMenu(mainMenu);
-  
   // and load the index.html of the app.
   // win.loadFile("index.html");
   win.loadURL(
@@ -61,14 +48,20 @@ function createWindow() {
       : `file://${path.join(__dirname, "../build/index.html")}`
   );
 
+  // Quit app when closed; closes all children windows too
+  win.on('closed', function(){
+    app.quit();
+  });
+  
+  // Build menu from template
+  const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
+
+  Menu.setApplicationMenu(mainMenu);
   // Open the DevTools.
   if (isDev) {
     win.webContents.openDevTools({ mode: "detach" });
     // win.webContents.openDevTools({ detach: false });
   }
-  // else {
-  //   require(path.join(__dirname, 'server/server'));
-  // };
 
   win.loadURL(isDev ? 'http://localhost:3000' : url.format({
     pathname: path.join(__dirname, 'build/index.html'),
@@ -92,16 +85,9 @@ const mainMenuTemplate =  [
       },
       {
         label:'Clear Items',
-        click(){
-          // doesnt need a second argument cause we're just clearing; not sending any data
-          // mainWindow.webContents.send('item:clear');
-        }
       },
       {
         label: 'Refresh',
-        // click(){
-        //   getCurrentWindow().reload();
-        // }
       },
       {
         label: 'Quit',
@@ -164,20 +150,15 @@ app.on("activate", () => {
 
 
 // Receiving the data in the main process
-ipcMain.on(channels.GET_DATA, (event, arg) => {
-  // Sending a response back to the renderer process (React)
-  console.log('Data is within main process')
-  event.sender.send(channels.GET_DATA, arg);
-});
-
-// Receiving the data in the main process
 ipcMain.on(channels.GET_RESPONSE, (event, arg) => {
   // Sending a response back to the renderer process (React)
   console.log('Query is within main process')
   event.sender.send(channels.GET_RESPONSE, arg + ' This was sent to main process on electron.js, and sent back to Test-Query');
+  // win.webContents.send('fromMain', arg)
 });
 
 
+/** NOTES */
 // import { ApolloClient, InMemoryCache, gql, ApolloProvider } from '@apollo/client';
 
 // const client = new ApolloClient({

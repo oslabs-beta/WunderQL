@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { ThemeProvider } from '@material-ui/core/styles'
 
 import { channels } from '../shared/constants';
-const { ipcRenderer } = window.require("electron");
+//const { ipcRenderer } = window.require("electron");
 
 const Home = ({ uri, setURI }) => {
   // const [data, setData] = useState(null);

@@ -142,12 +142,6 @@ export default function NavBar(props) {
         </div>
         <Divider />
         <List>
-          {/* {['Dashboard', 'Test Query', 'Playground', 'Past Queries'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))} */}
             <Link to="/" class='nav-list-item'>
               <ListItem button key={1}>
                 <ListItemIcon><InboxIcon /></ListItemIcon>
@@ -169,22 +163,17 @@ export default function NavBar(props) {
             <Link to="/previoussearches" class='nav-list-item'>
               <ListItem button key={4}>
                 <ListItemIcon><InboxIcon /></ListItemIcon>
-                <ListItemText primary='Playground' />
+                <ListItemText primary='Past Searches' />
               </ListItem>
             </Link>
-            {/* <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem> */}
         </List>    
         <Divider />  
         <FormControlLabel
           id='dark-switch'
           control={
             <Switch
-              // checked={state.checkedB}
               onChange={ () => props.handleSwitch(!props.dark) }
-              name="checkedB"
+              name="dark-mode"
               color="primary"
             />
           }

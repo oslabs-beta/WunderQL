@@ -17,11 +17,10 @@ import './stylesheets/index.css';
 import { channels } from './shared/constants';
 
 import { ApolloClient, InMemoryCache, gql, ApolloProvider } from '@apollo/client';
-const { ipcRenderer } = window.require("electron");
+//const { ipcRenderer } = window.require("electron");
 
 
 function App() {
-  // const [product, setProduct] = useState('');
   const [data, setData] = useState(null);
   const [dark, setDark] = useState(false);
   const [uri, setURI] = useState('nothing');
@@ -37,18 +36,18 @@ function App() {
   //   ipcRenderer.send(channels.GET_DATA, product);
   // };
 
-  useEffect(() => {
-    // useEffect hook - Listens to the get_data channel for the response from electron.js
-    ipcRenderer.on(channels.GET_DATA, (event, arg) => {
-      console.log('Listening for response from main process...')
-      setData(arg);
-      console.log('Data has been returned from main process');  
-    });
-    // Clean the listener after the component is dismounted
-    return () => {
-      ipcRenderer.removeAllListeners();
-    };
-  }, []);
+  // useEffect(() => {
+  //   // useEffect hook - Listens to the get_data channel for the response from electron.js
+  //   ipcRenderer.on(channels.GET_DATA, (event, arg) => {
+  //     console.log('Listening for response from main process...')
+  //     setData(arg);
+  //     console.log('Data has been returned from main process');  
+  //   });
+  //   // Clean the listener after the component is dismounted
+  //   return () => {
+  //     ipcRenderer.removeAllListeners();
+  //   };
+  // }, []);
 
   // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
@@ -85,7 +84,7 @@ function App() {
                 <Home theme={theme} uri={uri} setURI={setURI}/>
               </Route>
               <Route path="/dashboard">
-                <Dashboard />
+                <Dashboard uri={uri} />
               </Route>
               <Route path="/testquery">
                 <TestQuery client={client} uri={uri}/>

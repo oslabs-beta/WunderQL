@@ -2,136 +2,36 @@
 // import React from 'react';
 import { useState, useEffect } from "react";
 import LineChartComponent from "./LineChart";
-import { ApolloClient, InMemoryCache, gql, ApolloProvider } from '@apollo/client';
 import { channels } from '../shared/constants';
 const { ipcRenderer } = window.require("electron");
 
 const TestQuery = ({ client, uri }) => {
 
-  // const [uri, setUri] = useState('');
   const [query, setQuery] = useState('');
   const [runtime, setRuntime] = useState(0);
   
-// const exampleQuery = gql`
-//   query {
-//     launchesPast(limit: 10) {
-//       mission_name
-//       launch_date_local
-//       launch_site {
-//         site_name_long
-//       }
-//     }
-//   }
-// `
-
-  // const handleURI = (event) => {
-  //   console.log(event.target.value);
-  //   setUri(event.target.value);
-  // }
-
-  // const submitUri = () => {
-  //   console.log('URI fetch request started');
-  //   fetch('/senduri', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Accept': 'application/json,text/plain, */*',
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify({ uri: uri}),
-  //   })
-  // }
-
-  // const handleQuery = (event) => {
-  //   console.log(event.target.value);
-  //   setQuery(event.target.value);
-  // }
-
-  // const submitQuery = () => {
-  //   console.log('QUERY fetch request started');
-  //   // const startTime = performance.now();
-  //   //const startTime = Date.now();
-  //   // fetch(`${uri}`, {
-  //   //   method: 'POST',
-  //   //   headers: {
-  //   //     'Accept': 'application/json,text/plain, */*',
-  //   //     'Content-Type': 'application/json'
-  //   //   },
-  //   //   body: JSON.stringify({ query: query }),
-  //   // })
-  //   // .then((res) => {
-  //   //   console.log(res)
-  //   //   res.json()
-  //   // })
-  //   fetch('http://localhost:5000/test', {
-  //     method: 'GET',
-  //     headers: {
-  //       'Accept': 'application/json,text/plain, */*',
-  //       'Content-Type': 'application/json'
-  //     },
-  //     // body: JSON.stringify({ query: query }),
-  //   })
-  //   .then((res) => res.json())
-  //   .then((res) => setResponse(res))
-  //   // client.query({
-  //   //   query: gql`${query}`
-  //   // }).then(result => {
-  //   //   let responseTime = (performance.now() - startTime)
-  //   //   //let responseTime = (Date.now() - startTime)
-  //   //   setRuntime(Number(responseTime.toFixed(1)));
-  //   //   console.log(responseTime)
-  //   //   //console.log(result)
-  //   // })
-  // }
-  
-  const getResponse = () => {
+  const sendQuery = () => {
     // Sends the message to Electron main process
-    // console.log('Query is being sent to main process...');
-    // ipcRenderer.send(channels.GET_RESPONSE, query);
-
-    const startTime = performance.now();
-
-    /**this seems to be measuring runtime of promise 
-    client.query({
-      query: gql`${query}`
-    }).then(result => {
-      let responseTime = (performance.now() - startTime)
-      // let responseTime = (Date.now() - startTime)
-      setRuntime(Number(responseTime.toFixed(1)));
-    })
-    */
-
-    fetch(uri, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json,text/plain, */*',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ query: query })
-    })
-      .then(res => res.json())
-      .then(result => {
-        let responseTime = (performance.now() - startTime)
-        setRuntime(Number(responseTime.toFixed(1)));
-      })
+    console.log('Query is being sent to main process...');
+    ipcRenderer.send('send-query', query);
   };
 
   // commented out because calculating runtime from FE (for now)
-  // useEffect(() => {
-  //   // useEffect hook - listens to the get_response channel for the response from electron.js    
-  //   ipcRenderer.on(channels.GET_RESPONSE, (event, arg) => {
-  //     console.log('Listening for response from main process...')
-  //     setRuntime(arg);
-  //     console.log('Query has been returned from main process');
-  //   });
-  //   // Clean the listener after the component is dismounted
-  //   return () => {
-  //     ipcRenderer.removeAllListeners();
-  //   };
-  // }, []);
+  useEffect(() => {
+    // useEffect hook - listens to the get_response channel for the response from electron.js    
+    ipcRenderer.on(channels.GET_RESPONSE, (event, arg) => {
+      console.log('Listening for response from main process...')
+      setRuntime(arg);
+      console.log(arg, ' : Query has been returned from main process');
+    });
+    // Clean the listener after the component is dismounted
+    return () => {
+      ipcRenderer.removeAllListeners();
+    };
+  }, []);
 
   return (
     <div id='test-query'> 
-      {/* <h1>hello from test query</h1> */}
       <header id='uri'>
         <h2>Currently connected to: {uri}</h2>
         {/* <input 
@@ -149,8 +49,7 @@ const TestQuery = ({ client, uri }) => {
           // rows='30'
           // cols='50'
         ></textarea>
-        <button id='send-query' onClick={getResponse}>Submit Query</button>
-        {/* <button id='send-query' onClick={submitQuery}>Submit Query</button> */}
+        <button id='send-query' onClick={sendQuery}>Submit Query</button>
       </div>
       <div id='response-time'>
         <div id='runtime-title'>Query Runtime (ms)</div>
@@ -168,17 +67,43 @@ const TestQuery = ({ client, uri }) => {
 };
 
 
+    // const startTime = performance.now();
+
+    // fetch(uri, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Accept': 'application/json,text/plain, */*',
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify({ query: query })
+    // })
+    //   .then(res => res.json())
+    //   .then(result => {
+    //     let responseTime = (performance.now() - startTime)
+    //     setRuntime(Number(responseTime.toFixed(1)));
+    //   })
+
+    /**this seems to be measuring runtime of promise 
+    client.query({
+      query: gql`${query}`
+    }).then(result => {
+      let responseTime = (performance.now() - startTime)
+      // let responseTime = (Date.now() - startTime)
+      setRuntime(Number(responseTime.toFixed(1)));
+    })
+    */
+
 // client.query({
   // query: gql`
-  //   query {
-  //     launchesPast(limit: 10) {
-  //       mission_name
-  //       launch_date_local
-  //       launch_site {
-  //         site_name_long
-  //       }
-  //     }
-  //   }
+    // query {
+    //   launchesPast(limit: 10) {
+    //     mission_name
+    //     launch_date_local
+    //     launch_site {
+    //       site_name_long
+    //     }
+    //   }
+    // }
 //   `
 // }).then(result => console.log(result))
 

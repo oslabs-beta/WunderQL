@@ -27,7 +27,10 @@ const LineChartComponent = (props) => {
             }}
             >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="day" />
+        <XAxis 
+          dataKey="day" 
+          domain={['dataMax - 20', 'dataMax']}
+        />
         <YAxis 
           label={{ value: 'time(ms)', angle: -90, position:'insideLeft' }} 
           domain={['dataMin - 10', 'dataMax + 10']} 
