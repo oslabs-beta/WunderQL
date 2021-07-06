@@ -90,6 +90,7 @@ const TestQuery = ({ client, uri }) => {
 
     const startTime = performance.now();
 
+    /**this seems to be measuring runtime of promise 
     client.query({
       query: gql`${query}`
     }).then(result => {
@@ -97,6 +98,21 @@ const TestQuery = ({ client, uri }) => {
       // let responseTime = (Date.now() - startTime)
       setRuntime(Number(responseTime.toFixed(1)));
     })
+    */
+
+    fetch(uri, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json,text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ query: query })
+    })
+      .then(res => res.json())
+      .then(result => {
+        let responseTime = (performance.now() - startTime)
+        setRuntime(Number(responseTime.toFixed(1)));
+      })
   };
 
   // commented out because calculating runtime from FE (for now)
@@ -154,15 +170,15 @@ const TestQuery = ({ client, uri }) => {
 
 // client.query({
   // query: gql`
-    // query {
-    //   launchesPast(limit: 10) {
-    //     mission_name
-    //     launch_date_local
-    //     launch_site {
-    //       site_name_long
-    //     }
-    //   }
-    // }
+  //   query {
+  //     launchesPast(limit: 10) {
+  //       mission_name
+  //       launch_date_local
+  //       launch_site {
+  //         site_name_long
+  //       }
+  //     }
+  //   }
 //   `
 // }).then(result => console.log(result))
 

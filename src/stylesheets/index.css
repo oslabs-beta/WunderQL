@@ -128,10 +128,9 @@ body {
   /* color: white; */
 /* } */
 
-.nav-list-item a:hover {
+/* .nav-list-item a:hover { */
   /* cursor: pointer; */
-  cursor: url(./icon.png);
-}
+/* } */
 
 #dark-switch {
   margin: 1rem 0 0 1rem;
