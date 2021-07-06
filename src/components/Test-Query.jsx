@@ -71,7 +71,7 @@ const TestQuery = () => {
   
   const getResponse = () => {
     // Sends the message to Electron main process
-    console.log('Query is being sent to main process...');
+    console.log('Query is being sent to main process...')
     ipcRenderer.send(channels.GET_RESPONSE, query);
   };
 

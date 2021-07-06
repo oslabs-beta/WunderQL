@@ -8,7 +8,7 @@ const isDev = require("electron-is-dev");
 const User = require('../models/User');
 const connectDB = require('../config/db')
 const client = new ApolloClient({
-  link: new HttpLink({ uri: 'https://api.spacex.land/graphql/', fetch }),
+  link: new HttpLink({ uri: 'http://localhost:4000/graphql', fetch }),
   cache: new InMemoryCache(),
 });
 const {performance} = require('perf_hooks');
@@ -80,6 +80,27 @@ app.on("activate", () => {
   }
 });
 
+// Function that checks response time of query
+async function checkResponseTime(arg) {
+  let time1 = performance.now()
+  await fetch('http://localhost:4000/graphql', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query: `
+        ${arg}
+      `,
+      // variables: {
+      //   now: new Date().toISOString(),
+      // },
+    }),
+  });
+  let time2 = performance.now();
+  return time2 - time1;
+};
+
 
 // Receiving the data in the main process
 ipcMain.on(channels.GET_DATA, (event, arg) => {
@@ -88,54 +109,35 @@ ipcMain.on(channels.GET_DATA, (event, arg) => {
   event.sender.send(channels.GET_DATA, arg);
 });
 
-// Receiving the data in the main process
+// Async await --- wait for function to finish before ipcMain sends back response
 ipcMain.on(channels.GET_RESPONSE, async (event, arg) => {
-  // Sending a response back to the renderer process (React)
-  console.log('Query is within main process')
-  let t0 = performance.now();
-  await client.query({
-    query: gql`
-      ${arg}
-    `
-  }).then(function(result) {
-    let time2 = performance.now();
-    event.sender.send(channels.GET_RESPONSE, time2-t0);
-  })
-// }).then(result => event.sender.send(channels.GET_RESPONSE, JSON.stringify(result)));
-
-  // event.sender.send(channels.GET_RESPONSE, arg + ' This was sent to main process on electron.js, and sent back to Test-Query');
+// Sending a response back to the renderer process (React)
+let responseTime = await checkResponseTime(arg);
+event.sender.send(channels.GET_RESPONSE, responseTime);
 });
 
-
-// async function checkResponseTime(arg) {
-//   let time1 = performance.now()
-//   await fetch('https://api.spacex.land/graphql/', {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify({
-//       query: `
-//         ${arg}
-//       `,
-//       // variables: {
-//       //   now: new Date().toISOString(),
-//       // },
-//     }),
+//----------------------------------------
+// Receiving the query in the main process + sending back JSON response
+// ipcMain.on(channels.GET_RESPONSE, (event, arg) => {
+//   // Sending a response back to the renderer process (React)
+//   console.log('Query is within main process')
+//   let t0 = performance.now();
+//   client.query({
+//     query: gql`
+//       ${arg}
+//     `,
 //   });
 //   let time2 = performance.now();
-//   return time2 - time1;
-// };
+//   event.sender.send(channels.GET_RESPONSE, time2-t0);
+// // }).then(result => event.sender.send(channels.GET_RESPONSE, JSON.stringify(result)));
 
-// // wait for function to finish before ipcMain sends back response
-// ipcMain.on(channels.GET_RESPONSE, async (event, arg) => {
-//   // Sending a response back to the renderer process (React)
-  
-//   let responseTime = await checkResponseTime(arg);
-//   event.sender.send(channels.GET_RESPONSE, responseTime);
+//   // event.sender.send(channels.GET_RESPONSE, arg + ' This was sent to main process on electron.js, and sent back to Test-Query');
 // });
+//----------------------------------------
 
 
+//----------------------------------------
+// Example queries for https://api.spacex.land/graphql/
 // query {
 //   launchesPast(limit: 10) {
 //     mission_name
@@ -145,8 +147,7 @@ ipcMain.on(channels.GET_RESPONSE, async (event, arg) => {
 //     }
 //   }
 // }
-// https://api.spacex.land/graphql/
-
+// 
 // client.query({
 //   query: gql`
 //     query {
@@ -160,6 +161,7 @@ ipcMain.on(channels.GET_RESPONSE, async (event, arg) => {
 //     }
 //   `
 // }).then(result => console.log(result))
+//----------------------------------------
 
 
 //----------------------------------------
