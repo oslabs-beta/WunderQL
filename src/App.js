@@ -3,20 +3,33 @@ import {
   Switch,
   Route,
 } from "react-router-dom";
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
+import CssBaseline from '@material-ui/core/CssBaseline';
+
 import { useState, useEffect } from 'react';
 import Home from './components/Home'
 import Dashboard from './components/Dashboard'
 import NavBar from './components/NavBar'
 import TestQuery from './components/Test-Query'
 // import Header from './components/Header'
-import Playground from './components/Playground';
+import PreviousSearches from './components/PreviousSearches';
 import './stylesheets/index.css';
 import { channels } from './shared/constants';
+
+import { ApolloClient, InMemoryCache, gql, ApolloProvider } from '@apollo/client';
 const { ipcRenderer } = window.require("electron");
+
 
 function App() {
   // const [product, setProduct] = useState('');
   const [data, setData] = useState(null);
+  const [dark, setDark] = useState(false);
+  const [uri, setURI] = useState('nothing');
+
+  const client = new ApolloClient({
+    uri: uri,
+    cache: new InMemoryCache()
+  });
 
   // const getData = () => {
   //   // Sends the message to Electron main process
@@ -37,37 +50,54 @@ function App() {
     };
   }, []);
 
+  // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
+  const theme = createMuiTheme({
+    palette: {
+        type: dark ? 'dark' : 'light',
+    },
+})
+    
   return (
-    <div id="App">
-      {/* <h1>Hello Worldddddd</h1> */}
-      {/* <Header /> */}
-      <div class="title-bar">
-        <div class="titlebar-drag-region"></div>
-        <div class="title">Window Header</div>
-        <div class="title-bar-btns">
-          <button id="min-btn">-</button>
-          <button id="max-btn">+</button>
-          <button id="close-btn">x</button>
+    <ApolloProvider client={client}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <div id="App">
+
+          {/* <h1>Hello Worldddddd</h1> */}
+          {/* <Header /> */}
+            
+          {/* trying to make frameless win draggable */}
+          <div className="title-bar">
+            <div className="titlebar-drag-region"></div>
+            <div className="title">Window Header</div>
+            <div className="title-bar-btns">
+              <button id="min-btn">-</button>
+              <button id="max-btn">+</button>
+              <button id="close-btn">x</button>
+            </div>
+          </div>
+
+          <Router>
+            <NavBar handleSwitch={setDark} dark={dark} />
+            <Switch>
+              <Route exact path="/">
+                <Home theme={theme} uri={uri} setURI={setURI}/>
+              </Route>
+              <Route path="/dashboard">
+                <Dashboard />
+              </Route>
+              <Route path="/testquery">
+                <TestQuery client={client} uri={uri}/>
+              </Route>
+              <Route path="/previoussearches">
+                <PreviousSearches />
+              </Route>
+            </Switch>
+          </Router>
         </div>
-      </div>
-      <Router>
-        <NavBar />
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route path="/dashboard">
-            <Dashboard />
-          </Route>
-          <Route path="/testquery">
-            <TestQuery />
-          </Route>
-          <Route path="/playground">
-            <Playground />
-          </Route>
-        </Switch>
-      </Router>
-    </div>
+      </ThemeProvider>
+    </ApolloProvider>
   );
 }
 

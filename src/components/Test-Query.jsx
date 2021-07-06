@@ -5,28 +5,41 @@ import LineChartComponent from "./LineChart";
 import { ApolloClient, InMemoryCache, gql, ApolloProvider } from '@apollo/client';
 import { channels } from '../shared/constants';
 const { ipcRenderer } = window.require("electron");
-const TestQuery = () => {
 
-  const [uri, setUri] = useState('');
+const TestQuery = ({ client, uri }) => {
+
+  // const [uri, setUri] = useState('');
   const [query, setQuery] = useState('');
-  const [runtime, setRuntime] = useState(null);
+  const [runtime, setRuntime] = useState(0);
   
-  const handleURI = (event) => {
-    console.log(event.target.value);
-    setUri(event.target.value);
-  }
+// const exampleQuery = gql`
+//   query {
+//     launchesPast(limit: 10) {
+//       mission_name
+//       launch_date_local
+//       launch_site {
+//         site_name_long
+//       }
+//     }
+//   }
+// `
 
-  const submitUri = () => {
-    console.log('URI fetch request started');
-    fetch('/senduri', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json,text/plain, */*',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ uri: uri}),
-    })
-  }
+  // const handleURI = (event) => {
+  //   console.log(event.target.value);
+  //   setUri(event.target.value);
+  // }
+
+  // const submitUri = () => {
+  //   console.log('URI fetch request started');
+  //   fetch('/senduri', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Accept': 'application/json,text/plain, */*',
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify({ uri: uri}),
+  //   })
+  // }
 
   // const handleQuery = (event) => {
   //   console.log(event.target.value);
@@ -72,33 +85,45 @@ const TestQuery = () => {
   
   const getResponse = () => {
     // Sends the message to Electron main process
-    console.log('Query is being sent to main process...');
-    ipcRenderer.send(channels.GET_RESPONSE, query);
+    // console.log('Query is being sent to main process...');
+    // ipcRenderer.send(channels.GET_RESPONSE, query);
+
+    const startTime = performance.now();
+
+    client.query({
+      query: gql`${query}`
+    }).then(result => {
+      let responseTime = (performance.now() - startTime)
+      // let responseTime = (Date.now() - startTime)
+      setRuntime(Number(responseTime.toFixed(1)));
+    })
   };
 
-  useEffect(() => {
-    // useEffect hook - listens to the get_response channel for the response from electron.js    
-    ipcRenderer.on(channels.GET_RESPONSE, (event, arg) => {
-      console.log('Listening for response from main process...')
-      setRuntime(arg);
-      console.log('Query has been returned from main process');
-    });
-    // Clean the listener after the component is dismounted
-    return () => {
-      ipcRenderer.removeAllListeners();
-    };
-  }, []);
+  // commented out because calculating runtime from FE (for now)
+  // useEffect(() => {
+  //   // useEffect hook - listens to the get_response channel for the response from electron.js    
+  //   ipcRenderer.on(channels.GET_RESPONSE, (event, arg) => {
+  //     console.log('Listening for response from main process...')
+  //     setRuntime(arg);
+  //     console.log('Query has been returned from main process');
+  //   });
+  //   // Clean the listener after the component is dismounted
+  //   return () => {
+  //     ipcRenderer.removeAllListeners();
+  //   };
+  // }, []);
 
   return (
     <div id='test-query'> 
       {/* <h1>hello from test query</h1> */}
       <header id='uri'>
-        <input 
+        <h2>Currently connected to: {uri}</h2>
+        {/* <input 
           id='uri-input' 
           placeholder='input for URI'
           onChange={handleURI}
         ></input>
-        <button id='send-uri' onClick={submitUri}>Submit URI</button>
+        <button id='send-uri' onClick={submitUri}>Submit URI</button> */}
       </header>
       <div id='query-space'>
         <textarea 
@@ -113,12 +138,11 @@ const TestQuery = () => {
       </div>
       <div id='response-time'>
         <div id='runtime-title'>Query Runtime (ms)</div>
-        <div id='runtime-number'>150</div>
-        {/* <div id='runtime-number'>{`${runtime}`}</div> */}
-        {runtime && (
+        {/* <div id='runtime-number'>150</div> */}
+        <div id='runtime-number'>{`${runtime}`}</div>
+        {/* {runtime && (
           <p>{`${runtime}`}</p>
-          // <div id='runtime-number'>{`${runtime}`}</div>
-        )}
+        )} */}
       </div>
       <div id='response-chart'> 
         <LineChartComponent />
@@ -129,16 +153,16 @@ const TestQuery = () => {
 
 
 // client.query({
-//   query: gql`
-//     query {
-//       launchesPast(limit: 10) {
-//         mission_name
-//         launch_date_local
-//         launch_site {
-//           site_name_long
-//         }
-//       }
-//     }
+  // query: gql`
+    // query {
+    //   launchesPast(limit: 10) {
+    //     mission_name
+    //     launch_date_local
+    //     launch_site {
+    //       site_name_long
+    //     }
+    //   }
+    // }
 //   `
 // }).then(result => console.log(result))
 

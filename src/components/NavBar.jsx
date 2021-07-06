@@ -19,6 +19,8 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 
 import { Link } from 'react-router-dom';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 
 const drawerWidth = 240;
 
@@ -79,10 +81,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function NavBar() {
+export default function NavBar(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -92,9 +95,11 @@ export default function NavBar() {
     setOpen(false);
   };
 
+
+
   return (
     <div className={classes.root}>
-      <CssBaseline />
+      {/* <CssBaseline /> */}
       <AppBar
         position="fixed"
         className={clsx(classes.appBar, {
@@ -143,25 +148,25 @@ export default function NavBar() {
               <ListItemText primary={text} />
             </ListItem>
           ))} */}
-            <Link to="/">
+            <Link to="/" class='nav-list-item'>
               <ListItem button key={1}>
                 <ListItemIcon><InboxIcon /></ListItemIcon>
                 <ListItemText primary='Home' />
               </ListItem>
             </Link>
-            <Link to="/dashboard">
+            <Link to="/dashboard" class='nav-list-item'>
               <ListItem button key={2}>
                 <ListItemIcon><InboxIcon /></ListItemIcon>
                 <ListItemText primary='Dashboard' />
               </ListItem>
             </Link>
-            <Link to="/testquery">
+            <Link to="/testquery" class='nav-list-item'>
               <ListItem button key={3}>
                 <ListItemIcon><InboxIcon /></ListItemIcon>
                 <ListItemText primary='Test Query' />
               </ListItem>
             </Link>
-            <Link to="/playground">
+            <Link to="/previoussearches" class='nav-list-item'>
               <ListItem button key={4}>
                 <ListItemIcon><InboxIcon /></ListItemIcon>
                 <ListItemText primary='Playground' />
@@ -171,7 +176,20 @@ export default function NavBar() {
               <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
               <ListItemText primary={text} />
             </ListItem> */}
-        </List>      
+        </List>    
+        <Divider />  
+        <FormControlLabel
+          id='dark-switch'
+          control={
+            <Switch
+              // checked={state.checkedB}
+              onChange={ () => props.handleSwitch(!props.dark) }
+              name="checkedB"
+              color="primary"
+            />
+          }
+          label="Dark Mode"
+      />
       </Drawer>
     </div>
   );
