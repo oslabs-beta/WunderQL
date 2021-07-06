@@ -1,5 +1,4 @@
 // will have to wrap this component in Apollo client provider thing
-// import React from 'react';
 import { useState, useEffect } from "react";
 import LineChartComponent from "./LineChart";
 import { channels } from '../shared/constants';
@@ -12,8 +11,8 @@ const TestQuery = ({ client, uri }) => {
   
   const sendQuery = () => {
     // Sends the message to Electron main process
-    console.log('Query is being sent to main process...');
-    ipcRenderer.send('send-query', query);
+    console.log('Query is being sent to main process...')
+    ipcRenderer.send(channels.GET_RESPONSE, query);
   };
 
   // commented out because calculating runtime from FE (for now)
@@ -24,6 +23,7 @@ const TestQuery = ({ client, uri }) => {
       setRuntime(arg);
       console.log(arg, ' : Query has been returned from main process');
     });
+    
     // Clean the listener after the component is dismounted
     return () => {
       ipcRenderer.removeAllListeners();
@@ -34,26 +34,18 @@ const TestQuery = ({ client, uri }) => {
     <div id='test-query'> 
       <header id='uri'>
         <h2>Currently connected to: {uri}</h2>
-        {/* <input 
-          id='uri-input' 
-          placeholder='input for URI'
-          onChange={handleURI}
-        ></input>
-        <button id='send-uri' onClick={submitUri}>Submit URI</button> */}
       </header>
       <div id='query-space'>
         <textarea 
           placeholder='input for user query'
           id='text-area'
           onChange={(e) => setQuery(e.target.value)}
-          // rows='30'
-          // cols='50'
+
         ></textarea>
         <button id='send-query' onClick={sendQuery}>Submit Query</button>
       </div>
       <div id='response-time'>
         <div id='runtime-title'>Query Runtime (ms)</div>
-        {/* <div id='runtime-number'>150</div> */}
         <div id='runtime-number'>{`${runtime}`}</div>
         {/* {runtime && (
           <p>{`${runtime}`}</p>

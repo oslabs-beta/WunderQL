@@ -62,10 +62,8 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <div id="App">
-
-          {/* <h1>Hello Worldddddd</h1> */}
           {/* <Header /> */}
-            
+          
           {/* trying to make frameless win draggable */}
           <div className="title-bar">
             <div className="titlebar-drag-region"></div>
