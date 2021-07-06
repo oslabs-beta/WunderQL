@@ -1,3 +1,5 @@
+const { fetch } = require('cross-fetch');
+const { performance } = require('perf_hooks');
 const path = require("path");
 const url = require('url');
 const { app, BrowserWindow, ipcMain } = require("electron");
@@ -6,11 +8,8 @@ const isDev = require("electron-is-dev");
 const User = require('../models/User');
 const connectDB = require('../config/db')
 
-
 // Connnect to mongo database
 connectDB();
-
-let win;
 
 function createWindow() {
   // Create the browser window.
@@ -25,7 +24,6 @@ function createWindow() {
   });
 
   // and load the index.html of the app.
-  // win.loadFile("index.html");
   win.loadURL(
     isDev
       ? "http://localhost:3000"
@@ -35,17 +33,8 @@ function createWindow() {
   // Open the DevTools.
   if (isDev) {
     win.webContents.openDevTools({ mode: "detach" });
-    // win.webContents.openDevTools({ detach: false });
   }
-  // else {
-  //   require(path.join(__dirname, 'server/server'));
-  // };
 
-  win.loadURL(isDev ? 'http://localhost:3000' : url.format({
-    pathname: path.join(__dirname, 'build/index.html'),
-    protocol: 'file:',
-    slashes: true,
-}));
 }
 
 // This method will be called when Electron has finished
@@ -71,6 +60,24 @@ app.on("activate", () => {
   }
 });
 
+// Function that checks response time of query
+async function checkResponseTime(arg) {
+  let time1 = performance.now()
+  await fetch('https://api.spacex.land/graphql/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query: `
+        ${arg}
+      `,
+    }),
+  });
+  let time2 = performance.now();
+  return time2 - time1;
+};
+
 
 // Receiving the data in the main process
 ipcMain.on(channels.GET_DATA, (event, arg) => {
@@ -79,21 +86,35 @@ ipcMain.on(channels.GET_DATA, (event, arg) => {
   event.sender.send(channels.GET_DATA, arg);
 });
 
-// Receiving the data in the main process
-ipcMain.on(channels.GET_RESPONSE, (event, arg) => {
-  // Sending a response back to the renderer process (React)
-  console.log('Query is within main process')
-  event.sender.send(channels.GET_RESPONSE, arg + ' This was sent to main process on electron.js, and sent back to Test-Query');
+// Listening on channel 'get_endpoint' to receive endpoint from frontend
+ipcMain.on(channels.GET_ENDPOINT, async (event, graphqlEndpoint) => {
+  console.log('im in the endpoint listener function in electron.js')
+  await User.create( { graphqlURI : graphqlEndpoint }, (err, result) => {
+      console.log('im inside the user creation');
+      if (err) console.log(err);
+      console.log(result);
+    });
+    event.sender.send(channels.GET_ENDPOINT, graphqlEndpoint);
+
+})
+
+
+// Async await --- wait for function to finish before ipcMain sends back response
+// Sending a response back to the renderer process (React)
+ipcMain.on(channels.GET_RESPONSE, async (event, arg) => {
+let responseTime = await checkResponseTime(arg);
+await User.updateOne({_id: '60e4f89ed85c813fa67d17eb'}, {"query" : arg}, (err, result) => {
+  if (err){
+    console.log(err)
+    return err;
+  }
+  console.log('Query was successfully added!');
+  event.sender.send(channels.GET_RESPONSE, responseTime);
+});
 });
 
-
-// import { ApolloClient, InMemoryCache, gql, ApolloProvider } from '@apollo/client';
-
-// const client = new ApolloClient({
-//   uri: 'https://api.spacex.land/graphql/',
-//   cache: new InMemoryCache(),
-// });
-
+//----------------------------------------
+// Example queries for https://api.spacex.land/graphql/
 // query {
 //   launchesPast(limit: 10) {
 //     mission_name
@@ -103,26 +124,18 @@ ipcMain.on(channels.GET_RESPONSE, (event, arg) => {
 //     }
 //   }
 // }
-// https://api.spacex.land/graphql/
-
+// 
 // client.query({
 //   query: gql`
-// query {
-//   launchesPast(limit: 10) {
-//     mission_name
-//     launch_date_local
-//     launch_site {
-//       site_name_long
+//     query {
+//       launchesPast(limit: 10) {
+//         mission_name
+//         launch_date_local
+//         launch_site {
+//           site_name_long
+//         }
+//       }
 //     }
-//   }
-// }
-
-
+//   `
+// }).then(result => console.log(result))
 //----------------------------------------
-// traversy example code 
-//https://github.com/bradtraversy/electron-course-files/blob/master/buglogger/main.js
-//----------------------------------------
-
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.

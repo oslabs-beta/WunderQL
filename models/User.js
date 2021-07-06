@@ -4,13 +4,14 @@ const mongoose = require('mongoose');
 
 //Define schema
 const userSchema = new mongoose.Schema({
-  username:  { type: String, required: true }, 
-  password: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now },
-  graphqlurl: { type: Date, default: Date.now },
-  queryHistory: { type: Array, require: true }
-
+  // username: { type: String, required: true },
+  // password: { type: String, required: true },
+  graphqlURI: { type: String, required: true },
+  query: { type: String},
+  responseTime: { type: Number},
+  // projects: { type: ProjectSchema}
 });
+
 
 //export model
 module.exports = mongoose.model('User', userSchema);
