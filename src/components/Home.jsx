@@ -2,15 +2,22 @@ import { useState, useEffect } from 'react';
 import { ThemeProvider } from '@material-ui/core/styles'
 
 import { channels } from '../shared/constants';
-//const { ipcRenderer } = window.require("electron");
+const { ipcRenderer } = window.require("electron");
 
-const Home = ({ uri, setURI }) => {
+const Home = ({ uri, setURI, history, setHistory, setUriID }) => {
   // const [data, setData] = useState(null);
   
-
+  // Send URI to electron.js; receive array of objects containing dates + runtime
   const submitURI = () => {
     console.log(uri, ' : URI is being sent to main process...');
-    // ipcRenderer.send(channels.GET_URI, uri);
+    ipcRenderer.send(channels.GET_ENDPOINT, uri);
+    ipcRenderer.on(channels.GET_ENDPOINT, (event, arg) => {
+      setUriID(arg);
+    });
+    ipcRenderer.on(channels.GET_HISTORY, (event, arg) => {
+      // history state updated and stored in App.js
+      setHistory(arg);
+    })
   }
 
   return (

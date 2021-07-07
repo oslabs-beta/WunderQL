@@ -7,11 +7,11 @@ const { app, BrowserWindow, Menu, ipcMain } = require("electron");
 // const { getCurrentWindow } = require("electron");
 const { channels } = require('../src/shared/constants');
 const isDev = require("electron-is-dev");
-// const User = require('../models/User');
-const connectDB = require('../config/db')
+const User = require('../models/User');
+const connectDB = require('../config/db');
 
 // Connnect to mongo database
-connectDB();
+// connectDB();
 
 function createWindow() {
   // Create the browser window.
@@ -28,7 +28,7 @@ function createWindow() {
       // right now only works if false
       contextIsolation: false,
       enableRemoteModule: true,
-      preload: path.join(__dirname, 'preload.js')
+      // preload: path.join(__dirname, 'preload.js')
     }
   });
 
@@ -152,7 +152,7 @@ async function checkResponseTime(arg) {
   return time2 - time1;
 };
 
-
+// WHAT IS THIS?
 // Receiving the data in the main process
 ipcMain.on(channels.GET_DATA, (event, arg) => {
   // Sending a response back to the renderer process (React)
@@ -168,23 +168,24 @@ ipcMain.on(channels.GET_ENDPOINT, async (event, graphqlEndpoint) => {
       if (err) console.log(err);
       console.log(result);
     });
-    event.sender.send(channels.GET_ENDPOINT, graphqlEndpoint);
-
+    // retrieve history data from DB
+    const data = [];
+    event.sender.send(channels.GET_HISTORY, data);
 })
 
 
 // Async await --- wait for function to finish before ipcMain sends back response
 // Sending a response back to the renderer process (React)
-ipcMain.on(channels.GET_RESPONSE, async (event, arg) => {
-let responseTime = await checkResponseTime(arg);
-await User.updateOne({_id: '60e4f89ed85c813fa67d17eb'}, {"query" : arg}, (err, result) => {
-  if (err){
-    console.log(err)
-    return err;
-  }
-  console.log('Query was successfully added!');
-  event.sender.send(channels.GET_RESPONSE, responseTime);
-});
+ipcMain.on(channels.GET_RESPONSE_TIME, async (event, arg) => {
+  let responseTime = await checkResponseTime(arg);
+  await User.updateOne({_id: '60e4f89ed85c813fa67d17eb'}, {"query" : arg}, (err, result) => {
+    if (err){
+      console.log(err)
+      return err;
+    }
+    console.log('Query was successfully added!');
+    event.sender.send(channels.GET_RESPONSE_TIME, responseTime);
+  });
 });
 
 //----------------------------------------
