@@ -11,8 +11,10 @@ const LineChartComponent = ({ history }) => {
   // for (let i = 0; i < 20; i++) sample.push((Math.random()*3 + 148).toFixed(2));
 
   // create data points for each number in sample array
-  history.map((obj, index) => data.push({day:index, runtime:obj.runtime}));
-  
+  if (history) {
+    history.map((obj, index) => data.push({day:index, runtime:obj.runtime}));
+  }
+    
   return (
     <ResponsiveContainer width='100%' height='100%'>
       <LineChart

@@ -1,17 +1,17 @@
 const { fetch } = require('cross-fetch');
 const { performance } = require('perf_hooks');
 const path = require("path");
-const url = require('url');
+const { User } = require('../models/User');
+
 
 const { app, BrowserWindow, Menu, ipcMain } = require("electron");
 // const { getCurrentWindow } = require("electron");
 const { channels } = require('../src/shared/constants');
 const isDev = require("electron-is-dev");
-const User = require('../models/User');
-const connectDB = require('../config/db');
-
+// const User = require('../models/User');
+//SQL database connection
+const db = require("../models/User");
 // Connnect to mongo database
-// connectDB();
 
 function createWindow() {
   // Create the browser window.
@@ -28,7 +28,6 @@ function createWindow() {
       // right now only works if false
       contextIsolation: false,
       enableRemoteModule: true,
-      // preload: path.join(__dirname, 'preload.js')
     }
   });
 
@@ -148,69 +147,84 @@ async function checkResponseTime(arg) {
       `,
     }),
   });
-  let time2 = performance.now();
-  return time2 - time1;
+  return performance.now() - time1;
 };
 
-// WHAT IS THIS?
-// Receiving the data in the main process
-ipcMain.on(channels.GET_DATA, (event, arg) => {
-  // Sending a response back to the renderer process (React)
-  console.log('Data is within main process')
-  event.sender.send(channels.GET_DATA, arg);
-});
-
-// Listening on channel 'get_endpoint' to receive endpoint from frontend
+  // Listening on channel 'get_endpoint' to receive endpoint from frontend
 ipcMain.on(channels.GET_ENDPOINT, async (event, graphqlEndpoint) => {
-  console.log('im in the endpoint listener function in electron.js')
-  await User.create( { graphqlURI : graphqlEndpoint }, (err, result) => {
-      console.log('im inside the user creation');
-      if (err) console.log(err);
-      console.log(result);
-    });
-    // retrieve history data from DB
-    const data = [];
-    event.sender.send(channels.GET_HISTORY, data);
+  try {
+    const insertEndpoint = {
+      text: 'INSERT INTO graphqlurls(url) VALUES ($1) RETURNING _id',
+      values: [graphqlEndpoint],
+    };
+    const queryResult = await db.query(insertEndpoint);
+    const graphqlId = queryResult.rows[0]._id;
+    
+    // Sending endpoint back to frontend 
+    event.sender.send(channels.GET_ENDPOINT, graphqlId);
+  } catch (err) {
+    console.log(err)
+    return err;
+  }  
 })
-
 
 // Async await --- wait for function to finish before ipcMain sends back response
 // Sending a response back to the renderer process (React)
 ipcMain.on(channels.GET_RESPONSE_TIME, async (event, arg) => {
+  // Checking response time 
   let responseTime = await checkResponseTime(arg);
-  await User.updateOne({_id: '60e4f89ed85c813fa67d17eb'}, {"query" : arg}, (err, result) => {
-    if (err){
-      console.log(err)
-      return err;
-    }
-    console.log('Query was successfully added!');
-    event.sender.send(channels.GET_RESPONSE_TIME, responseTime);
-  });
-});
+  console.log(responseTime);
+  
+  // Inserting query string into database 
+  try {
+    const insertQuery = {
+      text: 'INSERT INTO queries(query_string, url_id) VALUES ($1, $2) RETURNING _id',
+      values: [arg, 5],
+    };
+    const queryResult = await db.query(insertQuery);
+    const queryId = queryResult.rows[0]._id;
+    
+    // Inserting response time into database 
+    const insertResponseTime = {
+      text: 'INSERT INTO response_times(response_time, query_id) VALUES ($1, $2)',
+      values: [responseTime, queryId]
+    };
+    await db.query(insertResponseTime);
 
-//----------------------------------------
+    // Sending responseTime back to frontend 
+    event.sender.send(channels.GET_RESPONSE_TIME, responseTime);
+  } catch (err) {
+    console.log(err)
+    return err;
+  }  
+  });
+
+
+  //----------------------------------------
 // Example queries for https://api.spacex.land/graphql/
 // query {
-//   launchesPast(limit: 10) {
-//     mission_name
-//     launch_date_local
-//     launch_site {
-//       site_name_long
-//     }
-//   }
-// }
-// 
-// client.query({
-//   query: gql`
-//     query {
-//       launchesPast(limit: 10) {
+//     launchesPast(limit: 10) {
 //         mission_name
 //         launch_date_local
 //         launch_site {
-//           site_name_long
+//             site_name_long
+//           }
 //         }
 //       }
-//     }
-//   `
-// }).then(result => console.log(result))
-//----------------------------------------
+      
+      // client.query({
+        //   query: gql`
+            // query {
+            //     launchesPast(limit: 10) {
+            //         mission_name
+            //         launch_date_local
+            //         launch_site {
+            //             site_name_long
+            //           }
+            //         }
+            //       }
+              //   `
+              // }).then(result => console.log(result))
+              //----------------------------------------
+              
+  

@@ -23,7 +23,7 @@ const { ipcRenderer } = window.require("electron");
 function App() {
   const [dark, setDark] = useState(false);
   const [uri, setURI] = useState('nothing');
-  const [history, setHistory] = useState([]);
+  const [history, setHistory] = useState(null);
   const [uriID, setUriID] = useState(0);
 
   const client = new ApolloClient({
