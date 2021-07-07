@@ -12,7 +12,7 @@ import Header from './components/Header'
 import Playground from './components/Playground';
 import './stylesheets/index.css';
 import { channels } from './shared/constants';
-const { ipcRenderer } = window.require("electron");
+// const { ipcRenderer } = window.require("electron");
 
 function App() {
   const [product, setProduct] = useState('');
@@ -21,20 +21,20 @@ function App() {
   const getData = () => {
     // Sends the message to Electron main process
     console.log('Data is being sent to main process...');
-    ipcRenderer.send(channels.GET_DATA, product);
+    // window.send(channels.GET_DATA, product);
   };
 
   useEffect(() => {
     // useEffect hook - Listens to the get_data channel for the response from electron.js
-    ipcRenderer.on(channels.GET_DATA, (event, arg) => {
-      console.log('Listening for response from main process...')
-      setData(arg);
-      console.log('Data has been returned from main process');  
-    });
+    // window.on(channels.GET_DATA, (event, arg) => {
+    //   console.log('Listening for response from main process...')
+    //   setData(arg);
+    //   console.log('Data has been returned from main process');  
+    // });
     // Clean the listener after the component is dismounted
-    return () => {
-      ipcRenderer.removeAllListeners();
-    };
+    // return () => {
+    //   ipcRenderer.removeAllListeners();
+    // };
   }, []);
 
   return (

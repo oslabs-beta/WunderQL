@@ -1,5 +1,5 @@
 const { fetch } = require('cross-fetch');
-const { ApolloClient, InMemoryCache, gql, ApolloProvider, HttpLink } = require('@apollo/client');
+const { performance } = require('perf_hooks');
 const path = require("path");
 const url = require('url');
 const { app, BrowserWindow, ipcMain } = require("electron");
@@ -7,20 +7,10 @@ const { channels } = require('../src/shared/constants');
 const isDev = require("electron-is-dev");
 const User = require('../models/User');
 const connectDB = require('../config/db')
-const client = new ApolloClient({
-  link: new HttpLink({ uri: 'http://localhost:4000/graphql', fetch }),
-  cache: new InMemoryCache(),
-});
-const {performance} = require('perf_hooks');
-// const client = new ApolloClient({
-//   uri: 'https://api.spacex.land/graphql/',
-//   cache: new InMemoryCache(),
-// });
 
 // Connnect to mongo database
 connectDB();
 
-let win;
 function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
@@ -34,7 +24,6 @@ function createWindow() {
   });
 
   // and load the index.html of the app.
-  // win.loadFile("index.html");
   win.loadURL(
     isDev
       ? "http://localhost:3000"
@@ -44,17 +33,8 @@ function createWindow() {
   // Open the DevTools.
   if (isDev) {
     win.webContents.openDevTools({ mode: "detach" });
-    // win.webContents.openDevTools({ detach: false });
   }
-  // else {
-  //   require(path.join(__dirname, 'server/server'));
-  // };
 
-  win.loadURL(isDev ? 'http://localhost:3000' : url.format({
-    pathname: path.join(__dirname, 'build/index.html'),
-    protocol: 'file:',
-    slashes: true,
-}));
 }
 
 // This method will be called when Electron has finished
@@ -83,7 +63,7 @@ app.on("activate", () => {
 // Function that checks response time of query
 async function checkResponseTime(arg) {
   let time1 = performance.now()
-  await fetch('http://localhost:4000/graphql', {
+  await fetch('https://api.spacex.land/graphql/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -92,9 +72,6 @@ async function checkResponseTime(arg) {
       query: `
         ${arg}
       `,
-      // variables: {
-      //   now: new Date().toISOString(),
-      // },
     }),
   });
   let time2 = performance.now();
@@ -109,32 +86,32 @@ ipcMain.on(channels.GET_DATA, (event, arg) => {
   event.sender.send(channels.GET_DATA, arg);
 });
 
+// Listening on channel 'get_endpoint' to receive endpoint from frontend
+ipcMain.on(channels.GET_ENDPOINT, async (event, graphqlEndpoint) => {
+  console.log('im in the endpoint listener function in electron.js')
+  await User.create( { graphqlURI : graphqlEndpoint }, (err, result) => {
+      console.log('im inside the user creation');
+      if (err) console.log(err);
+      console.log(result);
+    });
+    event.sender.send(channels.GET_ENDPOINT, graphqlEndpoint);
+
+})
+
+
 // Async await --- wait for function to finish before ipcMain sends back response
-ipcMain.on(channels.GET_RESPONSE, async (event, arg) => {
 // Sending a response back to the renderer process (React)
+ipcMain.on(channels.GET_RESPONSE, async (event, arg) => {
 let responseTime = await checkResponseTime(arg);
-event.sender.send(channels.GET_RESPONSE, responseTime);
+await User.updateOne({_id: '60e4f89ed85c813fa67d17eb'}, {"query" : arg}, (err, result) => {
+  if (err){
+    console.log(err)
+    return err;
+  }
+  console.log('Query was successfully added!');
+  event.sender.send(channels.GET_RESPONSE, responseTime);
 });
-
-//----------------------------------------
-// Receiving the query in the main process + sending back JSON response
-// ipcMain.on(channels.GET_RESPONSE, (event, arg) => {
-//   // Sending a response back to the renderer process (React)
-//   console.log('Query is within main process')
-//   let t0 = performance.now();
-//   client.query({
-//     query: gql`
-//       ${arg}
-//     `,
-//   });
-//   let time2 = performance.now();
-//   event.sender.send(channels.GET_RESPONSE, time2-t0);
-// // }).then(result => event.sender.send(channels.GET_RESPONSE, JSON.stringify(result)));
-
-//   // event.sender.send(channels.GET_RESPONSE, arg + ' This was sent to main process on electron.js, and sent back to Test-Query');
-// });
-//----------------------------------------
-
+});
 
 //----------------------------------------
 // Example queries for https://api.spacex.land/graphql/
@@ -162,13 +139,3 @@ event.sender.send(channels.GET_RESPONSE, responseTime);
 //   `
 // }).then(result => console.log(result))
 //----------------------------------------
-
-
-//----------------------------------------
-// traversy example code 
-//https://github.com/bradtraversy/electron-course-files/blob/master/buglogger/main.js
-//----------------------------------------
-
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.

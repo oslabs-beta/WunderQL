@@ -4,7 +4,16 @@ import { useState, useEffect } from "react";
 import { ApolloClient, InMemoryCache, gql, ApolloProvider } from '@apollo/client';
 import { channels } from '../shared/constants';
 const { ipcRenderer } = window.require("electron");
+// import { ipcRenderer } from 'electron'
+
 const TestQuery = () => {
+
+  // Testing sending graphqlEndpoint to electron.js
+  // ipcRenderer.send(channels.GET_ENDPOINT, 'https://api.spacex.land/graphql/');
+
+  // ipcRenderer.send(channels.GET_ENDPOINT, 'https://api.spacex.land/graphql/');
+    
+
 
   const [uri, setUri] = useState('');
   const [query, setQuery] = useState('');
@@ -73,6 +82,7 @@ const TestQuery = () => {
     // Sends the message to Electron main process
     console.log('Query is being sent to main process...')
     ipcRenderer.send(channels.GET_RESPONSE, query);
+    // window.ipcRenderer.send(channels.GET_RESPONSE, query)
   };
 
   useEffect(() => {
@@ -82,11 +92,17 @@ const TestQuery = () => {
       setRuntime(arg);
       console.log('Query has been returned from main process');
     });
+    
     // Clean the listener after the component is dismounted
     return () => {
       ipcRenderer.removeAllListeners();
     };
   }, []);
+
+  // window.ipcRenderer.on(channels.GET_RESPONSE, (data) => {
+    //   setRuntime(data);
+    //   console.log(data)
+    // })
 
   return (
     <div id='test-query'> 
