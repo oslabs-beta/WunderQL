@@ -4,23 +4,24 @@ import LineChartComponent from "./LineChart";
 import { channels } from '../shared/constants';
 const { ipcRenderer } = window.require("electron");
 
-const TestQuery = ({ client, uri }) => {
+const TestQuery = ({ client, uri, history }) => {
 
   const [query, setQuery] = useState('');
   const [runtime, setRuntime] = useState(0);
   
   const sendQuery = () => {
     // Sends the message to Electron main process
+
     console.log('Query is being sent to main process...')
-    ipcRenderer.send(channels.GET_RESPONSE, query);
+    ipcRenderer.send(channels.GET_RESPONSE_TIME, query);
   };
 
   // commented out because calculating runtime from FE (for now)
   useEffect(() => {
     // useEffect hook - listens to the get_response channel for the response from electron.js    
-    ipcRenderer.on(channels.GET_RESPONSE, (event, arg) => {
+    ipcRenderer.on(channels.GET_RESPONSETIME, (event, arg) => {
       console.log('Listening for response from main process...')
-      setRuntime(arg);
+      setRuntime(arg.toFixed(1));
       console.log(arg, ' : Query has been returned from main process');
     });
     
@@ -28,7 +29,7 @@ const TestQuery = ({ client, uri }) => {
     return () => {
       ipcRenderer.removeAllListeners();
     };
-  }, []);
+  }, [runtime]);
 
   return (
     <div id='test-query'> 
@@ -52,7 +53,7 @@ const TestQuery = ({ client, uri }) => {
         )} */}
       </div>
       <div id='response-chart'> 
-        <LineChartComponent />
+        <LineChartComponent history={history}/>
       </div>
     </div>
   ) 

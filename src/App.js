@@ -17,13 +17,14 @@ import './stylesheets/index.css';
 import { channels } from './shared/constants';
 
 import { ApolloClient, InMemoryCache, gql, ApolloProvider } from '@apollo/client';
-//const { ipcRenderer } = window.require("electron");
+const { ipcRenderer } = window.require("electron");
 
 
 function App() {
-  const [data, setData] = useState(null);
   const [dark, setDark] = useState(false);
   const [uri, setURI] = useState('nothing');
+  const [history, setHistory] = useState(null);
+  const [uriID, setUriID] = useState(0);
 
   const client = new ApolloClient({
     uri: uri,
@@ -36,18 +37,18 @@ function App() {
   //   ipcRenderer.send(channels.GET_DATA, product);
   // };
 
-  // useEffect(() => {
-  //   // useEffect hook - Listens to the get_data channel for the response from electron.js
-  //   ipcRenderer.on(channels.GET_DATA, (event, arg) => {
-  //     console.log('Listening for response from main process...')
-  //     setData(arg);
-  //     console.log('Data has been returned from main process');  
-  //   });
-  //   // Clean the listener after the component is dismounted
-  //   return () => {
-  //     ipcRenderer.removeAllListeners();
-  //   };
-  // }, []);
+  useEffect(() => {
+    // useEffect hook - Listens to the get_data channel for the response from electron.js
+    ipcRenderer.on(channels.GET_DATA, (event, arg) => {
+      console.log('Listening for response from main process...')
+      setHistory(arg);
+      console.log('Data has been returned from main process');  
+    });
+    // Clean the listener after the component is dismounted
+    return () => {
+      ipcRenderer.removeAllListeners();
+    };
+  }, []);
 
   // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
@@ -79,13 +80,20 @@ function App() {
             <NavBar handleSwitch={setDark} dark={dark} />
             <Switch>
               <Route exact path="/">
-                <Home theme={theme} uri={uri} setURI={setURI}/>
+                <Home 
+                  theme={theme} 
+                  uri={uri} 
+                  setUriID={setUriID}
+                  setURI={setURI} 
+                  history={history} 
+                  setHistory={setHistory}
+                />
               </Route>
               <Route path="/dashboard">
-                <Dashboard uri={uri} />
+                <Dashboard uri={uri} history={history}/>
               </Route>
               <Route path="/testquery">
-                <TestQuery client={client} uri={uri}/>
+                <TestQuery client={client} uri={uri} history={history}/>
               </Route>
               <Route path="/previoussearches">
                 <PreviousSearches />
@@ -96,6 +104,6 @@ function App() {
       </ThemeProvider>
     </ApolloProvider>
   );
-}
+};
 
 export default App;
