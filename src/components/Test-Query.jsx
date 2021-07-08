@@ -33,27 +33,49 @@ const TestQuery = ({ client, uri, uriID, history, setHistory }) => {
 
       //arg is received as an array of objects
       const pastRuntimes = [];
-      arg.map((query, index) => {
-        const date = new Date(query.date).toDateString();
- 
+      let x_sum = 0
+      let y_sum = 0
+      let numerator = 0;
+      let denominator = 0;
+
+      arg.forEach((query, index) => {
+        x_sum += index;
+        y_sum += query.response_time;
+      })        
+
+      const x_avg = x_sum / arg.length;
+      const y_avg = y_sum / arg.length;
+
+      arg.forEach((query, index) => {
+        numerator += ((index - x_avg) * (query.response_time - y_avg));
+        denominator += (index - x_avg) ** 2;
+      });  
+
+      const slope = numerator / denominator;
+      const y_intercept = y_avg - slope * x_avg;
+      const lineOfBestFit = (x) => slope * x + y_intercept;
+      console.log(x_avg, y_avg, y_intercept)
+
+      arg.forEach((query, index) => {
+      const date = new Date(query.date).toDateString();
+
         pastRuntimes.push({
           index: index,
           date: date,
           runtime: query.response_time.toFixed(1),
-        })
-      })
-      console.log('all past runtimes: ', pastRuntimes);
-      setHistory(pastRuntimes);
-      // console.log('history should match above consolelog: ', history)
+          best_fit: lineOfBestFit(index).toFixed(1)
+        });
+      });
 
-      // console.log(arg, ' : Query has been returned from main process');
+      setHistory(pastRuntimes);
+      console.log('all past runtimes: ', pastRuntimes);
     });
     
     // Clean the listener after the component is dismounted
     return () => {
       ipcRenderer.removeAllListeners();
     };
-  }, [runtime]);
+  });
 
   return (
     <div id='test-query'> 
