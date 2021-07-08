@@ -172,7 +172,8 @@ ipcMain.on(channels.GET_ENDPOINT, async (event, graphqlEndpoint) => {
 // Async await --- wait for function to finish before ipcMain sends back response
 // Sending a response back to the renderer process (React)
 ipcMain.on(channels.GET_RESPONSE_TIME, async (event, arg) => {
-
+  
+  let responseTime = await checkResponseTime(arg.query, arg.uri);
   // Insert query string and url_id into the database 
   try {
       // Checking response time 
@@ -185,7 +186,6 @@ ipcMain.on(channels.GET_RESPONSE_TIME, async (event, arg) => {
     const uri = uriQueryResult.rows[0].url;
     console.log('uri from electronjs: ', uri);
     
-    let responseTime = await checkResponseTime(query, uri);
     
 
     //--------------------

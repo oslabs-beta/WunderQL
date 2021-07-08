@@ -16,6 +16,7 @@ const TestQuery = ({ client, uri, uriID, history, setHistory }) => {
     ipcRenderer.send(channels.GET_RESPONSE_TIME, {
       uriID: uriID,
       query: query,
+      uri: uri,
     });
   };
 
