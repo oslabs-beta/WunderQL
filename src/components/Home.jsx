@@ -12,6 +12,7 @@ const Home = ({ uri, setURI, history, setHistory, setUriID }) => {
     console.log(uri, ' : URI is being sent to main process...');
     ipcRenderer.send(channels.GET_ENDPOINT, uri);
     ipcRenderer.on(channels.GET_ENDPOINT, (event, arg) => {
+      document.querySelector('#connected-text').style.display = 'block';
       setUriID(arg);
     });
     ipcRenderer.on(channels.GET_HISTORY, (event, arg) => {
@@ -31,6 +32,9 @@ const Home = ({ uri, setURI, history, setHistory, setUriID }) => {
           id='home-uri'
           />
         <button onClick={submitURI} id='home-send'>Get data</button>
+      </div>
+      <div id='connected-div'>
+        <h3 id='connected-text'>Connected!</h3>
       </div>
       {/* {data && (
         <>

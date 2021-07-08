@@ -134,19 +134,20 @@ app.on("activate", () => {
 });
 
 // Function that checks response time of query
-async function checkResponseTime(arg) {
+// https://api.spacex.land/graphql/
+async function checkResponseTime(query, uri_ID) {
   let time1 = performance.now()
-  await fetch('https://api.spacex.land/graphql/', {
+  await fetch(uri_ID, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       query: `
-        ${arg}
+        ${query}
       `,
     }),
-  });
+  })
   return performance.now() - time1;
 };
 
@@ -160,7 +161,7 @@ ipcMain.on(channels.GET_ENDPOINT, async (event, graphqlEndpoint) => {
     const queryResult = await db.query(insertEndpoint);
     const graphqlId = queryResult.rows[0]._id;
     
-    // Sending endpoint back to frontend 
+    // Send id  back to frontend 
     event.sender.send(channels.GET_ENDPOINT, graphqlId);
   } catch (err) {
     console.log(err)
@@ -171,33 +172,74 @@ ipcMain.on(channels.GET_ENDPOINT, async (event, graphqlEndpoint) => {
 // Async await --- wait for function to finish before ipcMain sends back response
 // Sending a response back to the renderer process (React)
 ipcMain.on(channels.GET_RESPONSE_TIME, async (event, arg) => {
-  // Checking response time 
-  let responseTime = await checkResponseTime(arg);
-  console.log(responseTime);
-  
-  // Inserting query string into database 
+
+  // Insert query string and url_id into the database 
   try {
-    const insertQuery = {
-      text: 'INSERT INTO queries(query_string, url_id) VALUES ($1, $2) RETURNING _id',
-      values: [arg, 5],
-    };
-    const queryResult = await db.query(insertQuery);
-    const queryId = queryResult.rows[0]._id;
+      // Checking response time 
+    const { query, uriID } = arg;
+    const findURI = {
+      text: 'SELECT url FROM graphqlurls WHERE _id = $1',
+      values: [uriID]
+    }; 
+    const uriQueryResult = await db.query(findURI);
+    const uri = uriQueryResult.rows[0].url;
+    console.log('uri from electronjs: ', uri);
     
-    // Inserting response time into database 
+    let responseTime = await checkResponseTime(query, uri);
+    
+
+    //--------------------
+    const checkIfQueryExist = {
+      text: 'select _id FROM queries WHERE query_string = $1',
+      values: [query]
+    };
+    const existingQueryResult = await db.query(checkIfQueryExist);
+    const existingQueryID = existingQueryResult.rows;
+    console.log('existingQueryID', existingQueryID);
+    
+    let queryId;
+
+    if (!existingQueryID.length) {
+      const insertQuery = {
+        text: 'INSERT INTO queries(query_string, url_id) VALUES ($1, $2) RETURNING _id',
+        values: [query, uriID],
+      };
+      const queryResult = await db.query(insertQuery);
+      console.log('queryResult', queryResult)
+      queryId = queryResult.rows[0]._id;
+      console.log('queryId in if condition', queryId)
+    } else {
+      queryId = existingQueryID[0]._id;
+      console.log('queryId in else condition', queryId)
+    }
+    // Insert response time and query_id into database 
+    // Associate response time with query_id
+    // const insertResponseTime = {
+    //   text: 'INSERT INTO response_times(response_time, query_id) VALUES ($1, $2)',
+    //   values: [responseTime, queryId]
+    // };
     const insertResponseTime = {
-      text: 'INSERT INTO response_times(response_time, query_id) VALUES ($1, $2)',
-      values: [responseTime, queryId]
+      text: 'INSERT INTO response_times(response_time, query_id, date) VALUES ($1, $2, $3)',
+      values: [responseTime, queryId, new Date()]
     };
     await db.query(insertResponseTime);
+    
+    const getResponseTimes = {
+      text: 'SELECT * FROM response_times WHERE query_id = $1;',
+      values: [queryId]
+    };
+    const responseTimesQueryResults = await db.query(getResponseTimes);
+    const responseTimes = responseTimesQueryResults.rows;
+    console.log('responseTimes', responseTimes);
 
-    // Sending responseTime back to frontend 
-    event.sender.send(channels.GET_RESPONSE_TIME, responseTime);
+    // Send responseTime back to frontend 
+    // Pass back array of response times that match a certain query ID
+    event.sender.send(channels.GET_RESPONSE_TIME, responseTimes);
   } catch (err) {
     console.log(err)
     return err;
   }  
-  });
+});
 
 
   //----------------------------------------

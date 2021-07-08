@@ -4,25 +4,49 @@ import LineChartComponent from "./LineChart";
 import { channels } from '../shared/constants';
 const { ipcRenderer } = window.require("electron");
 
-const TestQuery = ({ client, uri, history }) => {
+const TestQuery = ({ client, uri, uriID, history, setHistory }) => {
 
   const [query, setQuery] = useState('');
   const [runtime, setRuntime] = useState(0);
   
   const sendQuery = () => {
     // Sends the message to Electron main process
-
     console.log('Query is being sent to main process...')
-    ipcRenderer.send(channels.GET_RESPONSE_TIME, query);
+
+    ipcRenderer.send(channels.GET_RESPONSE_TIME, {
+      uriID: uriID,
+      query: query,
+    });
   };
 
   // commented out because calculating runtime from FE (for now)
   useEffect(() => {
     // useEffect hook - listens to the get_response channel for the response from electron.js    
-    ipcRenderer.on(channels.GET_RESPONSETIME, (event, arg) => {
+    ipcRenderer.on(channels.GET_RESPONSE_TIME, (event, arg) => {
       console.log('Listening for response from main process...')
-      setRuntime(arg.toFixed(1));
-      console.log(arg, ' : Query has been returned from main process');
+      console.log('arg object received from electronjs: ', arg);
+
+      const currRuntime = arg[arg.length - 1].response_time.toFixed(1);
+      console.log('runtime: ', currRuntime);
+
+      setRuntime(currRuntime);
+
+      //arg is received as an array of objects
+      const pastRuntimes = [];
+      arg.map((query, index) => {
+        const date = new Date(query.date).toDateString();
+ 
+        pastRuntimes.push({
+          index: index,
+          date: date,
+          runtime: query.response_time.toFixed(1),
+        })
+      })
+      console.log('all past runtimes: ', pastRuntimes);
+      setHistory(pastRuntimes);
+      // console.log('history should match above consolelog: ', history)
+
+      // console.log(arg, ' : Query has been returned from main process');
     });
     
     // Clean the listener after the component is dismounted
