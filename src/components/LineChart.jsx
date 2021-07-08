@@ -12,9 +12,12 @@ const LineChartComponent = ({ history }) => {
 
   // create data points for each number in sample array
   if (history) {
-    history.map((obj, index) => data.push({day:index, runtime:obj.runtime}));
+    console.log('hi im history from the line chart component: ', history)
+    history.map((obj, index) => data.push({day: obj.date, runtime: obj.runtime}));
+    // history.map((obj, index) => data.push({day: index, runtime: obj.runtime}));
   }
-    
+  console.log('data to be plotted: ', data)
+
   return (
     <ResponsiveContainer width='100%' height='100%'>
       <LineChart
@@ -31,7 +34,7 @@ const LineChartComponent = ({ history }) => {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis 
           dataKey="day" 
-          domain={['dataMax - 20', 'dataMax']}
+          // domain={['dataMax - 20', 'dataMax']}
         />
         <YAxis 
           label={{ value: 'time(ms)', angle: -90, position:'insideLeft' }} 
@@ -40,7 +43,7 @@ const LineChartComponent = ({ history }) => {
         />
         <Tooltip />
         {/* <Legend /> */}
-        <Line type="monotone" dataKey="time" stroke="#8884d8" activeDot={{ r: 8 }} />
+        <Line type="monotone" dataKey="runtime" stroke="#8884d8" activeDot={{ r: 8 }} />
       </LineChart>
     </ResponsiveContainer>
   )

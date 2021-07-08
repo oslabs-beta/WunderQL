@@ -30,15 +30,15 @@ CREATE TABLE public.queries (
 	"_id" serial PRIMARY KEY,
 	"query_string" varchar,
 	"url_id" bigint,
-	FOREIGN KEY (url_id) REFERENCES graphqlurl (_id)
+	FOREIGN KEY (url_id) REFERENCES graphqlurls (_id)
 ) WITH (
   OIDS=FALSE
 );
 
 CREATE TABLE public.response_times (
 	"_id" serial PRIMARY KEY,
-  "date" varchar,
-  "response_time" varchar,
+  "date" bigint,
+  "response_time" float,
 	"query_id" bigint,
 	FOREIGN KEY (query_id) REFERENCES queries (_id)
 ) WITH (

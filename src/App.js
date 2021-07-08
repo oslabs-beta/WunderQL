@@ -37,18 +37,19 @@ function App() {
   //   ipcRenderer.send(channels.GET_DATA, product);
   // };
 
-  useEffect(() => {
-    // useEffect hook - Listens to the get_data channel for the response from electron.js
-    ipcRenderer.on(channels.GET_DATA, (event, arg) => {
-      console.log('Listening for response from main process...')
-      setHistory(arg);
-      console.log('Data has been returned from main process');  
-    });
-    // Clean the listener after the component is dismounted
-    return () => {
-      ipcRenderer.removeAllListeners();
-    };
-  }, []);
+  // useEffect(() => {
+  //   // useEffect hook - Listens to the get_data channel for the response from electron.js
+  //   ipcRenderer.on(channels.GET_RESPONSE_TIME, (event, arg) => {
+  //     console.log('Listening for response from main process...')
+  //     setHistory(arg);
+  //     console.log('history', history);
+  //     console.log('Data has been returned from main process');  
+  //   });
+  //   // Clean the listener after the component is dismounted
+  //   return () => {
+  //     ipcRenderer.removeAllListeners();
+  //   };
+  // }, [history]);
 
   // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
@@ -82,18 +83,25 @@ function App() {
               <Route exact path="/">
                 <Home 
                   theme={theme} 
-                  uri={uri} 
-                  setUriID={setUriID}
+                  uri={uri}
                   setURI={setURI} 
+                  uriID={uriID} 
+                  setUriID={setUriID}
                   history={history} 
                   setHistory={setHistory}
                 />
               </Route>
               <Route path="/dashboard">
-                <Dashboard uri={uri} history={history}/>
+                <Dashboard uriID={uriID} history={history}/>
               </Route>
               <Route path="/testquery">
-                <TestQuery client={client} uri={uri} history={history}/>
+                <TestQuery 
+                  client={client} 
+                  uri={uri} 
+                  uriID={uriID} 
+                  history={history}
+                  setHistory={setHistory}
+                />
               </Route>
               <Route path="/previoussearches">
                 <PreviousSearches />
