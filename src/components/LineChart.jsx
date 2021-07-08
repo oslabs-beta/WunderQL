@@ -4,22 +4,6 @@ import CustomTooltip from './CustomTooltip';
 const LineChartComponent = ({ history }) => {
   const data = [];
   
-  // // construct fake data of random runtimes(ms) per query
-  // const sample = [];
-  // // generate random numbers (runtimes) for sample array
-  // for (let i = 0; i < 30; i++) sample.push((Math.random()*3 + 148).toFixed(2));
-  // sample.push(160);
-  // for (let i = 0; i < 20; i++) sample.push((Math.random()*3 + 148).toFixed(2));
-
-  // create data points for each number in sample array
-  // if (history) {
-    
-  //   console.log('hi im history from the line chart component: ', history)
-  //   history.forEach((obj, index) => {
-  //     data.push({index: index, day: obj.date, runtime: obj.runtime})
-  //   });
-  //   // history.map((obj, index) => data.push({day: index, runtime: obj.runtime}));
-  // }
   console.log('data to be plotted: ', data)
   // const date = history.date;
   // const payloadFormatter = (value, name, props) => (['date', 'date2']);
@@ -51,7 +35,7 @@ const LineChartComponent = ({ history }) => {
           // payload="[{day: 'date'}]"
           // formatter={payloadFormatter}
           // label={date}
-          // content={<CustomTooltip date={history.date} />}
+          // content={<CustomTooltip date={history} />}
         />
         {/* <Legend /> */}
         <Line type="monotone" dataKey="runtime" dot={{stroke: 'red', strokeWidth: 1}} strokeWidth={0}activeDot={{ r: 8 }} />

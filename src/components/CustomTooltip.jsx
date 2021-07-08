@@ -1,5 +1,6 @@
 const CustomTooltip = ({ date }) => {
-  return <div>date</div>
+  console.log('history: ', date)
+  // return <div>{history.date}</div>
 }
 
 export default CustomTooltip;
