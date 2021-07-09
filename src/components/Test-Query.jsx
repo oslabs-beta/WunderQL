@@ -54,7 +54,6 @@ const TestQuery = ({ client, uri, uriID, history, setHistory }) => {
       const slope = numerator / denominator;
       const y_intercept = y_avg - slope * x_avg;
       const lineOfBestFit = (x) => slope * x + y_intercept;
-      console.log(x_avg, y_avg, y_intercept)
 
       arg.forEach((query, index) => {
       const date = new Date(query.date).toDateString();
@@ -92,7 +91,7 @@ const TestQuery = ({ client, uri, uriID, history, setHistory }) => {
         <button id='send-query' onClick={sendQuery}>Submit Query</button>
       </div>
       <div id='response-time'>
-        <div id='runtime-title'>Query Runtime (ms)</div>
+        <div id='runtime-title'>Query Response Time (ms)</div>
         <div id='runtime-number'>{`${runtime}`}</div>
         {/* {runtime && (
           <p>{`${runtime}`}</p>
