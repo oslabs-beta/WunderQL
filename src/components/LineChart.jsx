@@ -24,11 +24,12 @@ const LineChartComponent = ({ history }) => {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis 
           dataKey="index" 
+          // tick={{fontSize: 2}}
           // domain={['dataMax - 20', 'dataMax']}
         />
         <YAxis 
           label={{ value: 'time(ms)', angle: -90, position:'insideLeft' }} 
-          domain={['dataMin - 10', 'dataMax + 10']} 
+          domain={['dataMin - 200', 'dataMax + 500']} 
           allowDecimals='false'
         />
         <Tooltip 
