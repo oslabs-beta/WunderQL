@@ -79,10 +79,16 @@ body {
   grid-template-rows: repeat(4, 4rem);
   justify-content: center;
   align-items: center;
-  margin-top: 10rem
+  margin-top: 10rem;
   /* grid-template-areas: 
     "one"
     "two"; */
+  }
+  
+#enter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #home-inputs {

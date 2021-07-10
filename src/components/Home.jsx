@@ -22,9 +22,9 @@ const Home = ({ uri, setURI, history, setHistory, setUriID }) => {
   }
 
   return (
-    <div id='home'>
-      <h1>Welcome back, developer!</h1>
-      <h3>Enter a URI to get started...</h3>
+    <div id='home'>      
+      <h1 id='welcome'>Welcome back, developer!</h1>
+      <h3 id='enter'>Enter a URI to get started...</h3>
       <div id='home-inputs'>
         <input
           onChange={(e) => setURI(e.target.value)}
