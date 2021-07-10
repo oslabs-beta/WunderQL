@@ -105,7 +105,7 @@ export default function NavBar(props) {
         className={clsx(classes.appBar, {
           [classes.appBarShift]: open,
         })}
-        style={{backgroundColor:'#113851', 
+        style={{background:'linear-gradient(205deg, rgba(63,99,255,1) 0%, rgba(54,54,193,1) 21%, rgba(231,117,117,1) 100%)', 
         // webkitUserSelect:'none',
         // userSelect: 'none',
         // webkitAppRegion: 'drag'

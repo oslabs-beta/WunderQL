@@ -28,7 +28,7 @@
 }
 
 #App {
-  background-color: #ebebeb;
+  background-color: #ffffff;
   color: black;
   margin: 0;
   padding: 0;
@@ -105,11 +105,15 @@ body {
   padding: 0.5rem;
   /* margin-right: 1rem; */
   width: 150%;
+  border-radius: 1rem;
+  border-style: double;
+  border-color: gainsboro;
 }
 
 #home-send {
   padding: 0.5rem 0.9rem;
   margin-top: 1rem;
+  letter-spacing: 1.5px;
 }
 
 #connected-div {
@@ -225,11 +229,11 @@ body {
   margin: 1rem;
   display: grid;
   grid-gap: 1rem;
-  grid-template-columns: 50% 50%;
-  grid-template-rows: 10% 30% 50%;
+  grid-template-columns: 30% 70%;
+  grid-template-rows: 10% 35% 50%;
   grid-template-areas:
     "uri uri"
-    "input runtime"
+    "input stats"
     "input chart"
 }
 
@@ -240,15 +244,15 @@ body {
   align-items: center;
 }
 
-#uri-input {
+/* #uri-input {
   padding: 0.5rem;
   margin-right: 1rem;
   width: 78%;
-}
+} */
 
-#send-uri {
+/* #send-uri {
   padding: 0.5rem 0.9rem;
-}
+} */
 
 #query-space {
   /* border: 1px solid black; */
@@ -257,30 +261,46 @@ body {
   grid-template-rows: 4fr 0.5fr;
   -webkit-box-shadow: 3px 4px 3px 2px rgba(5,5,5,5);
   box-shadow: 3px 4px 3px 2px rgba(5,5,5,5);
+  border-radius: .3rem;
 }
 
 #text-area {
   padding: 1rem;
+  border-radius: .3rem;
+
 }
 
-#response-time {
-  grid-area: runtime;
-  /* border: 2px dotted blue; */
+#stats {
+  grid-area: stats;
   -webkit-box-shadow: 3px 4px 3px 2px rgba(5,5,5,5);
   box-shadow: 3px 4px 3px 2px rgba(5,5,5,5);  
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
+  border-radius: .3rem;
+
 }
 
-#runtime-title {
+.category {
+  display: grid;
+  grid-template-rows: 50% 50%;
+  justify-content: center;
+  border-right: 1px solid black;
+}
+
+.category-title {
+  margin: 1rem 0;
   font-weight: 900;
+  text-align: center;
 }
 
-#runtime-number {
-  font-size: 4rem;
+.category-number {
+  margin: 1rem 0;
+  font-size: 2rem;
+  text-align: center;
 }
+
 
 #response-chart {
   grid-area: chart;
@@ -290,6 +310,7 @@ body {
   /* border: 2px dashed red; */
   -webkit-box-shadow: 3px 4px 3px 2px rgba(5,5,5,5);
   box-shadow: 3px 4px 3px 2px rgba(5,5,5,5);
+  border-radius: .3rem;
 }
 
 /*/////////////////////////////////////////////////////*/

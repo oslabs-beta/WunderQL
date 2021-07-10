@@ -2,8 +2,10 @@
 import { useState, useEffect } from "react";
 import LineChartComponent from "./LineChart";
 import { channels } from '../shared/constants';
-const { ipcRenderer } = window.require("electron");
+import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 
+const { ipcRenderer } = window.require("electron");
 const TestQuery = ({ client, uri, uriID, history, setHistory }) => {
 
   const [query, setQuery] = useState('');
@@ -86,16 +88,35 @@ const TestQuery = ({ client, uri, uriID, history, setHistory }) => {
           placeholder='input for user query'
           id='text-area'
           onChange={(e) => setQuery(e.target.value)}
-
         ></textarea>
-        <button id='send-query' onClick={sendQuery}>Submit Query</button>
+        <Button 
+          variant="contained" 
+          id='send-query' 
+          color="primary"
+          onClick={sendQuery}
+        >Send Query</Button>
       </div>
-      <div id='response-time'>
-        <div id='runtime-title'>Query Response Time (ms)</div>
-        <div id='runtime-number'>{`${runtime}`}</div>
-        {/* {runtime && (
-          <p>{`${runtime}`}</p>
-        )} */}
+      <div id='stats'>
+        <div class='category'>
+          <div class='category-title'>Query Response Time (ms)</div>
+          {/* <div id='runtime-number'>{`${runtime}`}</div> */}
+          <div class='category-number'>100</div>
+          {/* {runtime && (
+            <p>{`${runtime}`}</p>
+          )} */}
+        </div>
+        <div class='category'>
+          <div class='category-title'>Number of Requests to Failure</div>
+          <div class='category-number'>100</div>
+        </div>
+        <div class='category'>
+          <div class='category-title'>Number of Null Responses</div>
+          <div class='category-number'>100</div>
+        </div>
+        <div class='category'>
+          <div class='category-title'>Response Time for Batch Test</div>
+          <div class='category-number'>100</div>
+        </div>
       </div>
       <div id='response-chart'> 
         <LineChartComponent history={history}/>

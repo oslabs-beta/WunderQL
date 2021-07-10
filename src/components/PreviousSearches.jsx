@@ -1,4 +1,5 @@
 import { DataGrid } from '@material-ui/data-grid';
+import QueryCard from './QueryCard';
 import { useState, useEffect } from 'react';
 
 const rows = [
