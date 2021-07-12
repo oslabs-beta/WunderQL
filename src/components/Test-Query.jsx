@@ -13,6 +13,8 @@ const TestQuery = ({ client, uri, uriID, history, setHistory }) => {
     // Sends the message to Electron main process
     console.log('Query is being sent to main process...')
 
+    // Make GraphQL API query at a rate of 1 request per 5 milliseconds
+    // TODO: Make the rate of requests change based on user interaction 
     // setInterval(() => {
     //   ipcRenderer.send(channels.GET_RESPONSE_TIME, {
     //     uriID: uriID,
@@ -27,7 +29,10 @@ const TestQuery = ({ client, uri, uriID, history, setHistory }) => {
       uri: uri,
     });
 
+    // Initiate load test when user clicks 'Submit Query'
+    // TODO: Move this to new component, and don't hardcode numofChildProcesses
     ipcRenderer.send(channels.TEST_LOAD, {
+      numOfChildProccesses: 3,
       query: query,
       uri: uri,
     })
