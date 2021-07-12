@@ -6,20 +6,10 @@ import Button from '@material-ui/core/Button';
 
 const { ipcRenderer } = window.require("electron");
 
-const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getResponseTimes }) => {
+const BatchTest = ({ uri, uriID, history, runtime, getResponseTimes }) => {
 
   const [query, setQuery] = useState('');
   
-  // this is for when a card was clicked in the 'previous searches' component and the query
-  // is passed as a prop when user is rerouted back to this component
-  let queryProp = null;
-  let location = useLocation();
-  if (location.state) {
-    console.log(location.state)
-    queryProp = location.state.queryProp;
-    console.log('queryProp sent from cards: ', queryProp)
-    // document.querySelector('#text-area').value = location.state.queryProp;
-  }
 
   const sendQuery = () => {
     // Sends the message to Electron main process
@@ -51,7 +41,7 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
           placeholder='input for user query'
           id='text-area'
           onChange={(e) => setQuery(e.target.value)}
-        >{queryProp}</textarea>
+        ></textarea>
         <Button 
           variant="contained" 
           id='send-query' 
@@ -68,7 +58,7 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
             <p>{`${runtime}`}</p>
           )} */}
         </div>
-        <div class='category' id='failure'>
+        <div class='category'>
           <div class='category-title'>Number of Requests to Failure</div>
           <div class='category-number'>100</div>
         </div>
@@ -76,10 +66,10 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
           <div class='category-title'>Number of Null Responses</div>
           <div class='category-number'>100</div>
         </div>
-        {/* <div class='category'>
+        <div class='category'>
           <div class='category-title'>Response Time for Batch Test</div>
           <div class='category-number'>100</div>
-        </div> */}
+        </div>
       </div>
       <div id='response-chart'> 
         <LineChartComponent history={history}/>
@@ -89,45 +79,5 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
 };
 
 
-    // const startTime = performance.now();
 
-    // fetch(uri, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Accept': 'application/json,text/plain, */*',
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({ query: query })
-    // })
-    //   .then(res => res.json())
-    //   .then(result => {
-    //     let responseTime = (performance.now() - startTime)
-    //     setRuntime(Number(responseTime.toFixed(1)));
-    //   })
-
-    /**this seems to be measuring runtime of promise 
-    client.query({
-      query: gql`${query}`
-    }).then(result => {
-      let responseTime = (performance.now() - startTime)
-      // let responseTime = (Date.now() - startTime)
-      setRuntime(Number(responseTime.toFixed(1)));
-    })
-    */
-
-// client.query({
-  // query: gql`
-    // query {
-    //   launchesPast(limit: 10) {
-    //     mission_name
-    //     launch_date_local
-    //     launch_site {
-    //       site_name_long
-    //     }
-    //   }
-    // }
-//   `
-// }).then(result => console.log(result))
-
-
-export default TestQuery;
+export default BatchTest;

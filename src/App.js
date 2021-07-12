@@ -11,6 +11,7 @@ import Home from './components/Home'
 import Dashboard from './components/Dashboard'
 import NavBar from './components/NavBar'
 import TestQuery from './components/Test-Query'
+import BatchTest from "./components/BatchTest";
 // import Header from './components/Header'
 import PreviousSearches from './components/PreviousSearches';
 import './stylesheets/index.css';
@@ -25,33 +26,58 @@ function App() {
   const [uri, setURI] = useState('(please enter a URI to begin)');
   const [history, setHistory] = useState(null);
   const [uriID, setUriID] = useState(0);
+  const [runtime, setRuntime] = useState(0);
+
 
   const client = new ApolloClient({
     uri: uri,
     cache: new InMemoryCache()
   });
 
-  // const getData = () => {
-  //   // Sends the message to Electron main process
-  //   console.log('Data is being sent to main process...');
-  //   ipcRenderer.send(channels.GET_DATA, product);
-  // };
-
-  // useEffect(() => {
-  //   // useEffect hook - Listens to the get_data channel for the response from electron.js
-  //   ipcRenderer.on(channels.GET_RESPONSE_TIME, (event, arg) => {
-  //     console.log('Listening for response from main process...')
-  //     setHistory(arg);
-  //     console.log('history', history);
-  //     console.log('Data has been returned from main process');  
-  //   });
-  //   // Clean the listener after the component is dismounted
-  //   return () => {
-  //     ipcRenderer.removeAllListeners();
-  //   };
-  // }, [history]);
-
   // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
+  const getResponseTimes = () => {
+    ipcRenderer.on(channels.GET_RESPONSE_TIME, (event, arg) => {
+      console.log('Listening for response from main process...')
+      console.log('arg object received from electronjs: ', arg);
+
+      const currRuntime = arg[arg.length - 1].response_time.toFixed(1);
+      console.log('runtime: ', currRuntime);
+      setRuntime(currRuntime);
+
+      //arg is received from DB as an array of objects
+      const pastRuntimes = [];
+      let x_sum = 0
+      let y_sum = 0
+      let numerator = 0;
+      let denominator = 0;
+        arg.forEach((query, index) => {
+        x_sum += index;
+        y_sum += query.response_time;
+      })        
+      const x_avg = x_sum / arg.length;
+      const y_avg = y_sum / arg.length;
+        arg.forEach((query, index) => {
+        numerator += ((index - x_avg) * (query.response_time - y_avg));
+        denominator += (index - x_avg) ** 2;
+      });  
+      const slope = numerator / denominator;
+      const y_intercept = y_avg - slope * x_avg;
+      const lineOfBestFit = (x) => slope * x + y_intercept;
+        arg.forEach((query, index) => {
+      const date = new Date(query.date).toDateString();
+          pastRuntimes.push({
+          index: index,
+          date: date,
+          runtime: query.response_time.toFixed(1),
+          best_fit: lineOfBestFit(index).toFixed(1)
+        });
+      });
+
+      setHistory(pastRuntimes);
+      console.log('all past runtimes: ', pastRuntimes);
+    });
+  }
 
   const theme = createMuiTheme({
     palette: {
@@ -92,7 +118,7 @@ function App() {
                 />
               </Route>
               <Route path="/dashboard">
-                <Dashboard uriID={uriID} history={history}/>
+                <Dashboard uri={uri} uriID={uriID} history={history}/>
               </Route>
               <Route path="/testquery">
                 <TestQuery 
@@ -101,10 +127,28 @@ function App() {
                   uriID={uriID} 
                   history={history}
                   setHistory={setHistory}
+                  runtime={runtime}
+                  getResponseTimes={getResponseTimes}
+                />
+              </Route>
+              <Route path="/batchtest">
+                <BatchTest 
+                  client={client} 
+                  uri={uri} 
+                  uriID={uriID} 
+                  history={history}
+                  setHistory={setHistory}
+                  runtime={runtime}
+                  getResponseTimes={getResponseTimes}
                 />
               </Route>
               <Route path="/previoussearches">
-                <PreviousSearches />
+                <PreviousSearches 
+                  uri={uri} 
+                  uriID={uriID} 
+                  history={history}
+                  getResponseTimes={getResponseTimes}
+                />
               </Route>
             </Switch>
           </Router>

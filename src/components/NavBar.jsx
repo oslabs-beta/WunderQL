@@ -160,6 +160,12 @@ export default function NavBar(props) {
                 <ListItemText primary='Test Query' />
               </ListItem>
             </Link>
+            <Link to="/batchtest" class='nav-list-item'>
+              <ListItem button key={3}>
+                <ListItemIcon><InboxIcon /></ListItemIcon>
+                <ListItemText primary='Batch Test' />
+              </ListItem>
+            </Link>
             <Link to="/previoussearches" class='nav-list-item'>
               <ListItem button key={4}>
                 <ListItemIcon><InboxIcon /></ListItemIcon>

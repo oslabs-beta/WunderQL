@@ -60,6 +60,14 @@ body {
   box-sizing: border-box;
   overflow: hidden;
 }
+
+/* to be used in all components */
+.uri {
+  grid-area: uri;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
   
 /*/////////////////////////////////////////////////////*/
 /*/////////////////////// Home ////////////////////////*/
@@ -176,9 +184,9 @@ body {
   margin: 1rem;
   display: grid;
   grid-template-columns: 50% 50%;
-  grid-template-rows: 15% 50% 50%;
+  grid-template-rows: 10% 48% 48%;
   grid-template-areas:
-    "header header"
+    "uri uri"
     "one two"
     "three four";
 }
@@ -237,13 +245,6 @@ body {
     "input chart"
 }
 
-#uri {
-  grid-area: uri;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 /* #uri-input {
   padding: 0.5rem;
   margin-right: 1rem;
@@ -255,7 +256,7 @@ body {
 } */
 
 #query-space {
-  /* border: 1px solid black; */
+  border: none;
   grid-area: input;
   display: grid;
   grid-template-rows: 4fr 0.5fr;
@@ -286,7 +287,12 @@ body {
   display: grid;
   grid-template-rows: 50% 50%;
   justify-content: center;
-  border-right: 1px solid black;
+}
+
+#failure {
+  border-left: 2px dashed black;
+  border-right: 2px dashed black;
+  padding: 8px;
 }
 
 .category-title {
@@ -321,4 +327,29 @@ body {
   grid-area: main;
   padding: 1rem;
   margin: 1rem;
+}
+
+#card {
+  width: 150px;
+  height: 200px;
+  border: 1px solid black;
+  border-radius: .5rem;
+  padding: 0.5rem;
+  -webkit-box-shadow: 3px 4px 3px 2px rgba(5,5,5,5);
+  box-shadow: 3px 4px 3px 2px rgba(5,5,5,5);
+  background-color: rgb(255, 255, 255);
+}
+
+#cards-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  
+}
+
+#cards-list li {
+  list-style-type: none;
+  margin: 0.6rem;
+  font-size: 0.8rem;
+  
 }

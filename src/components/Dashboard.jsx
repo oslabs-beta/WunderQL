@@ -1,31 +1,37 @@
 // import React from 'react'
 // import TestQuery from './Test-Query';
-// import ScatterPlotTest from './ScatterPlotTest'
 import LineChartComponent from './LineChart';
+import PieChartComponent from './DashboardPieChart';
+import BarChartComponent from './DashboardBarChart';
+import ScatterChartComponent from './DashboardScatterChart';
+import RadarChartComponent from './DashboardRadarChart';
 
 const Dashboard = ({ uri }) => {
   
-  
+  //fake data for all queries of a single uri
+  const uriData = [
+
+  ]
+
+
+
   return (
     <div id='dashboard'>
-      <h1>Summary for: {uri}</h1>
-      {/* <ResponsiveContainer width="100%" height="100%"> */}
+      <header class='uri'>
+        <h2>Summary for: {uri}</h2>
+      </header>
         <div id='top-left'>
-          <LineChartComponent />
+          <BarChartComponent />
         </div>
         <div id='top-right'>
-          <LineChartComponent />
-          {/* <ScatterPlotTest /> */}
+          <PieChartComponent />
         </div>
         <div id='bottom-left'>
-          <LineChartComponent />
-          {/* <ScatterPlotTest /> */}
+          <RadarChartComponent />
         </div>
         <div id='bottom-right'>
-          <LineChartComponent />
-          {/* <ScatterPlotTest /> */}
+          <ScatterChartComponent />
         </div>
-      {/* </ResponsiveContainer> */}
     </div>
   )
 }
