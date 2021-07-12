@@ -22,7 +22,7 @@ const { ipcRenderer } = window.require("electron");
 
 function App() {
   const [dark, setDark] = useState(false);
-  const [uri, setURI] = useState('nothing');
+  const [uri, setURI] = useState('(please enter a URI to begin)');
   const [history, setHistory] = useState(null);
   const [uriID, setUriID] = useState(0);
 

@@ -2,7 +2,21 @@ const { fetch } = require('cross-fetch');
 const { performance } = require('perf_hooks');
 const path = require("path");
 const { User } = require('../models/User');
+// const { loadTest } = require('./loadTest');
+// const childProc = require("child_process");
+// const { spawn } = require('child_process');
+// const childProc = require("child_process");
+// const CHILD_PROCESSES = 1;
+// const URL = 'http://localhost:4000/graphql';
+// const childd = require('child_process').execFile(path.join(__dirname, 'child'));
+// console.log(childd)
+// const { spawn } = require('child_process');
+// let { child } = require('./child');
+// child = require('child_process').exec('./child');
+// const child = spawn('find', ['./child.js']);
+// console.log(child)
 
+// console.log(loadTest)
 
 const { app, BrowserWindow, Menu, ipcMain } = require("electron");
 // const { getCurrentWindow } = require("electron");
@@ -12,6 +26,54 @@ const isDev = require("electron-is-dev");
 //SQL database connection
 const db = require("../models/User");
 // Connnect to mongo database
+
+
+// const childProc = require("child_process");
+
+// const test = require('child_process').fork('public/loadTest.js'); //change the path depending on where the file is.
+// test.on('message', function(m) {
+//   console.log('PARENT got message:', m);
+// });
+
+const testest = async (CHILD_PROCESSES, URL) => {
+  let times = [];
+  let children = [];
+
+  for (let i = 0; i < CHILD_PROCESSES; i++) {
+    // let childProcess = childProc.spawn("node", ["child.js", `--url=${URL}`])
+    let test = require('child_process').fork(__dirname + '/child.js', [`--url=${URL}`]); //change the path depending on where the file is.
+    console.log(test)
+    children.push(test);
+  }
+
+  // console.log(children)
+  let responses = children.map(function wait(child) {
+    return new Promise(function c(res) {
+      child.on('data', (data) => {
+        console.log(`child stdout: ${data}`);
+        times.push(parseInt(data));
+      });
+      child.on("exit", function (code) {
+        if (code === 0) {
+          res(true);
+        } else {
+          res(false);
+        }
+      });
+    });
+  });
+
+  responses = await Promise.all(responses);
+
+  if (responses.filter(Boolean).length === responses.length) {
+    const sum = times.reduce((a, b) => a + b, 0);
+    const avg = (sum / times.length) || 0;
+    console.log(`average: ${avg}`);
+    console.log("success!");
+  } else {
+    console.log("failures!");
+  }
+};
 
 function createWindow() {
   // Create the browser window.
@@ -133,6 +195,8 @@ app.on("activate", () => {
   }
 });
 
+
+
 // Function that checks response time of query
 // https://api.spacex.land/graphql/
 async function checkResponseTime(query, uri_ID) {
@@ -184,7 +248,7 @@ ipcMain.on(channels.GET_RESPONSE_TIME, async (event, arg) => {
     }; 
     const uriQueryResult = await db.query(findURI);
     const uri = uriQueryResult.rows[0].url;
-    console.log('uri from electronjs: ', uri);
+    // console.log('uri from electronjs: ', uri);
     
     
 
@@ -195,7 +259,7 @@ ipcMain.on(channels.GET_RESPONSE_TIME, async (event, arg) => {
     };
     const existingQueryResult = await db.query(checkIfQueryExist);
     const existingQueryID = existingQueryResult.rows;
-    console.log('existingQueryID', existingQueryID);
+    // console.log('existingQueryID', existingQueryID);
     
     let queryId;
 
@@ -205,12 +269,12 @@ ipcMain.on(channels.GET_RESPONSE_TIME, async (event, arg) => {
         values: [query, uriID],
       };
       const queryResult = await db.query(insertQuery);
-      console.log('queryResult', queryResult)
+      // console.log('queryResult', queryResult)
       queryId = queryResult.rows[0]._id;
-      console.log('queryId in if condition', queryId)
+      // console.log('queryId in if condition', queryId)
     } else {
       queryId = existingQueryID[0]._id;
-      console.log('queryId in else condition', queryId)
+      // console.log('queryId in else condition', queryId)
     }
     // Insert response time and query_id into database 
     // Associate response time with query_id
@@ -230,7 +294,7 @@ ipcMain.on(channels.GET_RESPONSE_TIME, async (event, arg) => {
     };
     const responseTimesQueryResults = await db.query(getResponseTimes);
     const responseTimes = responseTimesQueryResults.rows;
-    console.log('responseTimes', responseTimes);
+    // console.log('responseTimes', responseTimes);
 
     // Send responseTime back to frontend 
     // Pass back array of response times that match a certain query ID
@@ -241,6 +305,12 @@ ipcMain.on(channels.GET_RESPONSE_TIME, async (event, arg) => {
   }  
 });
 
+ipcMain.on(channels.TEST_LOAD, async (event, arg) => {
+  console.log('uri in TEST_LOAD', arg.uri)
+  console.log('Before load test...');
+  await testest(2, arg.uri);
+  console.log('Load test completed');
+});
 
   //----------------------------------------
 // Example queries for https://api.spacex.land/graphql/

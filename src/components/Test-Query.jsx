@@ -13,11 +13,24 @@ const TestQuery = ({ client, uri, uriID, history, setHistory }) => {
     // Sends the message to Electron main process
     console.log('Query is being sent to main process...')
 
+    // setInterval(() => {
+    //   ipcRenderer.send(channels.GET_RESPONSE_TIME, {
+    //     uriID: uriID,
+    //     query: query,
+    //     uri: uri,
+    //   });
+    // }, 5)
+    
     ipcRenderer.send(channels.GET_RESPONSE_TIME, {
       uriID: uriID,
       query: query,
       uri: uri,
     });
+
+    ipcRenderer.send(channels.TEST_LOAD, {
+      query: query,
+      uri: uri,
+    })
   };
 
   // commented out because calculating runtime from FE (for now)
@@ -32,6 +45,7 @@ const TestQuery = ({ client, uri, uriID, history, setHistory }) => {
 
       setRuntime(currRuntime);
 
+      // REFACTOR - it would be better to isolate lines 45 - 77 to its own function 
       //arg is received as an array of objects
       const pastRuntimes = [];
       let x_sum = 0
@@ -55,7 +69,6 @@ const TestQuery = ({ client, uri, uriID, history, setHistory }) => {
       const slope = numerator / denominator;
       const y_intercept = y_avg - slope * x_avg;
       const lineOfBestFit = (x) => slope * x + y_intercept;
-      console.log(x_avg, y_avg, y_intercept)
 
       arg.forEach((query, index) => {
       const date = new Date(query.date).toDateString();
@@ -93,7 +106,7 @@ const TestQuery = ({ client, uri, uriID, history, setHistory }) => {
         <button id='send-query' onClick={sendQuery}>Submit Query</button>
       </div>
       <div id='response-time'>
-        <div id='runtime-title'>Query Runtime (ms)</div>
+        <div id='runtime-title'>Query Response Time (ms)</div>
         <div id='runtime-number'>{`${runtime}`}</div>
         {/* {runtime && (
           <p>{`${runtime}`}</p>
