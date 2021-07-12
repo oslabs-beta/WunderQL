@@ -11,8 +11,8 @@ const LineChartComponent = ({ history }) => {
 
   
   const CustomTooltip = ({ active, payload, label }) => {
-    console.log(payload[0])
     if (active && payload && payload.length) {  
+      console.log(payload[0])
       
       const getDifference = () => {
         return Math.abs(payload[0].payload.best_fit - payload[0].payload.runtime).toFixed(1);

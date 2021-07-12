@@ -25,3 +25,5 @@ yarn-debug.log*
 yarn-error.log*
 
 package-lock.json
+.sass-cache/
+index.css.map

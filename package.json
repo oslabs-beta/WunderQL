@@ -21,6 +21,7 @@
     "is-electron": "^2.2.0",
     "mongodb": "^3.6.9",
     "mongoose": "^5.13.0",
+    "node-sass": "^6.0.1",
     "perf_hooks": "^0.0.1",
     "pg": "^8.6.0",
     "react": "^17.0.2",
@@ -29,6 +30,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "recharts": "^2.0.9",
+    "sass": "^1.35.2",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
