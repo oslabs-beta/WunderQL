@@ -39,7 +39,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev": "concurrently -k \"BROWSER=none npm start\" \"npm:electron\"",
+    "dev": "concurrently -k \"BROWSER=none npm start\" \"npm:electron\" \"sass --watch src/stylesheets:src/stylesheets\"",
     "electron": "wait-on tcp:3000 && electron .",
     "server": "node server/server.js",
     "start2": "concurrently \"npm run start\" \"npm run server\" \"wait-on http://localhost:3000 && electron .\""

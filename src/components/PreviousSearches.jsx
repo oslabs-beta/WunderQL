@@ -140,6 +140,57 @@ const fakeData = [
     }`
     
   },
+  {
+    id: 9,
+    'Query Name': 'Rocket ships',
+    'Num of runtimes': 38,
+    'Avg Runtime(ms)': 150,
+    'Last Date Ran': new Date().toDateString(),
+    query: `query {
+      launchesPast(limit: 8) {
+        mission_name
+        launch_date_local
+        launch_site {
+          site_name_long
+        }
+      }
+    }`
+    
+  },
+  {
+    id: 10,
+    'Query Name': 'Rocket ships',
+    'Num of runtimes': 38,
+    'Avg Runtime(ms)': 150,
+    'Last Date Ran': new Date().toDateString(),
+    query: `query {
+      launchesPast(limit: 8) {
+        mission_name
+        launch_date_local
+        launch_site {
+          site_name_long
+        }
+      }
+    }`
+    
+  },
+  {
+    id: 11,
+    'Query Name': 'Rocket ships',
+    'Num of runtimes': 38,
+    'Avg Runtime(ms)': 150,
+    'Last Date Ran': new Date().toDateString(),
+    query: `query {
+      launchesPast(limit: 8) {
+        mission_name
+        launch_date_local
+        launch_site {
+          site_name_long
+        }
+      }
+    }`
+    
+  },
 ];
 
 
