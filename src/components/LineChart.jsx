@@ -6,7 +6,28 @@ const LineChartComponent = ({ history }) => {
   
   console.log('data to be plotted: ', data)
   // const date = history.date;
-  const payloadFormatter = (value, name, props) => (['date', 'date2']);
+  // const payloadFormatter = (value, name, props) => (['date', 'date2']);
+
+
+  
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {  
+      console.log(payload[0])
+      
+      const getDifference = () => {
+        return Math.abs(payload[0].payload.best_fit - payload[0].payload.runtime).toFixed(1);
+      }
+      return (
+        <div className="custom-tooltip">
+          <p className="label">{`${label}: ${payload[0].value}ms`}</p>
+          {/* <p className="intro">{getDate(label)}</p> */}
+          <p className="desc">{`${getDifference()}ms from average`}</p>
+        </div>
+      );
+    }
+  
+    return null;
+  };
 
   return (
     <ResponsiveContainer width='100%' height='100%'>
@@ -33,7 +54,7 @@ const LineChartComponent = ({ history }) => {
           domain={['dataMin - 100', 'dataMax + 100']} 
           allowDecimals='false'
         />
-        <Tooltip 
+        <Tooltip content={<CustomTooltip />}
           // payload="[{day: 'date'}]"
           // formatter={payloadFormatter}
           // label={date}

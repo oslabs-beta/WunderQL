@@ -1,31 +1,42 @@
 // import React from 'react'
 // import TestQuery from './Test-Query';
-// import ScatterPlotTest from './ScatterPlotTest'
 import LineChartComponent from './LineChart';
+import PieChartComponent from './DashboardPieChart';
+import BarChartComponent from './DashboardBarChart';
+import ScatterChartComponent from './DashboardScatterChart';
+import RadarChartComponent from './DashboardRadarChart';
+import { useDarkTheme } from './ThemeContext';
 
 const Dashboard = ({ uri }) => {
   
-  
+  //fake data for all queries of a single uri
+  const uriData = [
+
+  ]
+
+  const darkTheme = useDarkTheme();
+  const themeStyle = {
+    backgroundColor: darkTheme ? '#333' : 'white',
+    color: darkTheme ? '#CCC' : '#333'
+  }
+
   return (
-    <div id='dashboard'>
-      <h1>Summary for: {uri}</h1>
-      {/* <ResponsiveContainer width="100%" height="100%"> */}
+    <div id='dashboard' style={themeStyle}>
+      <header class='uri'>
+        <h2>Summary for: {uri}</h2>
+      </header>
         <div id='top-left'>
-          <LineChartComponent />
+          <BarChartComponent />
         </div>
         <div id='top-right'>
-          <LineChartComponent />
-          {/* <ScatterPlotTest /> */}
+          <PieChartComponent />
         </div>
         <div id='bottom-left'>
-          <LineChartComponent />
-          {/* <ScatterPlotTest /> */}
+          <RadarChartComponent />
         </div>
         <div id='bottom-right'>
-          <LineChartComponent />
-          {/* <ScatterPlotTest /> */}
+          <ScatterChartComponent />
         </div>
-      {/* </ResponsiveContainer> */}
     </div>
   )
 }

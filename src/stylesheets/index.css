@@ -1,4 +1,4 @@
-.titlebar-drag-region {  /*added*/
+.titlebar-drag-region {
   top: 6px;
   left: 6px;
   display: block;
@@ -14,7 +14,7 @@
   height: 30px;
   border: 1px solid gray;
   align-items: center;
-  position: relative;  /*added*/
+  position: relative;
   /*-webkit-app-region: drag;*/  /*removed*/
 }
 
@@ -28,23 +28,19 @@
 }
 
 #App {
-  background-color: #ebebeb;
+  background-color: #ffffff;
   color: black;
   margin: 0;
   padding: 0;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   letter-spacing: 1px;
   display: grid;
   grid-template-columns: 5fr 5fr;
   grid-template-rows: 0.5fr 3fr 3fr;
-  grid-template-areas:
-    /* "header header header" */
-    "- -"
-    "main main"
-    "main main";
+  grid-template-areas: "- -" "main main" "main main";
   width: 100%;
   height: 100vh;
-  }
+}
 
 html {
   width: 100%;
@@ -60,18 +56,18 @@ body {
   box-sizing: border-box;
   overflow: hidden;
 }
-  
+
+/* to be used in all components */
+.uri {
+  grid-area: uri;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /*/////////////////////////////////////////////////////*/
 /*/////////////////////// Home ////////////////////////*/
 /*/////////////////////////////////////////////////////*/
-
-/* #header {
-  grid-area: header;
-  padding: 1rem;
-  margin: 1rem;
-  border: 1px solid black;
-} */
-
 #home {
   grid-area: main;
   display: grid;
@@ -79,12 +75,12 @@ body {
   grid-template-rows: repeat(4, 4rem);
   justify-content: center;
   align-items: center;
-  margin-top: 10rem;
+  padding-top: 10rem;
   /* grid-template-areas: 
-    "one"
-    "two"; */
-  }
-  
+  * "one"
+  * "two"; */
+}
+
 #enter {
   display: flex;
   justify-content: center;
@@ -105,15 +101,19 @@ body {
   padding: 0.5rem;
   /* margin-right: 1rem; */
   width: 150%;
+  border-radius: 1rem;
+  border-style: double;
+  border-color: gainsboro;
 }
 
 #home-send {
   padding: 0.5rem 0.9rem;
   margin-top: 1rem;
+  letter-spacing: 1.5px;
 }
 
 #connected-div {
-  color: rgb(191, 0, 0);
+  color: #bf0000;
   /* display: none; */
   display: flex;
   justify-content: center;
@@ -148,15 +148,13 @@ body {
 }
 
 /* .nav-list-item a { */
-  /* display: block; */
-  /* padding: 1rem 0; */
-  /* color: white; */
+ * /* display: block; */
+ * /* padding: 1rem 0; */
+ * /* color: white; */
 /* } */
-
 /* .nav-list-item a:hover { */
-  /* cursor: pointer; */
+ * /* cursor: pointer; */
 /* } */
-
 #dark-switch {
   margin: 1rem 0 0 1rem;
 }
@@ -164,19 +162,14 @@ body {
 /*/////////////////////////////////////////////////////*/
 /*//////////////////// Dashboard //////////////////////*/
 /*/////////////////////////////////////////////////////*/
-
 #dashboard {
   /* border: 5px dotted black; */
   grid-area: main;
-  padding: 1rem;
-  margin: 1rem;
+  padding: 2rem;
   display: grid;
   grid-template-columns: 50% 50%;
-  grid-template-rows: 15% 50% 50%;
-  grid-template-areas:
-    "header header"
-    "one two"
-    "three four";
+  grid-template-rows: 10% 48% 48%;
+  grid-template-areas: "uri uri" "one two" "three four";
 }
 
 #line-chart {
@@ -189,8 +182,6 @@ body {
   justify-content: center;
   align-items: center;
   grid-area: one;
-  /* width: 100%;
-  height: 100%; */
 }
 
 #top-right {
@@ -214,72 +205,67 @@ body {
   align-items: center;
 }
 
-
 /*/////////////////////////////////////////////////////*/
 /*/////////////////// Test Query //////////////////////*/
 /*/////////////////////////////////////////////////////*/
-
 #test-query {
   grid-area: main;
-  padding: 1rem;
-  margin: 1rem;
+  padding: 2rem;
   display: grid;
   grid-gap: 1rem;
-  grid-template-columns: 50% 50%;
-  grid-template-rows: 10% 30% 50%;
-  grid-template-areas:
-    "uri uri"
-    "input runtime"
-    "input chart"
-}
-
-#uri {
-  grid-area: uri;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-#uri-input {
-  padding: 0.5rem;
-  margin-right: 1rem;
-  width: 78%;
-}
-
-#send-uri {
-  padding: 0.5rem 0.9rem;
+  grid-template-columns: 30% 70%;
+  grid-template-rows: 10% 35% 50%;
+  grid-template-areas: "uri uri" "input stats" "input chart";
 }
 
 #query-space {
-  /* border: 1px solid black; */
+  border: none;
   grid-area: input;
   display: grid;
   grid-template-rows: 4fr 0.5fr;
-  -webkit-box-shadow: 3px 4px 3px 2px rgba(5,5,5,5);
-  box-shadow: 3px 4px 3px 2px rgba(5,5,5,5);
+  -webkit-box-shadow: 3px 4px 1px 2px #565656;
+  box-shadow: 3px 4px 6px 2px #565656;
+  border-radius: 0.3rem;
 }
 
 #text-area {
   padding: 1rem;
+  border-radius: 0.3rem;
 }
 
-#response-time {
-  grid-area: runtime;
-  /* border: 2px dotted blue; */
-  -webkit-box-shadow: 3px 4px 3px 2px rgba(5,5,5,5);
-  box-shadow: 3px 4px 3px 2px rgba(5,5,5,5);  
+#stats {
+  grid-area: stats;
+  -webkit-box-shadow: 3px 4px 1px 2px #565656;
+  box-shadow: 3px 4px 6px 2px #565656;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
+  border-radius: 0.3rem;
 }
 
-#runtime-title {
+.category {
+  display: grid;
+  grid-template-rows: 50% 50%;
+  justify-content: center;
+}
+
+#failure {
+  border-left: 2px dashed black;
+  border-right: 2px dashed black;
+  padding: 8px;
+}
+
+.category-title {
+  margin: 1rem 0;
   font-weight: 900;
+  text-align: center;
 }
 
-#runtime-number {
-  font-size: 4rem;
+.category-number {
+  margin: 1rem 0;
+  font-size: 2rem;
+  text-align: center;
 }
 
 #response-chart {
@@ -288,16 +274,49 @@ body {
   justify-content: center;
   align-items: center;
   /* border: 2px dashed red; */
-  -webkit-box-shadow: 3px 4px 3px 2px rgba(5,5,5,5);
-  box-shadow: 3px 4px 3px 2px rgba(5,5,5,5);
+  -webkit-box-shadow: 3px 4px 1px 2px #565656;
+  box-shadow: 3px 4px 6px 2px #565656;
+  border-radius: 0.3rem;
+}
+
+/*/////////////////////////////////////////////////////*/
+/*/////////////////// Load Testing ////////////////////*/
+/*/////////////////////////////////////////////////////*/
+#load-amount {
+  font-size: 2rem;
+  text-align: center;
 }
 
 /*/////////////////////////////////////////////////////*/
 /*//////////////// Previous Searches //////////////////*/
 /*/////////////////////////////////////////////////////*/
-
 #previous-searches {
   grid-area: main;
-  padding: 1rem;
-  margin: 1rem;
+  padding: 2rem;
+  overflow: scroll;
 }
+
+#card {
+  width: 150px;
+  height: 200px;
+  border: 1px solid gray;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  -webkit-box-shadow: 3px 4px 1px 2px #565656;
+  box-shadow: 3px 4px 6px 2px #565656;
+  background-color: white;
+  user-select: none;
+}
+
+#cards-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+#cards-list li {
+  list-style-type: none;
+  margin: 0.6rem;
+  font-size: 0.8rem;
+}
+
+/*# sourceMappingURL=index.css.map */
