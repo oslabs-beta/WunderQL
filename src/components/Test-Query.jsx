@@ -1,15 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useLocation } from 'react-router-dom'
 import LineChartComponent from "./LineChart";
 import { channels } from '../shared/constants';
 import Button from '@material-ui/core/Button';
-
+import { useDarkTheme } from "./ThemeContext";
 const { ipcRenderer } = window.require("electron");
 
 const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getResponseTimes }) => {
 
   const [query, setQuery] = useState('');
   
+  const darkTheme = useDarkTheme();
+  const themeStyle = {
+    backgroundColor: darkTheme ? '#333' : 'white',
+    color: darkTheme ? '#CCC' : '#333'
+  }
+
   // this is for when a card was clicked in the 'previous searches' component and the query
   // is passed as a prop when user is rerouted back to this component
   let queryProp = null;
@@ -42,7 +48,7 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
   });
 
   return (
-    <div id='test-query'> 
+    <div id='test-query' style={themeStyle}> 
       <header class='uri'>
         <h2>Currently connected to: {uri}</h2>
       </header>
@@ -51,6 +57,7 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
           placeholder='input for user query'
           id='text-area'
           onChange={(e) => setQuery(e.target.value)}
+          style={themeStyle}
         >{queryProp}</textarea>
         <Button 
           variant="contained" 

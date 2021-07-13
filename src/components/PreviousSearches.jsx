@@ -2,6 +2,7 @@
 import QueryCard from './QueryCard';
 import { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { useDarkTheme } from './ThemeContext';
 
 const fakeData = [
   {
@@ -147,7 +148,7 @@ const fakeData = [
     'Avg Runtime(ms)': 150,
     'Last Date Ran': new Date().toDateString(),
     query: `query {
-      launchesPast(limit: 8) {
+      launchesPast(limit: 9) {
         mission_name
         launch_date_local
         launch_site {
@@ -164,7 +165,7 @@ const fakeData = [
     'Avg Runtime(ms)': 150,
     'Last Date Ran': new Date().toDateString(),
     query: `query {
-      launchesPast(limit: 8) {
+      launchesPast(limit: 10) {
         mission_name
         launch_date_local
         launch_site {
@@ -181,7 +182,7 @@ const fakeData = [
     'Avg Runtime(ms)': 150,
     'Last Date Ran': new Date().toDateString(),
     query: `query {
-      launchesPast(limit: 8) {
+      launchesPast(limit: 11) {
         mission_name
         launch_date_local
         launch_site {
@@ -197,6 +198,12 @@ const fakeData = [
 const PreviousSearches = ({ uri, uriID, history, getResponseTimes }) => {
 
   const [queries, setQueries] = useState(fakeData);
+
+  const darkTheme = useDarkTheme();
+  const themeStyle = {
+    backgroundColor: darkTheme ? '#333' : 'white',
+    color: darkTheme ? '#CCC' : '#333'
+  }
 
   // history prop is an array for a single quuery
   // the array contains objects for each time the query was ran
@@ -253,7 +260,7 @@ const PreviousSearches = ({ uri, uriID, history, getResponseTimes }) => {
   }
 
   return (
-    <div id='previous-searches'>
+    <div id='previous-searches' style={themeStyle}>
 
       <header class='uri'>
         <h2>All previous queries for: {uri}</h2>

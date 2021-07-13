@@ -75,7 +75,7 @@ body {
   grid-template-rows: repeat(4, 4rem);
   justify-content: center;
   align-items: center;
-  margin-top: 10rem;
+  padding-top: 10rem;
   /* grid-template-areas: 
   * "one"
   * "two"; */
@@ -165,8 +165,7 @@ body {
 #dashboard {
   /* border: 5px dotted black; */
   grid-area: main;
-  padding: 1rem;
-  margin: 1rem;
+  padding: 2rem;
   display: grid;
   grid-template-columns: 50% 50%;
   grid-template-rows: 10% 48% 48%;
@@ -211,8 +210,7 @@ body {
 /*/////////////////////////////////////////////////////*/
 #test-query {
   grid-area: main;
-  padding: 1rem;
-  margin: 1rem;
+  padding: 2rem;
   display: grid;
   grid-gap: 1rem;
   grid-template-columns: 30% 70%;
@@ -282,12 +280,19 @@ body {
 }
 
 /*/////////////////////////////////////////////////////*/
+/*/////////////////// Load Testing ////////////////////*/
+/*/////////////////////////////////////////////////////*/
+#load-amount {
+  font-size: 2rem;
+  text-align: center;
+}
+
+/*/////////////////////////////////////////////////////*/
 /*//////////////// Previous Searches //////////////////*/
 /*/////////////////////////////////////////////////////*/
 #previous-searches {
   grid-area: main;
-  padding: 1rem;
-  margin: 1rem;
+  padding: 2rem;
   overflow: scroll;
 }
 

@@ -3,7 +3,7 @@ import {
   Switch,
   Route,
 } from "react-router-dom";
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
+// import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import { useState, useEffect } from 'react';
@@ -11,22 +11,28 @@ import Home from './components/Home'
 import Dashboard from './components/Dashboard'
 import NavBar from './components/NavBar'
 import TestQuery from './components/Test-Query'
-import BatchTest from "./components/BatchTest";
+import BatchTest from "./components/LoadTest";
 // import Header from './components/Header'
 import PreviousSearches from './components/PreviousSearches';
 import './stylesheets/index.css';
 import { channels } from './shared/constants';
 
 import { ApolloClient, InMemoryCache, gql, ApolloProvider } from '@apollo/client';
+import { ThemeProvider, useDarkTheme } from "./components/ThemeContext"; 
+
+// export const ThemeContext = createContext();
+
 const { ipcRenderer } = window.require("electron");
 
 
 function App() {
-  const [dark, setDark] = useState(false);
+  // const [dark, setDark] = useState(false); // or true?
   const [uri, setURI] = useState('(please enter a URI to begin)');
   const [history, setHistory] = useState(null);
   const [uriID, setUriID] = useState(0);
   const [runtime, setRuntime] = useState(0);
+
+  // const toggleDarkMode = () => {console.log('changed theme'); setDark(prevDarkTheme => !prevDarkTheme)}
 
 
   const client = new ApolloClient({
@@ -35,6 +41,11 @@ function App() {
   });
 
   // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const darkTheme = useDarkTheme();
+  const themeStyle = {
+    backgroundColor: darkTheme ? '#333' : 'white',
+    color: darkTheme ? '#CCC' : '#333'
+  }
 
   const getResponseTimes = () => {
     ipcRenderer.on(channels.GET_RESPONSE_TIME, (event, arg) => {
@@ -79,17 +90,19 @@ function App() {
     });
   }
 
-  const theme = createMuiTheme({
-    palette: {
-        type: dark ? 'dark' : 'light',
-    },
-})
+  // const theme = createMuiTheme({
+  //   palette: {
+  //       type: dark ? 'dark' : 'light',
+  //   },
+  // })
     
   return (
     <ApolloProvider client={client}>
-      <ThemeProvider theme={theme}>
+      {/* <ThemeContext.Provider value={dark}> */}
+      <ThemeProvider>
+      {/* <ThemeProvider theme={theme}> */}
         <CssBaseline />
-        <div id="App">
+        <div id="App" style={themeStyle}>
           {/* <Header /> */}
           
           {/* trying to make frameless win draggable */}
@@ -104,18 +117,18 @@ function App() {
           </div>
 
           <Router>
-            <NavBar handleSwitch={setDark} dark={dark} />
+            <NavBar />
             <Switch>
               <Route exact path="/">
                 <Home 
-                  theme={theme} 
+                  // theme={theme} 
                   uri={uri}
                   setURI={setURI} 
                   uriID={uriID} 
                   setUriID={setUriID}
                   history={history} 
                   setHistory={setHistory}
-                />
+                  />
               </Route>
               <Route path="/dashboard">
                 <Dashboard uri={uri} uriID={uriID} history={history}/>
@@ -129,9 +142,9 @@ function App() {
                   setHistory={setHistory}
                   runtime={runtime}
                   getResponseTimes={getResponseTimes}
-                />
+                  />
               </Route>
-              <Route path="/batchtest">
+              <Route path="/loadtest">
                 <BatchTest 
                   client={client} 
                   uri={uri} 
@@ -140,7 +153,7 @@ function App() {
                   setHistory={setHistory}
                   runtime={runtime}
                   getResponseTimes={getResponseTimes}
-                />
+                  />
               </Route>
               <Route path="/previoussearches">
                 <PreviousSearches 
@@ -148,12 +161,13 @@ function App() {
                   uriID={uriID} 
                   history={history}
                   getResponseTimes={getResponseTimes}
-                />
+                  />
               </Route>
             </Switch>
           </Router>
         </div>
       </ThemeProvider>
+      {/* </ThemeContext.      </ThemeProvider>Provider> */}
     </ApolloProvider>
   );
 };

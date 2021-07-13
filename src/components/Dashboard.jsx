@@ -5,6 +5,7 @@ import PieChartComponent from './DashboardPieChart';
 import BarChartComponent from './DashboardBarChart';
 import ScatterChartComponent from './DashboardScatterChart';
 import RadarChartComponent from './DashboardRadarChart';
+import { useDarkTheme } from './ThemeContext';
 
 const Dashboard = ({ uri }) => {
   
@@ -13,10 +14,14 @@ const Dashboard = ({ uri }) => {
 
   ]
 
-
+  const darkTheme = useDarkTheme();
+  const themeStyle = {
+    backgroundColor: darkTheme ? '#333' : 'white',
+    color: darkTheme ? '#CCC' : '#333'
+  }
 
   return (
-    <div id='dashboard'>
+    <div id='dashboard' style={themeStyle}>
       <header class='uri'>
         <h2>Summary for: {uri}</h2>
       </header>
