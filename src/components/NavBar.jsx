@@ -16,7 +16,10 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+// import MailIcon from '@material-ui/icons/Mail';
+
+// import { useContext } from 'react';
+import { useDarkTheme, useDarkThemeUpdate } from './ThemeContext';
 
 import { Link } from 'react-router-dom';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -95,17 +98,22 @@ export default function NavBar(props) {
     setOpen(false);
   };
 
-
+  const darkTheme = useDarkTheme();
+  const toggleDarkMode = useDarkThemeUpdate();
+  const themeStyle = {
+    backgroundColor: darkTheme ? '#333' : 'white',
+    color: darkTheme ? '#CCC' : '#333'
+  }
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} style={themeStyle}>
       {/* <CssBaseline /> */}
       <AppBar
         position="fixed"
         className={clsx(classes.appBar, {
           [classes.appBarShift]: open,
         })}
-        style={{backgroundColor:'#113851', 
+        style={{background:'linear-gradient(205deg, rgba(63,99,255,1) 0%, rgba(54,54,193,1) 21%, rgba(231,117,117,1) 100%)', 
         // webkitUserSelect:'none',
         // userSelect: 'none',
         // webkitAppRegion: 'drag'
@@ -134,6 +142,7 @@ export default function NavBar(props) {
         classes={{
           paper: classes.drawerPaper,
         }}
+        style={themeStyle}
       >
         <div className={classes.drawerHeader}>
           <IconButton onClick={handleDrawerClose}>
@@ -160,6 +169,12 @@ export default function NavBar(props) {
                 <ListItemText primary='Test Query' />
               </ListItem>
             </Link>
+            <Link to="/loadtest" class='nav-list-item'>
+              <ListItem button key={3}>
+                <ListItemIcon><InboxIcon /></ListItemIcon>
+                <ListItemText primary='Load Test' />
+              </ListItem>
+            </Link>
             <Link to="/previoussearches" class='nav-list-item'>
               <ListItem button key={4}>
                 <ListItemIcon><InboxIcon /></ListItemIcon>
@@ -172,7 +187,7 @@ export default function NavBar(props) {
           id='dark-switch'
           control={
             <Switch
-              onChange={ () => props.handleSwitch(!props.dark) }
+              onChange={toggleDarkMode}
               name="dark-mode"
               color="primary"
             />

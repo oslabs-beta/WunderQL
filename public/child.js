@@ -24,14 +24,7 @@ const argv = require('minimist')(process.argv);
   
   // Send graphQL API request
   axios.post(argv.url, {
-    query: `query {
-      tickets {
-        content
-        author {
-          name
-        }
-      }
-    }`})
+    query: `${argv.query}`})
   .then((response) => {
     process.stdout.write(response.duration.toString());
     process.exitCode = 0;

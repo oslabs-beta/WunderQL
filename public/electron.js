@@ -20,12 +20,13 @@ function createWindow() {
     icon: `${__dirname}/assets/icon.png`,
     frame: true,
     webPreferences: {
-      nodeIntegration: true,
+      nodeIntegration: false,
       // defaults to true; allows separation btw main and renderer
       // right now only works if false
-      contextIsolation: false,
-      enableRemoteModule: true,
-    }
+      contextIsolation: true,
+      enableRemoteModule: false,
+      preload: path.join(__dirname, "preload.js"),
+    },
   });
 
   win.setResizable(true);
@@ -134,13 +135,13 @@ app.on("activate", () => {
 //////////////////////////////////////////////////////////////
 
 // Function that conducts load test on endpoint
-const loadTest = async (CHILD_PROCESSES, URL) => {
+const loadTest = async (CHILD_PROCESSES, URL, QUERY) => {
   let times = []; // array of response times of all child processes
   let children = []; // array of all child processes created
 
   for (let i = 0; i < CHILD_PROCESSES; i++) {
     // Spawn the child process
-    let childProcess = childProc.spawn("node", [`${__dirname}/child.js`, `--url=${URL}`])
+    let childProcess = childProc.spawn("node", [`${__dirname}/child.js`, `--url=${URL}`, `--query=${QUERY}`])
     children.push(childProcess);
   }
 
@@ -198,7 +199,8 @@ async function checkResponseTime(query, uri_ID) {
 };
 
 // Listening on channel 'get_endpoint' to receive endpoint from frontend
-ipcMain.on(channels.GET_ENDPOINT, async (event, graphqlEndpoint) => {
+// ipcMain.on(channels.GET_ENDPOINT, async (event, graphqlEndpoint) => {
+ipcMain.on("EndpointToMain", async (event, graphqlEndpoint) => {
   try {
     const insertEndpoint = {
       text: 'INSERT INTO graphqlurls(url) VALUES ($1) RETURNING _id',
@@ -208,7 +210,8 @@ ipcMain.on(channels.GET_ENDPOINT, async (event, graphqlEndpoint) => {
     const graphqlId = queryResult.rows[0]._id;
     
     // Send id  back to frontend 
-    event.sender.send(channels.GET_ENDPOINT, graphqlId);
+    // event.sender.send(channels.GET_ENDPOINT, graphqlId);
+    event.sender.send("fromMain", graphqlId)
   } catch (err) {
     console.log(err)
     return err;
@@ -217,8 +220,8 @@ ipcMain.on(channels.GET_ENDPOINT, async (event, graphqlEndpoint) => {
 
 // Async await --- wait for function to finish before ipcMain sends back response
 // Sending a response back to the renderer process (React)
-ipcMain.on(channels.GET_RESPONSE_TIME, async (event, arg) => {
-  
+// ipcMain.on(channels.GET_RESPONSE_TIME, async (event, arg) => {
+ipcMain.on("QueryDetailstoMain", async (event, arg) => {
   let responseTime = await checkResponseTime(arg.query, arg.uri);
   // Insert query string and url_id into the database 
   try {
@@ -275,19 +278,20 @@ ipcMain.on(channels.GET_RESPONSE_TIME, async (event, arg) => {
 
     // Send responseTime back to frontend 
     // Pass back array of response times that match a certain query ID
-    event.sender.send(channels.GET_RESPONSE_TIME, responseTimes);
+    // event.sender.send(channels.GET_RESPONSE_TIME, responseTimes);
+    event.sender.send("ResponseTimesFromMain", responseTimes);
   } catch (err) {
     console.log(err)
     return err;
   }  
 });
 
-ipcMain.on(channels.TEST_LOAD, async (event, arg) => {
-  console.log('uri in TEST_LOAD', arg.uri)
-  console.log('Before load test...');
-  await loadTest(arg.numOfChildProccesses, arg.uri);
-  console.log('Load test completed');
-});
+// ipcMain.on(channels.TEST_LOAD, async (event, arg) => {
+//   console.log('uri in TEST_LOAD', arg.uri)
+//   console.log('Before load test...');
+//   await loadTest(arg.numOfChildProccesses, arg.uri, arg.query);
+//   console.log('Load test completed');
+// });
 
   //----------------------------------------
 // Example queries for https://api.spacex.land/graphql/
