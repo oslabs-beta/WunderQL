@@ -24,6 +24,197 @@ import { ThemeProvider, useDarkTheme } from "./components/ThemeContext";
 
 const { ipcRenderer } = window.require("electron");
 
+// fake data for cards in previous-searches
+const fakeData = [
+  {
+    id: 1,
+    'Query Name': 'Rocket ships',
+    'Num of runtimes': 38,
+    'Avg Runtime(ms)': 150,
+    'Last Date Ran': new Date().toDateString(),
+    query: `query {
+      launchesPast(limit: 1) {
+        mission_name
+        launch_date_local
+        launch_site {
+          site_name_long
+        }
+      }
+    }`
+    
+  },
+  {
+    id: 2,
+    'Query Name': 'Rocket ships',
+    'Num of runtimes': 38,
+    'Avg Runtime(ms)': 150,
+    'Last Date Ran': new Date().toDateString(),
+    query: `query {
+      launchesPast(limit: 2) {
+        mission_name
+        launch_date_local
+        launch_site {
+          site_name_long
+        }
+      }
+    }`
+    
+  },
+  {
+    id: 3,
+    'Query Name': 'Rocket ships',
+    'Num of runtimes': 38,
+    'Avg Runtime(ms)': 150,
+    'Last Date Ran': new Date().toDateString(),
+    query: `query {
+      launchesPast(limit: 3) {
+        mission_name
+        launch_date_local
+        launch_site {
+          site_name_long
+        }
+      }
+    }`
+    
+  },
+  {
+    id: 4,
+    'Query Name': 'Rocket ships',
+    'Num of runtimes': 38,
+    'Avg Runtime(ms)': 150,
+    'Last Date Ran': new Date().toDateString(),
+    query: `query {
+      launchesPast(limit: 4) {
+        mission_name
+        launch_date_local
+        launch_site {
+          site_name_long
+        }
+      }
+    }`
+    
+  },
+  {
+    id: 5,
+    'Query Name': 'Rocket ships',
+    'Num of runtimes': 38,
+    'Avg Runtime(ms)': 150,
+    'Last Date Ran': new Date().toDateString(),
+    query: `query {
+      launchesPast(limit: 5) {
+        mission_name
+        launch_date_local
+        launch_site {
+          site_name_long
+        }
+      }
+    }`
+    
+  },
+  {
+    id: 6,
+    'Query Name': 'Rocket ships',
+    'Num of runtimes': 38,
+    'Avg Runtime(ms)': 150,
+    'Last Date Ran': new Date().toDateString(),
+    query: `query {
+      launchesPast(limit: 6) {
+        mission_name
+        launch_date_local
+        launch_site {
+          site_name_long
+        }
+      }
+    }`
+    
+  },
+  {
+    id: 7,
+    'Query Name': 'Rocket ships',
+    'Num of runtimes': 38,
+    'Avg Runtime(ms)': 150,
+    'Last Date Ran': new Date().toDateString(),
+    query: `query {
+      launchesPast(limit: 7) {
+        mission_name
+        launch_date_local
+        launch_site {
+          site_name_long
+        }
+      }
+    }`
+    
+  },
+  {
+    id: 8,
+    'Query Name': 'Rocket ships',
+    'Num of runtimes': 38,
+    'Avg Runtime(ms)': 150,
+    'Last Date Ran': new Date().toDateString(),
+    query: `query {
+      launchesPast(limit: 8) {
+        mission_name
+        launch_date_local
+        launch_site {
+          site_name_long
+        }
+      }
+    }`
+    
+  },
+  {
+    id: 9,
+    'Query Name': 'Rocket ships',
+    'Num of runtimes': 38,
+    'Avg Runtime(ms)': 150,
+    'Last Date Ran': new Date().toDateString(),
+    query: `query {
+      launchesPast(limit: 9) {
+        mission_name
+        launch_date_local
+        launch_site {
+          site_name_long
+        }
+      }
+    }`
+    
+  },
+  {
+    id: 10,
+    'Query Name': 'Rocket ships',
+    'Num of runtimes': 38,
+    'Avg Runtime(ms)': 150,
+    'Last Date Ran': new Date().toDateString(),
+    query: `query {
+      launchesPast(limit: 10) {
+        mission_name
+        launch_date_local
+        launch_site {
+          site_name_long
+        }
+      }
+    }`
+    
+  },
+  {
+    id: 11,
+    'Query Name': 'Rocket ships',
+    'Num of runtimes': 38,
+    'Avg Runtime(ms)': 150,
+    'Last Date Ran': new Date().toDateString(),
+    query: `query {
+      launchesPast(limit: 11) {
+        mission_name
+        launch_date_local
+        launch_site {
+          site_name_long
+        }
+      }
+    }`
+    
+  },
+];
+
 
 function App() {
   // const [dark, setDark] = useState(false); // or true?
@@ -31,6 +222,8 @@ function App() {
   const [history, setHistory] = useState(null);
   const [uriID, setUriID] = useState(0);
   const [runtime, setRuntime] = useState(0);
+  const [queriesList, setQueriesList] = useState(fakeData);
+
 
   // const toggleDarkMode = () => {console.log('changed theme'); setDark(prevDarkTheme => !prevDarkTheme)}
 
@@ -161,6 +354,8 @@ function App() {
                   uriID={uriID} 
                   history={history}
                   getResponseTimes={getResponseTimes}
+                  queriesList={queriesList}
+                  setQueriesList={setQueriesList}
                   />
               </Route>
             </Switch>

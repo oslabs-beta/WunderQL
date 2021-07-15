@@ -4,200 +4,11 @@ import { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useDarkTheme } from './ThemeContext';
 
-const fakeData = [
-  {
-    id: 1,
-    'Query Name': 'Rocket ships',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 1) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
-    
-  },
-  {
-    id: 2,
-    'Query Name': 'Rocket ships',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 2) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
-    
-  },
-  {
-    id: 3,
-    'Query Name': 'Rocket ships',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 3) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
-    
-  },
-  {
-    id: 4,
-    'Query Name': 'Rocket ships',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 4) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
-    
-  },
-  {
-    id: 5,
-    'Query Name': 'Rocket ships',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 5) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
-    
-  },
-  {
-    id: 6,
-    'Query Name': 'Rocket ships',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 6) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
-    
-  },
-  {
-    id: 7,
-    'Query Name': 'Rocket ships',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 7) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
-    
-  },
-  {
-    id: 8,
-    'Query Name': 'Rocket ships',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 8) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
-    
-  },
-  {
-    id: 9,
-    'Query Name': 'Rocket ships',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 9) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
-    
-  },
-  {
-    id: 10,
-    'Query Name': 'Rocket ships',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 10) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
-    
-  },
-  {
-    id: 11,
-    'Query Name': 'Rocket ships',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 11) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
-    
-  },
-];
 
 
-const PreviousSearches = ({ uri, uriID, history, getResponseTimes }) => {
+const PreviousSearches = ({ uri, uriID, history, getResponseTimes, queriesList, setQueriesList }) => {
 
-  const [queries, setQueries] = useState(fakeData);
+  // const [queriesList, setQueriesList] = useState(fakeData);
 
   const darkTheme = useDarkTheme();
   const themeStyle = {
@@ -212,7 +23,7 @@ const PreviousSearches = ({ uri, uriID, history, getResponseTimes }) => {
 
 
   // const data = [];
-  const data = queries.map((query, index) => (
+  const data = queriesList.map((query, index) => (
     <Draggable 
       key={query.id} 
       draggableId={`${query.id}`} 
@@ -252,11 +63,11 @@ const PreviousSearches = ({ uri, uriID, history, getResponseTimes }) => {
   const handleOnDragEnd = (result) => {
     console.log(result)
     if (!result.destination) return;
-    const items = Array.from(queries);
+    const items = Array.from(queriesList);
     const [reorderedQuery] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedQuery);
 
-    setQueries(items);
+    setQueriesList(items);
   }
 
   return (

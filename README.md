@@ -94,3 +94,8 @@ Laura Llano - [GitHub](https://github.com/ldllano) - [LinkedIn](https://www.link
 ## Looking Ahead
 
 Never look ahead. Only look at TODAY. #cheesy
+
+## Badges
+<!-- if testing with cypress, can display this badge -->
+<!-- [![Cypress.io](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)](https://www.cypress.io/)
+ -->
