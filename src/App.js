@@ -214,7 +214,13 @@ const fakeData = [
     
   },
 ];
-
+const fakeURIs = [
+  'raubern big dum-dum',
+  'he dum-dum of all dum-dum',
+  'he scrum master? more like dum master',
+  'why is raubern',
+  'no more raubern',
+]
 
 function App() {
   // const [dark, setDark] = useState(false); // or true?
@@ -223,7 +229,7 @@ function App() {
   const [uriID, setUriID] = useState(0);
   const [runtime, setRuntime] = useState(0);
   const [queriesList, setQueriesList] = useState(fakeData);
-
+  const [uriList, setUriList] = useState(fakeURIs); // to use in dashboard
 
   // const toggleDarkMode = () => {console.log('changed theme'); setDark(prevDarkTheme => !prevDarkTheme)}
 
@@ -321,6 +327,8 @@ function App() {
                   setUriID={setUriID}
                   history={history} 
                   setHistory={setHistory}
+                  queriesList={queriesList}
+                  uriList={uriList}
                   />
               </Route>
               <Route path="/dashboard">

@@ -11,7 +11,10 @@ const Dashboard = ({ uri }) => {
   
   //fake data for all queries of a single uri
   const uriData = [
-
+    'query 1',
+    'query 2',
+    'query 3',
+    'query 4',
   ]
 
   const darkTheme = useDarkTheme();
