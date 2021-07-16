@@ -160,7 +160,7 @@ export default function NavBar(props) {
             <Link to="/dashboard" class='nav-list-item'>
               <ListItem button key={2}>
                 <ListItemIcon><InboxIcon /></ListItemIcon>
-                <ListItemText primary='Dashboard' />
+                <ListItemText primary='URI Dashboard' />
               </ListItem>
             </Link>
             <Link to="/testquery" class='nav-list-item'>
