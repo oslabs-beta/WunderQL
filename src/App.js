@@ -17,12 +17,10 @@ import PreviousSearches from './components/PreviousSearches';
 import './stylesheets/index.css';
 import { channels } from './shared/constants';
 
-import { ApolloClient, InMemoryCache, gql, ApolloProvider } from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { ThemeProvider, useDarkTheme } from "./components/ThemeContext"; 
-
 // export const ThemeContext = createContext();
-
-const { ipcRenderer } = window.require("electron");
+// const { ipcRenderer } = window.require("electron");
 
 // fake data for cards in previous-searches
 const fakeData = [
@@ -234,7 +232,6 @@ function App() {
 
   // const toggleDarkMode = () => {console.log('changed theme'); setDark(prevDarkTheme => !prevDarkTheme)}
 
-
   const client = new ApolloClient({
     uri: uri,
     cache: new InMemoryCache()
@@ -249,7 +246,8 @@ function App() {
 
   // get response time for one query call; function updates state here then sent to test-query
   const getResponseTimes = () => {
-    ipcRenderer.on(channels.GET_RESPONSE_TIME, (event, arg) => {
+    // ipcRenderer.on(channels.GET_RESPONSE_TIME, (event, arg) => {
+    window.api.receiveArray("ResponseTimesFromMain", (event, arg) => {
       console.log('Listening for response from main process...')
       // arg is received from DB as an array of objects
       // console.log('arg object received from electronjs: ', arg);
@@ -292,7 +290,15 @@ function App() {
 
       setHistory(pastRuntimes);
     });
+
   }
+  
+
+  // const theme = createMuiTheme({
+  //   palette: {
+  //       type: dark ? 'dark' : 'light',
+  //   },
+  // })
     
   return (
     <ApolloProvider client={client}>
@@ -355,6 +361,7 @@ function App() {
                   history={history}
                   setHistory={setHistory}
                   runtime={runtime}
+                  setRuntime={setRuntime}
                   getResponseTimes={getResponseTimes}
                   />
               </Route>
