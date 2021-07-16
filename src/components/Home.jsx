@@ -8,7 +8,7 @@ import { useDarkTheme } from './ThemeContext';
 import { channels } from '../shared/constants';
 const { ipcRenderer } = window.require("electron");
 
-const Home = ({ uri, setURI, history, setHistory, setUriID, queriesList, uriList }) => {
+const Home = ({ uri, setURI, nickname, setNickname, history, setHistory, setUriID, queriesList, uriList }) => {
   
   const darkTheme = useDarkTheme();
   const themeStyle = {
@@ -33,27 +33,28 @@ const Home = ({ uri, setURI, history, setHistory, setUriID, queriesList, uriList
   // Send URI to electron.js; receive array of objects containing dates + runtime
   const submitURI = () => {
     console.log(uri, ' : URI is being sent to main process...');
-    ipcRenderer.send(channels.GET_ENDPOINT, uri);
+    ipcRenderer.send(channels.GET_ENDPOINT, {uri: uri, name: nickname});
     ipcRenderer.on(channels.GET_ENDPOINT, (event, arg) => {
       document.querySelector('#connected-text').style.display = 'block';
       setUriID(arg);
     });
     ipcRenderer.on(channels.GET_HISTORY, (event, arg) => {
+      // history is an array of all unique queries for a single URI
       // history state updated and stored in App.js
       setHistory(arg);
     })
   }
 
   // Material UI Button
-  const useStyles = makeStyles((theme) => ({
-    root: {
-      '& > *': {
-        margin: theme.spacing(1),
-      },
-    },
-  }));
+  // const useStyles = makeStyles((theme) => ({
+  //   root: {
+  //     '& > *': {
+  //       margin: theme.spacing(1),
+  //     },
+  //   },
+  // }));
 
-  const classes = useStyles();
+  // const classes = useStyles();
 
   return (
     <div id='home' style={themeStyle}>
@@ -69,6 +70,12 @@ const Home = ({ uri, setURI, history, setHistory, setUriID, queriesList, uriList
           placeholder="GraphQL API"
           id='home-uri'
           /> 
+        <h3 class='prompt'>Give that bad boi a name!</h3>
+        <input
+          onChange={(e) => setNickname(e.target.value)}
+          placeholder="bbygorl"
+          id='home-uri'
+          /> 
       </div>
 
       <div id='previous-inputs'>
@@ -78,9 +85,7 @@ const Home = ({ uri, setURI, history, setHistory, setUriID, queriesList, uriList
         <select 
           name='uris' 
           id='uris' 
-          placeholder='merp' 
           onChange={(e) => setURI(e.target.value)}
-          // value='sheeeeesh pick one already'
           >
           <option value="" disabled selected hidden>sheeeesh pick one already</option>
           {URIs}      

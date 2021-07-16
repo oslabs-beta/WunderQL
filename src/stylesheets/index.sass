@@ -77,14 +77,14 @@ body
 /*/////////////////////// Home ////////////////////////*/
 /*/////////////////////////////////////////////////////*/
 
-$input-height: 150px
+$input-height: 200px
 
 #home 
   grid-area: main
   display: grid
   flex-direction: column
   grid-template-columns: 50% 50%
-  grid-template-rows: 10% 45% 20%
+  grid-template-rows: 10% 55% 20%
   justify-content: center
   align-items: center
   padding-top: 10rem
@@ -137,7 +137,7 @@ $input-height: 150px
 
   
   option:first-child
-    display:none
+    display: none
 
 
 // button and connected message
@@ -209,9 +209,9 @@ $input-height: 150px
   padding: 2rem
   // margin: 1rem
   display: grid
-  grid-template-columns: 50% 50%
+  grid-template-columns: 33% 33% 33%
   grid-template-rows: 10% 48% 48%
-  grid-template-areas: "uri uri" "one two" "three four"
+  grid-template-areas: "uri uri uri" "one two stats" "three three stats"
 
 
 #line-chart 
@@ -227,26 +227,49 @@ $input-height: 150px
   // height: 100%; */
 
 
-#top-right 
+#top-mid 
   grid-area: two
   display: flex
   justify-content: center
   align-items: center
 
 
-#bottom-left 
+#bottom
   grid-area: three
   display: flex
   justify-content: center
   align-items: center
 
 
-#bottom-right
-  grid-area: four
+#left
+  grid-area: stats
   display: flex
+  flex-direction: column
   justify-content: center
   align-items: center
+  // border: 1px solid black
 
+.dashboard-stats
+  // border: 2px solid blue
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  margin: 1rem
+
+.dash-title
+  font-color: red
+
+.dash-num
+  background-color: lightgray
+  border: 1px solid lightgray
+  border-radius: 40px
+  width: 250px
+  text-align: center
+  
+  h1
+    padding: 0
+    margin: 1rem 4rem
 
 
 /*/////////////////////////////////////////////////////*/
@@ -263,21 +286,29 @@ $input-height: 150px
   grid-template-rows: 10% 35% 50%
   grid-template-areas: "uri uri" "input stats" "input chart"
 
+  h2
+    border-right: 1px solid black
+    padding-right: 2rem
+
+#queries-list
+  padding: 0.5rem 1rem
+  margin-left: 2rem
+
 #query-space 
   border: none
   grid-area: input
   display: grid
-  grid-template-rows: 4fr 0.5fr
+  grid-template-rows: 4fr 0.5fr 0.5fr
   -webkit-box-shadow: $webkit-box-shadow
   box-shadow: $box-shadow
   border-radius: .3rem
-
 
 #text-area 
   padding: 1rem
   border-radius: .3rem
 
-
+#uri-name
+  text-align: center
 
 #stats 
   grid-area: stats

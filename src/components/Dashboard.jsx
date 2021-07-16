@@ -9,13 +9,12 @@ import { useDarkTheme } from './ThemeContext';
 
 const Dashboard = ({ uri }) => {
   
-  //fake data for all queries of a single uri
-  const uriData = [
-    'query 1',
-    'query 2',
-    'query 3',
-    'query 4',
-  ]
+  // total num unique queries (history prop - array of queries)
+  // total num queries sent (can this be sent from db?)
+  // total num load tests 
+  // pass fail pie chart
+  // some other circular chart
+  // bar graph of num queries sent per day
 
   const darkTheme = useDarkTheme();
   const themeStyle = {
@@ -29,16 +28,27 @@ const Dashboard = ({ uri }) => {
         <h2>Summary for: {uri}</h2>
       </header>
         <div id='top-left'>
-          <BarChartComponent />
-        </div>
-        <div id='top-right'>
-          <PieChartComponent />
-        </div>
-        <div id='bottom-left'>
           <RadarChartComponent />
         </div>
-        <div id='bottom-right'>
-          <ScatterChartComponent />
+        <div id='top-mid'>
+          <PieChartComponent />
+        </div>
+        <div id='bottom'>
+          <BarChartComponent />
+        </div>
+        <div id='left'>
+          <div class='dashboard-stats'>
+            <div class='dash-title'><h3>Total Unique Queries</h3></div>
+            <div class='dash-num'><h1>100</h1></div>
+          </div>
+          <div class='dashboard-stats'>
+            <div class='dash-title'><h3>Total URI Calls</h3></div>
+            <div class='dash-num'><h1>100000</h1></div>
+          </div>
+          <div class='dashboard-stats'>
+            <div class='dash-title'><h3>Total Load Tests</h3></div>
+            <div class='dash-num'><h1>100</h1></div>
+          </div>
         </div>
     </div>
   )

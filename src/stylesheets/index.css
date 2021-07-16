@@ -73,7 +73,7 @@ body {
   display: grid;
   flex-direction: column;
   grid-template-columns: 50% 50%;
-  grid-template-rows: 10% 45% 20%;
+  grid-template-rows: 10% 55% 20%;
   justify-content: center;
   align-items: center;
   padding-top: 10rem;
@@ -86,7 +86,7 @@ body {
 
 #new-inputs {
   grid-area: new;
-  height: 150px;
+  height: 200px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -110,7 +110,7 @@ body {
 
 #previous-inputs {
   grid-area: previous;
-  height: 150px;
+  height: 200px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -127,6 +127,10 @@ body {
   border: 1px solid gainsboro;
   width: 70%;
 }
+#uris option:first-child {
+  display: none;
+}
+
 #submit-connect {
   grid-area: connect;
   display: grid;
@@ -193,9 +197,9 @@ body {
   grid-area: main;
   padding: 2rem;
   display: grid;
-  grid-template-columns: 50% 50%;
+  grid-template-columns: 33% 33% 33%;
   grid-template-rows: 10% 48% 48%;
-  grid-template-areas: "uri uri" "one two" "three four";
+  grid-template-areas: "uri uri uri" "one two stats" "three three stats";
 }
 
 #line-chart {
@@ -210,25 +214,50 @@ body {
   grid-area: one;
 }
 
-#top-right {
+#top-mid {
   grid-area: two;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-#bottom-left {
+#bottom {
   grid-area: three;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-#bottom-right {
-  grid-area: four;
+#left {
+  grid-area: stats;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.dashboard-stats {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem;
+}
+
+.dash-title {
+  font-color: red;
+}
+
+.dash-num {
+  background-color: lightgray;
+  border: 1px solid lightgray;
+  border-radius: 40px;
+  width: 250px;
+  text-align: center;
+}
+.dash-num h1 {
+  padding: 0;
+  margin: 1rem 4rem;
 }
 
 /*/////////////////////////////////////////////////////*/
@@ -243,12 +272,21 @@ body {
   grid-template-rows: 10% 35% 50%;
   grid-template-areas: "uri uri" "input stats" "input chart";
 }
+#test-query h2 {
+  border-right: 1px solid black;
+  padding-right: 2rem;
+}
+
+#queries-list {
+  padding: 0.5rem 1rem;
+  margin-left: 2rem;
+}
 
 #query-space {
   border: none;
   grid-area: input;
   display: grid;
-  grid-template-rows: 4fr 0.5fr;
+  grid-template-rows: 4fr 0.5fr 0.5fr;
   -webkit-box-shadow: 3px 4px 1px 2px #565656;
   box-shadow: 3px 4px 6px 2px #565656;
   border-radius: 0.3rem;
@@ -257,6 +295,10 @@ body {
 #text-area {
   padding: 1rem;
   border-radius: 0.3rem;
+}
+
+#uri-name {
+  text-align: center;
 }
 
 #stats {

@@ -45,7 +45,7 @@ const fakeData = [
   },
   {
     id: 2,
-    'Query Name': 'Rocket ships',
+    'Query Name': 'Raubern ships',
     'Num of runtimes': 38,
     'Avg Runtime(ms)': 150,
     'Last Date Ran': new Date().toDateString(),
@@ -62,7 +62,7 @@ const fakeData = [
   },
   {
     id: 3,
-    'Query Name': 'Rocket ships',
+    'Query Name': 'Raubern sucks',
     'Num of runtimes': 38,
     'Avg Runtime(ms)': 150,
     'Last Date Ran': new Date().toDateString(),
@@ -79,7 +79,7 @@ const fakeData = [
   },
   {
     id: 4,
-    'Query Name': 'Rocket ships',
+    'Query Name': 'Rockets dont suck',
     'Num of runtimes': 38,
     'Avg Runtime(ms)': 150,
     'Last Date Ran': new Date().toDateString(),
@@ -96,7 +96,7 @@ const fakeData = [
   },
   {
     id: 5,
-    'Query Name': 'Rocket ships',
+    'Query Name': 'Rocket is bbygorl',
     'Num of runtimes': 38,
     'Avg Runtime(ms)': 150,
     'Last Date Ran': new Date().toDateString(),
@@ -113,7 +113,7 @@ const fakeData = [
   },
   {
     id: 6,
-    'Query Name': 'Rocket ships',
+    'Query Name': 'Rocket me',
     'Num of runtimes': 38,
     'Avg Runtime(ms)': 150,
     'Last Date Ran': new Date().toDateString(),
@@ -130,7 +130,7 @@ const fakeData = [
   },
   {
     id: 7,
-    'Query Name': 'Rocket ships',
+    'Query Name': 'i ship rockets',
     'Num of runtimes': 38,
     'Avg Runtime(ms)': 150,
     'Last Date Ran': new Date().toDateString(),
@@ -147,7 +147,7 @@ const fakeData = [
   },
   {
     id: 8,
-    'Query Name': 'Rocket ships',
+    'Query Name': 'me like rockets',
     'Num of runtimes': 38,
     'Avg Runtime(ms)': 150,
     'Last Date Ran': new Date().toDateString(),
@@ -164,7 +164,7 @@ const fakeData = [
   },
   {
     id: 9,
-    'Query Name': 'Rocket ships',
+    'Query Name': 'Rocket rocket rocket',
     'Num of runtimes': 38,
     'Avg Runtime(ms)': 150,
     'Last Date Ran': new Date().toDateString(),
@@ -181,7 +181,7 @@ const fakeData = [
   },
   {
     id: 10,
-    'Query Name': 'Rocket ships',
+    'Query Name': 'Rocks in a rocket',
     'Num of runtimes': 38,
     'Avg Runtime(ms)': 150,
     'Last Date Ran': new Date().toDateString(),
@@ -198,7 +198,7 @@ const fakeData = [
   },
   {
     id: 11,
-    'Query Name': 'Rocket ships',
+    'Query Name': 'Rocket of rocks',
     'Num of runtimes': 38,
     'Avg Runtime(ms)': 150,
     'Last Date Ran': new Date().toDateString(),
@@ -217,7 +217,7 @@ const fakeData = [
 const fakeURIs = [
   'raubern big dum-dum',
   'he dum-dum of all dum-dum',
-  'he scrum master? more like dum master',
+  'raubern scrum master? more like dum master',
   'why is raubern',
   'no more raubern',
 ]
@@ -225,6 +225,7 @@ const fakeURIs = [
 function App() {
   // const [dark, setDark] = useState(false); // or true?
   const [uri, setURI] = useState('(please enter a URI to begin)');
+  const [nickname, setNickname] = useState(null)
   const [history, setHistory] = useState(null);
   const [uriID, setUriID] = useState(0);
   const [runtime, setRuntime] = useState(0);
@@ -246,16 +247,21 @@ function App() {
     color: darkTheme ? '#CCC' : '#333'
   }
 
+  // get response time for one query call; function updates state here then sent to test-query
   const getResponseTimes = () => {
     ipcRenderer.on(channels.GET_RESPONSE_TIME, (event, arg) => {
       console.log('Listening for response from main process...')
-      console.log('arg object received from electronjs: ', arg);
-
+      // arg is received from DB as an array of objects
+      // console.log('arg object received from electronjs: ', arg);
+      
+      // 
+      
+      // get the runtime of the most recent query
       const currRuntime = arg[arg.length - 1].response_time.toFixed(1);
       console.log('runtime: ', currRuntime);
       setRuntime(currRuntime);
 
-      //arg is received from DB as an array of objects
+      // statistical analysis to plot line-of-best-fit
       const pastRuntimes = [];
       let x_sum = 0
       let y_sum = 0
@@ -285,15 +291,8 @@ function App() {
       });
 
       setHistory(pastRuntimes);
-      console.log('all past runtimes: ', pastRuntimes);
     });
   }
-
-  // const theme = createMuiTheme({
-  //   palette: {
-  //       type: dark ? 'dark' : 'light',
-  //   },
-  // })
     
   return (
     <ApolloProvider client={client}>
@@ -323,6 +322,8 @@ function App() {
                   // theme={theme} 
                   uri={uri}
                   setURI={setURI} 
+                  nickname={nickname}
+                  setNickname={setNickname}
                   uriID={uriID} 
                   setUriID={setUriID}
                   history={history} 
@@ -343,6 +344,7 @@ function App() {
                   setHistory={setHistory}
                   runtime={runtime}
                   getResponseTimes={getResponseTimes}
+                  queriesList={queriesList}
                   />
               </Route>
               <Route path="/loadtest">
