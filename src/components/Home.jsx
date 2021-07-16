@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import { useDarkTheme } from './ThemeContext';
 
 import { channels } from '../shared/constants';
-const { ipcRenderer } = window.require("electron");
+// const { ipcRenderer } = window.require("electron");
 
 const Home = ({ uri, setURI, history, setHistory, setUriID }) => {
   
@@ -15,21 +15,31 @@ const Home = ({ uri, setURI, history, setHistory, setUriID }) => {
     color: darkTheme ? '#CCC' : '#333'
   }
   
-  // const [data, setData] = useState(null);
   
   // Send URI to electron.js; receive array of objects containing dates + runtime
   const submitURI = () => {
     console.log(uri, ' : URI is being sent to main process...');
-    ipcRenderer.send(channels.GET_ENDPOINT, uri);
-    ipcRenderer.on(channels.GET_ENDPOINT, (event, arg) => {
+    
+    // ipcRenderer.send(channels.GET_ENDPOINT, uri);
+    window.api.send("EndpointToMain", uri);
+    
+    // ipcRenderer.on(channels.GET_ENDPOINT, (event, arg) => {
+    //   document.querySelector('#connected-text').style.display = 'block';
+    //   setUriID(arg);
+    // });
+    window.api.receive("fromMain", (id) => {
+      console.log('Within window.api.receive in Home.jsx, id: ', id);
       document.querySelector('#connected-text').style.display = 'block';
-      setUriID(arg);
-    });
-    ipcRenderer.on(channels.GET_HISTORY, (event, arg) => {
-      // history state updated and stored in App.js
-      setHistory(arg);
+      console.log('received from main process')
+      setUriID(id);
     })
+
+    // ipcRenderer.on(channels.GET_HISTORY, (event, arg) => {
+    //   // history state updated and stored in App.js
+    //   setHistory(arg);
+    // })
   }
+  
   // Material UI Button
   const useStyles = makeStyles((theme) => ({
     root: {
