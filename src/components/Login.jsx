@@ -3,7 +3,7 @@ import axios from "axios";
 
 import { Link } from 'react-router-dom';
 import { channels } from '../shared/constants';
-const { ipcRenderer } = window.require("electron");
+
 
 
 const Login = ({ user, setUser }) => {

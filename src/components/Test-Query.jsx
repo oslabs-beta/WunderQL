@@ -1,15 +1,15 @@
 import { useState, useEffect, useContext } from "react";
 import { useLocation } from 'react-router-dom'
 import LineChartComponent from "./LineChart";
-import { channels } from '../shared/constants';
+// import { channels } from '../shared/constants';
 import Button from '@material-ui/core/Button';
 import { useDarkTheme } from "./ThemeContext";
-const { ipcRenderer } = window.require("electron");
+// const { ipcRenderer } = window.require("electron");
 
-const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getResponseTimes }) => {
+const TestQuery = ({ client, uri, uriID, history, runtime, setHistory, getResponseTimes, setRuntime }) => {
 
   const [query, setQuery] = useState('');
-  
+
   const darkTheme = useDarkTheme();
   const themeStyle = {
     backgroundColor: darkTheme ? '#333' : 'white',
@@ -31,21 +31,39 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
     // Sends the message to Electron main process
     console.log('Query is being sent to main process...')
 
-    ipcRenderer.send(channels.GET_RESPONSE_TIME, {
+    // Make GraphQL API query at a rate of 1 request per 5 milliseconds
+    // TODO: Make the rate of requests change based on user interaction 
+    // setInterval(() => {
+    //   ipcRenderer.send(channels.GET_RESPONSE_TIME, {
+    //     uriID: uriID,
+    //     query: query,
+    //     uri: uri,
+    //   });
+    // }, 5)
+    
+    // ipcRenderer.send(channels.GET_RESPONSE_TIME, {
+    //   uriID: uriID,
+    //   query: query,
+    //   uri: uri,
+    // });
+    window.api.send('QueryDetailstoMain', {
       uriID: uriID,
       query: query,
-    });
+      uri: uri,   
+    })
+    
+    // Listen for resposne times from main
+    getResponseTimes();
+
+    // Initiate load test when user clicks 'Submit Query'
+    // TODO: Move this to new component, and don't hardcode numofChildProcesses
+    // ipcRenderer.send(channels.TEST_LOAD, {
+    //   numOfChildProccesses: 3,
+    //   query: query,
+    //   uri: uri,
+    // })
   };
 
-  // commented out because calculating runtime from FE (for now)
-  useEffect(() => {
-    getResponseTimes();
-    
-    // Clean the listener after the component is dismounted
-    return () => {
-      ipcRenderer.removeAllListeners();
-    };
-  });
 
   return (
     <div id='test-query' style={themeStyle}> 
@@ -94,47 +112,5 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
     </div>
   ) 
 };
-
-
-    // const startTime = performance.now();
-
-    // fetch(uri, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Accept': 'application/json,text/plain, */*',
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({ query: query })
-    // })
-    //   .then(res => res.json())
-    //   .then(result => {
-    //     let responseTime = (performance.now() - startTime)
-    //     setRuntime(Number(responseTime.toFixed(1)));
-    //   })
-
-    /**this seems to be measuring runtime of promise 
-    client.query({
-      query: gql`${query}`
-    }).then(result => {
-      let responseTime = (performance.now() - startTime)
-      // let responseTime = (Date.now() - startTime)
-      setRuntime(Number(responseTime.toFixed(1)));
-    })
-    */
-
-// client.query({
-  // query: gql`
-    // query {
-    //   launchesPast(limit: 10) {
-    //     mission_name
-    //     launch_date_local
-    //     launch_site {
-    //       site_name_long
-    //     }
-    //   }
-    // }
-//   `
-// }).then(result => console.log(result))
-
 
 export default TestQuery;

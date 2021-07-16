@@ -5,7 +5,6 @@ import { channels } from '../shared/constants';
 import Button from '@material-ui/core/Button';
 import { useDarkTheme } from "./ThemeContext";
 
-const { ipcRenderer } = window.require("electron");
 
 const LoadTest = ({ uri, uriID, history, runtime, getResponseTimes }) => {
 
@@ -22,10 +21,10 @@ const LoadTest = ({ uri, uriID, history, runtime, getResponseTimes }) => {
     // Sends the message to Electron main process
     console.log('Query is being sent to main process...')
 
-    ipcRenderer.send(channels.GET_RESPONSE_TIME, {
-      uriID: uriID,
-      query: query,
-    });
+    // ipcRenderer.send(channels.GET_RESPONSE_TIME, {
+    //   uriID: uriID,
+    //   query: query,
+    // });
   };
 
   // commented out because calculating runtime from FE (for now)
@@ -33,9 +32,9 @@ const LoadTest = ({ uri, uriID, history, runtime, getResponseTimes }) => {
     getResponseTimes();
     
     // Clean the listener after the component is dismounted
-    return () => {
-      ipcRenderer.removeAllListeners();
-    };
+    // return () => {
+    //   ipcRenderer.removeAllListeners();
+    // };
   });
 
   return (
