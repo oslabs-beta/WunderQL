@@ -17,7 +17,7 @@ import PreviousSearches from './components/PreviousSearches';
 import './stylesheets/index.css';
 import { channels } from './shared/constants';
 
-import { ApolloClient, InMemoryCache, gql, ApolloProvider } from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { ThemeProvider, useDarkTheme } from "./components/ThemeContext"; 
 
 // export const ThemeContext = createContext();
@@ -49,6 +49,8 @@ function App() {
 
   const getResponseTimes = () => {
     // ipcRenderer.on(channels.GET_RESPONSE_TIME, (event, arg) => {
+  // useEffect(() => {
+  //   console.log('im rerenering')
     window.api.receiveArray("ResponseTimesFromMain", (event, arg) => {
       console.log('Listening for response from main process...')
       console.log('arg object received from electronjs: ', arg);
@@ -89,7 +91,9 @@ function App() {
       setHistory(pastRuntimes);
       console.log('all past runtimes: ', pastRuntimes);
     });
+
   }
+  
 
   // const theme = createMuiTheme({
   //   palette: {
@@ -141,7 +145,7 @@ function App() {
                   uriID={uriID} 
                   history={history}
                   setHistory={setHistory}
-                  // runtime={runtime}
+                  runtime={runtime}
                   getResponseTimes={getResponseTimes}
                   />
               </Route>
@@ -153,7 +157,8 @@ function App() {
                   history={history}
                   setHistory={setHistory}
                   runtime={runtime}
-                  getResponseTimes={getResponseTimes}
+                  setRuntime={setRuntime}
+                  // getResponseTimes={getResponseTimes}
                   />
               </Route>
               <Route path="/previoussearches">
@@ -161,7 +166,7 @@ function App() {
                   uri={uri} 
                   uriID={uriID} 
                   history={history}
-                  getResponseTimes={getResponseTimes}
+                  // getResponseTimes={getResponseTimes}
                   />
               </Route>
             </Switch>

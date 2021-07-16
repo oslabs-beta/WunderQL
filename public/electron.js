@@ -23,9 +23,13 @@ function createWindow() {
       nodeIntegration: false,
       // defaults to true; allows separation btw main and renderer
       // right now only works if false
+      nodeIntegrationInWorker: false,
+      nodeIntegrationInSubFrames: false,
       contextIsolation: true,
       enableRemoteModule: false,
       preload: path.join(__dirname, "preload.js"),
+      /* eng-disable PRELOAD_JS_CHECK */
+      disableBlinkFeatures: "Auxclick"
     },
   });
 
@@ -201,6 +205,7 @@ async function checkResponseTime(query, uri_ID) {
 // Listening on channel 'get_endpoint' to receive endpoint from frontend
 // ipcMain.on(channels.GET_ENDPOINT, async (event, graphqlEndpoint) => {
 ipcMain.on("EndpointToMain", async (event, graphqlEndpoint) => {
+// ipcMain.on("EndpointToMain", async (event, graphqlEndpoint) => {
   try {
     const insertEndpoint = {
       text: 'INSERT INTO graphqlurls(url) VALUES ($1) RETURNING _id',
@@ -220,8 +225,8 @@ ipcMain.on("EndpointToMain", async (event, graphqlEndpoint) => {
 
 // Async await --- wait for function to finish before ipcMain sends back response
 // Sending a response back to the renderer process (React)
-// ipcMain.on(channels.GET_RESPONSE_TIME, async (event, arg) => {
 ipcMain.on("QueryDetailstoMain", async (event, arg) => {
+// ipcMain.on("QueryDetailstoMain", async (event, arg) => {
   let responseTime = await checkResponseTime(arg.query, arg.uri);
   // Insert query string and url_id into the database 
   try {
@@ -286,12 +291,6 @@ ipcMain.on("QueryDetailstoMain", async (event, arg) => {
   }  
 });
 
-// ipcMain.on(channels.TEST_LOAD, async (event, arg) => {
-//   console.log('uri in TEST_LOAD', arg.uri)
-//   console.log('Before load test...');
-//   await loadTest(arg.numOfChildProccesses, arg.uri, arg.query);
-//   console.log('Load test completed');
-// });
 
   //----------------------------------------
 // Example queries for https://api.spacex.land/graphql/

@@ -8,8 +8,6 @@ const LineChartComponent = ({ history }) => {
   // const date = history.date;
   // const payloadFormatter = (value, name, props) => (['date', 'date2']);
 
-
-  
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {  
       console.log(payload[0])

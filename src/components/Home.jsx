@@ -15,11 +15,11 @@ const Home = ({ uri, setURI, history, setHistory, setUriID }) => {
     color: darkTheme ? '#CCC' : '#333'
   }
   
-  // const [data, setData] = useState(null);
   
   // Send URI to electron.js; receive array of objects containing dates + runtime
   const submitURI = () => {
     console.log(uri, ' : URI is being sent to main process...');
+    
     // ipcRenderer.send(channels.GET_ENDPOINT, uri);
     window.api.send("EndpointToMain", uri);
     
@@ -39,6 +39,7 @@ const Home = ({ uri, setURI, history, setHistory, setUriID }) => {
     //   setHistory(arg);
     // })
   }
+  
   // Material UI Button
   const useStyles = makeStyles((theme) => ({
     root: {
