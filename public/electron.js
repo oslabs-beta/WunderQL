@@ -127,7 +127,7 @@ app.on("window-all-closed", () => {
   }
 });
 
-app.on("activate", () => {
+ipcMain.on("activate", () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
@@ -135,6 +135,47 @@ app.on("activate", () => {
   }
 });
 
+
+
+ipcMain.on(channels.GET_USER_AUTH, async (event, arg) => {
+
+  //Get Users Name and Password from Login Form
+  try {
+    const validateUserQuery = {
+      text : 'SELECT * FROM users WHERE username = $1 AND password = $2',
+      values: [arg.username, arg.password],
+    }
+
+    //Check to see if valid username and password combination exists
+    const validUsers = await db.query(validateUserQuery)
+    if(validUsers.rows[0]){
+      console.log("true", validUsers)
+    } else {
+      console.log("false", validUsers)
+    }
+
+  } catch (err) {
+    console.log(err)
+    return err;
+  }  
+})
+
+// https://github.com
+// http://localhost:3000/oauth-callback
+//   // const request = net.request('http://localhost:3000/oauth-callback')
+//   request.on('response', (response) => {
+//     console.log(response)
+//     // console.log(`STATUS: ${response.statusCode}`)
+//     // console.log(`HEADERS: ${JSON.stringify(response.headers)}`)
+//     // response.on('data', (chunk) => {
+//     //   console.log(`BODY: ${chunk}`)
+//     // })
+//     // response.on('end', () => {
+//     //   console.log('No more data in response.')
+//     // })
+//   })
+//   request.end()
+// })
 
 //////////////////////////////////////////////////////////////
 

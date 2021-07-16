@@ -387,4 +387,9 @@ body {
   font-size: 0.8rem;
 }
 
+#login-form{
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
 /*# sourceMappingURL=index.css.map */

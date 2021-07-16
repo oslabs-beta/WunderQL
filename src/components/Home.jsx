@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import { useDarkTheme } from './ThemeContext';
 
 import { channels } from '../shared/constants';
-// const { ipcRenderer } = window.require("electron");
+
 
 const Home = ({ uri, setURI, nickname, setNickname, history, setHistory, setUriID, queriesList, uriList }) => {
   
@@ -81,7 +81,9 @@ const Home = ({ uri, setURI, nickname, setNickname, history, setHistory, setUriI
   // const classes = useStyles();
 
   return (
-    <div id='home' style={themeStyle}>
+    <div id='home' 
+    // style={themeStyle}
+    >
 
       <header>
         <h1 id='welcome'>Welcome back, developer!</h1>

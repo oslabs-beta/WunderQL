@@ -151,7 +151,7 @@ export default function NavBar(props) {
         </div>
         <Divider />
         <List>
-            <Link to="/" class='nav-list-item'>
+            <Link to="/home" class='nav-list-item'>
               <ListItem button key={1}>
                 <ListItemIcon><InboxIcon /></ListItemIcon>
                 <ListItemText primary='Home' />
@@ -179,6 +179,12 @@ export default function NavBar(props) {
               <ListItem button key={4}>
                 <ListItemIcon><InboxIcon /></ListItemIcon>
                 <ListItemText primary='Past Searches' />
+              </ListItem>
+            </Link>
+            <Link to="/login" class='nav-list-item'>
+              <ListItem button key={5}>
+                <ListItemIcon><InboxIcon /></ListItemIcon>
+                <ListItemText primary='Login' />
               </ListItem>
             </Link>
         </List>    
