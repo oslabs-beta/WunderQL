@@ -12,6 +12,7 @@ import Dashboard from './components/Dashboard'
 import NavBar from './components/NavBar'
 import TestQuery from './components/Test-Query'
 import BatchTest from "./components/LoadTest";
+import Login from "./components/Login"
 // import Header from './components/Header'
 import PreviousSearches from './components/PreviousSearches';
 import './stylesheets/index.css';
@@ -162,6 +163,9 @@ function App() {
                   history={history}
                   getResponseTimes={getResponseTimes}
                   />
+              </Route>
+              <Route path="/login">
+                <Login />
               </Route>
             </Switch>
           </Router>
