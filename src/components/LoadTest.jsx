@@ -4,7 +4,7 @@ import LineChartComponent from "./LineChart";
 import { channels } from '../shared/constants';
 import Button from '@material-ui/core/Button';
 import { useDarkTheme } from "./ThemeContext";
-// const { ipcRenderer } = window.require("electron");
+
 
 const LoadTest = ({ uri, uriID, history, runtime, getResponseTimes }) => {
 

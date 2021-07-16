@@ -12,6 +12,7 @@ import Dashboard from './components/Dashboard'
 import NavBar from './components/NavBar'
 import TestQuery from './components/Test-Query'
 import BatchTest from "./components/LoadTest";
+import Login from "./components/Login"
 // import Header from './components/Header'
 import PreviousSearches from './components/PreviousSearches';
 import './stylesheets/index.css';
@@ -19,8 +20,7 @@ import { channels } from './shared/constants';
 
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { ThemeProvider, useDarkTheme } from "./components/ThemeContext"; 
-// export const ThemeContext = createContext();
-// const { ipcRenderer } = window.require("electron");
+
 
 
 function App() {
@@ -163,6 +163,9 @@ function App() {
                   history={history}
                   getResponseTimes={getResponseTimes}
                   />
+              </Route>
+              <Route path="/login">
+                <Login />
               </Route>
             </Switch>
           </Router>
