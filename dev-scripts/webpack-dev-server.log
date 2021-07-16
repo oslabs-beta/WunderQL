@@ -16,5 +16,5 @@ modules by path [1m./src/[39m[22m 50.2 KiB (javascript) 7.18 KiB (css/mini-ex
   [1m./src/index.jsx[39m[22m 264 bytes [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
   [1m./src/App.js[39m[22m 9.58 KiB [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
   [1m./src/shared/constants.js[39m[22m 238 bytes [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
-webpack 5.44.0 compiled [1m[32msuccessfully[39m[22m in 6521 ms
+webpack 5.44.0 compiled [1m[32msuccessfully[39m[22m in 5072 ms
 [34mℹ[39m [90m｢wdm｣[39m: Compiled successfully.
