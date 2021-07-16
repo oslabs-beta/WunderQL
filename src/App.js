@@ -19,9 +19,7 @@ import { channels } from './shared/constants';
 
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { ThemeProvider, useDarkTheme } from "./components/ThemeContext"; 
-
 // export const ThemeContext = createContext();
-
 // const { ipcRenderer } = window.require("electron");
 
 
@@ -33,7 +31,6 @@ function App() {
   const [runtime, setRuntime] = useState(0);
 
   // const toggleDarkMode = () => {console.log('changed theme'); setDark(prevDarkTheme => !prevDarkTheme)}
-
 
   const client = new ApolloClient({
     uri: uri,
@@ -49,8 +46,6 @@ function App() {
 
   const getResponseTimes = () => {
     // ipcRenderer.on(channels.GET_RESPONSE_TIME, (event, arg) => {
-  // useEffect(() => {
-  //   console.log('im rerenering')
     window.api.receiveArray("ResponseTimesFromMain", (event, arg) => {
       console.log('Listening for response from main process...')
       console.log('arg object received from electronjs: ', arg);
@@ -158,7 +153,7 @@ function App() {
                   setHistory={setHistory}
                   runtime={runtime}
                   setRuntime={setRuntime}
-                  // getResponseTimes={getResponseTimes}
+                  getResponseTimes={getResponseTimes}
                   />
               </Route>
               <Route path="/previoussearches">
@@ -166,7 +161,7 @@ function App() {
                   uri={uri} 
                   uriID={uriID} 
                   history={history}
-                  // getResponseTimes={getResponseTimes}
+                  getResponseTimes={getResponseTimes}
                   />
               </Route>
             </Switch>

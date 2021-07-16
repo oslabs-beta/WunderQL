@@ -4,8 +4,6 @@ import App from './App';
 import { ApolloClient, InMemoryCache, gql, ApolloProvider } from '@apollo/client';
 
 ReactDOM.render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>,
+      <App />,
   document.getElementById('root')
 );

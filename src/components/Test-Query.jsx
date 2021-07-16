@@ -50,10 +50,11 @@ const TestQuery = ({ client, uri, uriID, history, runtime, setHistory, getRespon
       uriID: uriID,
       query: query,
       uri: uri,   
-         
     })
     
+    // Listen for resposne times from main
     getResponseTimes();
+
     // Initiate load test when user clicks 'Submit Query'
     // TODO: Move this to new component, and don't hardcode numofChildProcesses
     // ipcRenderer.send(channels.TEST_LOAD, {
