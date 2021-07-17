@@ -129,24 +129,39 @@ ipcMain.on("activate", () => {
 });
 
 //-------------------------------------------------------------------------------
+
 //! #1 loginToMain - User logins 
-ipcMain.on("loginToMain", async (event, arg) => {
+//ipcMain.on(channels.GET_USER_AUTH, async (event, arg) => {
+  ipcMain.on("loginToMain", async (event, arg) => {
+  //Get Users Name and Password from Login Form
   try {
-  //send all URLs associated with that user from db after getting user ID from above
-  let userId;
-    const getUrlsQuery = {
-      text: 'SELECT _id, url, nickname FROM graphqlurls WHERE user_id = $1',
-      values: [userId]
+    let userId
+    const validateUserQuery = {
+      text : 'SELECT * FROM users WHERE username = $1 AND password = $2',
+      values: [arg.username, arg.password],
     }
-    const queryResult = await db.query(getUrlsQuery);
-    const results = queryResult.rows;
-    event.sender.send("UrlsfromMain", results)
+
+    //Check to see if valid username and password combination exists
+    const validUsers = await db.query(validateUserQuery)
+    if(validUsers.rows.length){
+      userId=validUsers.rows[0]._id;
+      event.sender.send("fromMain", true)
+    } 
+
+  const getUrlsQuery = {
+    text: 'SELECT _id, url, nickname FROM graphqlurls WHERE user_id = $1',
+    values: [userId]
+  }
+  const queryResult = await db.query(getUrlsQuery);
+  const results = queryResult.rows;
+  event.sender.send("UrlsfromMain", results)
 
   } catch (err) {
     console.log(err)
     return err;
   }  
 });
+
 
 // Function that conducts load test on endpoint
 const loadTest = async (CHILD_PROCESSES, URL, QUERY) => {
@@ -260,21 +275,15 @@ ipcMain.on("urlToMain", async (event, arg) => {
     event.sender.send("queriesfromMain", allQueries)
 
     //get dashboard summary for specific url - total queries, total tests, total load tests. If possible # of queries per day.
-    
-    //! MISSING TWO DATA POINTS
-    // const query = {
-    //   text: `SELECT graphqlurls.url, COUNT(q.*) as number_of_queries, COUNT(rt.*) as number_of_tests, COUNT(lrt.*) as number_of_load_tests 
-    //   FROM graphqlurls
-    //   INNER JOIN queries q ON q.url_id = gu._id WHERE graphqlurls._id = $1 
-    //   INNER JOIN response_times rt ON rt.query_id = q._id
-    //   INNER JOIN load_test_response_times lrt ON lrt.query_id = q._id`,
-    // }
 
     const query = {
-      text: `SELECT gu.url, COUNT(q.*) as number_of_queries
-      FROM graphqlurls gu
-      INNER JOIN queries q ON q.url_id = gu._id WHERE gu._id = $1
-      GROUP BY gu.url`,
+      text: `SELECT gu.url, COUNT(q._id) as number_of_queries, COUNT(rt._id) as number_of_tests, COUNT(lrt._id) as number_of_load_tests
+      FROM graphqlurls gu 
+      INNER JOIN queries q ON q.url_id = gu._id AND gu._id = $1
+      INNER JOIN response_times rt ON rt.query_id = q._id
+      INNER JOIN load_test_response_times lrt ON lrt.query_id = q._id
+      GROUP BY gu.url
+      `,
       values: [arg.urlId]
     }
   
@@ -371,7 +380,7 @@ ipcMain.on("loadTestQueryToMain", async (event, arg) => {
     console.log(err)
     return err;
   }  
-})
+});
   
 
   //----------------------------------------
@@ -400,4 +409,3 @@ ipcMain.on("loadTestQueryToMain", async (event, arg) => {
               //   `
               // }).then(result => console.log(result))
               //----------------------------------------
-              

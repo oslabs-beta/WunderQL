@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import { useDarkTheme } from "./ThemeContext";
 
 
-const LoadTest = ({ uri, uriID, history, runtime, getResponseTimes }) => {
+const LoadTest = ({ uri, uriID, setUriID, history, runtime, getResponseTimes }) => {
 
   const [query, setQuery] = useState('');
   const [loadAmount, setLoadAmount] = useState(null);
