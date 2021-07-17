@@ -19,8 +19,8 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
 
   // configure uri list to appear as drop down list upon successful login
   // when connected to backend, replace 'queriesList' with history
-  const queries = [];
-  queriesList.map((prevQuery, index) => queries.push(<option value={prevQuery.query} id={index}>{prevQuery['Query Name']}</option>))
+  // const queries = [];
+  // queriesList.map((prevQuery, index) => queries.push(<option value={prevQuery.query} id={index}>{prevQuery['Query Name']}</option>))
 
   // this is for when a card was clicked in the 'previous searches' component and the query
   // is passed as a prop when user is rerouted back to this component
@@ -94,7 +94,7 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
           onChange={(e) => document.querySelector('#text-area').innerHTML = e.target.value}
           >
           <option value="" disabled selected hidden>previously searched queries</option>
-          {queries}   
+          {/* {queries}    */}
           </select>
       </header>
       <div id='query-space'>

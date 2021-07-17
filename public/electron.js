@@ -137,8 +137,8 @@ ipcMain.on("activate", () => {
 
 
 
-ipcMain.on(channels.GET_USER_AUTH, async (event, arg) => {
-
+//ipcMain.on(channels.GET_USER_AUTH, async (event, arg) => {
+  ipcMain.on("loginToMain", async (event, arg) => {
   //Get Users Name and Password from Login Form
   try {
     const validateUserQuery = {
@@ -149,9 +149,11 @@ ipcMain.on(channels.GET_USER_AUTH, async (event, arg) => {
     //Check to see if valid username and password combination exists
     const validUsers = await db.query(validateUserQuery)
     if(validUsers.rows[0]){
-      console.log("true", validUsers)
+      console.log("true", true)
+      event.sender.send("fromMain", true)
     } else {
-      console.log("false", validUsers)
+      console.log("false", false)
+      event.sender.send("fromMain", false)
     }
 
   } catch (err) {

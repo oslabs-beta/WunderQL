@@ -8,7 +8,7 @@ contextBridge.exposeInMainWorld(
     send: (channel, data) => {
       // whitelist channels
       console.log('this is in send within preload.js')
-      let validChannels = ["toMain", "EndpointToMain", "QueryDetailstoMain"];
+      let validChannels = ["toMain", "EndpointToMain", "QueryDetailstoMain", "loginToMain"];
       if (validChannels.includes(channel)) {
         ipcRenderer.send(channel, data);
       }

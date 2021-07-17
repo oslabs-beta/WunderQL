@@ -20,6 +20,7 @@ import { channels } from './shared/constants';
 
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { ThemeProvider, useDarkTheme } from "./components/ThemeContext"; 
+import MainContainer from "./components/MainContainer";
 
 
 // fake data for cards in previous-searches
@@ -221,7 +222,7 @@ const fakeURIs = [
 ]
 
 function App() {
-  // const [dark, setDark] = useState(false); // or true?
+  const [dark, setDark] = useState(false); // or true?
   const [uri, setURI] = useState('(please enter a URI to begin)');
   const [nickname, setNickname] = useState(null)
   const [history, setHistory] = useState(null);
@@ -229,7 +230,9 @@ function App() {
   const [runtime, setRuntime] = useState(0);
   const [queriesList, setQueriesList] = useState(fakeData);
   const [uriList, setUriList] = useState(fakeURIs); // to use in dashboard
-
+  const [user, setUser] = useState({
+    loggedIn: false
+  });
   // const toggleDarkMode = () => {console.log('changed theme'); setDark(prevDarkTheme => !prevDarkTheme)}
 
   const client = new ApolloClient({
@@ -245,53 +248,54 @@ function App() {
   }
 
   // get response time for one query call; function updates state here then sent to test-query
-  const getResponseTimes = () => {
-    // ipcRenderer.on(channels.GET_RESPONSE_TIME, (event, arg) => {
-    window.api.receiveArray("ResponseTimesFromMain", (event, arg) => {
-      console.log('Listening for response from main process...')
-      // arg is received from DB as an array of objects
-      // console.log('arg object received from electronjs: ', arg);
+  //Moved to Main container probably will delete
+  // const getResponseTimes = () => {
+  //   // ipcRenderer.on(channels.GET_RESPONSE_TIME, (event, arg) => {
+  //   window.api.receiveArray("ResponseTimesFromMain", (event, arg) => {
+  //     console.log('Listening for response from main process...')
+  //     // arg is received from DB as an array of objects
+  //     // console.log('arg object received from electronjs: ', arg);
       
-      // 
+  //     // 
       
-      // get the runtime of the most recent query
-      const currRuntime = arg[arg.length - 1].response_time.toFixed(1);
-      console.log('runtime: ', currRuntime);
-      setRuntime(currRuntime);
+  //     // get the runtime of the most recent query
+  //     const currRuntime = arg[arg.length - 1].response_time.toFixed(1);
+  //     console.log('runtime: ', currRuntime);
+  //     setRuntime(currRuntime);
 
-      // statistical analysis to plot line-of-best-fit
-      const pastRuntimes = [];
-      let x_sum = 0
-      let y_sum = 0
-      let numerator = 0;
-      let denominator = 0;
-        arg.forEach((query, index) => {
-        x_sum += index;
-        y_sum += query.response_time;
-      })        
-      const x_avg = x_sum / arg.length;
-      const y_avg = y_sum / arg.length;
-        arg.forEach((query, index) => {
-        numerator += ((index - x_avg) * (query.response_time - y_avg));
-        denominator += (index - x_avg) ** 2;
-      });  
-      const slope = numerator / denominator;
-      const y_intercept = y_avg - slope * x_avg;
-      const lineOfBestFit = (x) => slope * x + y_intercept;
-        arg.forEach((query, index) => {
-      const date = new Date(query.date).toDateString();
-          pastRuntimes.push({
-          index: index,
-          date: date,
-          runtime: query.response_time.toFixed(1),
-          best_fit: lineOfBestFit(index).toFixed(1)
-        });
-      });
+  //     // statistical analysis to plot line-of-best-fit
+  //     const pastRuntimes = [];
+  //     let x_sum = 0
+  //     let y_sum = 0
+  //     let numerator = 0;
+  //     let denominator = 0;
+  //       arg.forEach((query, index) => {
+  //       x_sum += index;
+  //       y_sum += query.response_time;
+  //     })        
+  //     const x_avg = x_sum / arg.length;
+  //     const y_avg = y_sum / arg.length;
+  //       arg.forEach((query, index) => {
+  //       numerator += ((index - x_avg) * (query.response_time - y_avg));
+  //       denominator += (index - x_avg) ** 2;
+  //     });  
+  //     const slope = numerator / denominator;
+  //     const y_intercept = y_avg - slope * x_avg;
+  //     const lineOfBestFit = (x) => slope * x + y_intercept;
+  //       arg.forEach((query, index) => {
+  //     const date = new Date(query.date).toDateString();
+  //         pastRuntimes.push({
+  //         index: index,
+  //         date: date,
+  //         runtime: query.response_time.toFixed(1),
+  //         best_fit: lineOfBestFit(index).toFixed(1)
+  //       });
+  //     });
 
-      setHistory(pastRuntimes);
-    });
+  //     setHistory(pastRuntimes);
+  //   });
 
-  }
+  // }
   
 
   // const theme = createMuiTheme({
@@ -321,9 +325,10 @@ function App() {
           </div>
 
           <Router>
-            <NavBar />
+          {/* Need to add to main? */}
+            {/* <NavBar /> */}
             <Switch>
-              <Route exact path="/home">
+              {/* <Route exact path="/home">
                 <Home 
                   // theme={theme} 
                   uri={uri}
@@ -374,10 +379,18 @@ function App() {
                   queriesList={queriesList}
                   setQueriesList={setQueriesList}
                   />
-              </Route>
-              <Route path="/login">
-                <Login />
-              </Route>
+              </Route> */}
+        <Route exact path='/'>
+          {user.loggedIn ? 
+          <MainContainer user={user} setUser={setUser} uri={uri} setURI={setURI} uriID={uriID} setRuntime={setRuntime} runtime={runtime} setQueriesList={setQueriesList} uriList={uriList}/> 
+          : <Login user={user} setUser={setUser} uri={uri} setURI={setURI} uriID={uriID} setRuntime={setRuntime} runtime={runtime} setQueriesList={setQueriesList} uriList={uriList}/>}
+        </Route>
+              {/* <Route path="/login">
+                <Login 
+                user={user}
+                setUser={setUser}
+                />
+              </Route> */}
             </Switch>
           </Router>
         </div>
