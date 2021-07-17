@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom'
 import LineChartComponent from "./LineChart";
+import ScatterChartComponent from "./DashboardScatterChart";
 import { channels } from '../shared/constants';
 import Button from '@material-ui/core/Button';
 import { useDarkTheme } from "./ThemeContext";
@@ -82,7 +83,8 @@ const LoadTest = ({ uri, uriID, history, runtime, getResponseTimes }) => {
 
       </div>
       <div id='response-chart'> 
-        <LineChartComponent history={history}/>
+        {/* <LineChartComponent history={history}/> */}
+        <ScatterChartComponent />
       </div>
     </div>
   ) 
