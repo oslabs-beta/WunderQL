@@ -23,23 +23,23 @@ const PreviousSearches = ({ uri, uriID, history, getResponseTimes, queriesList, 
 
 
   // const data = [];
-  const data = queriesList.map((query, index) => (
-    <Draggable 
-      key={query.id} 
-      draggableId={`${query.id}`} 
-      index={index}
-    >
-      {(provided) => (
-        <li 
-          {...provided.draggableProps} 
-          ref={provided.innerRef} 
-          {...provided.dragHandleProps}
-          >
-            <QueryCard query={query.query} getResponseTimes={getResponseTimes}/>
-        </li>
-      )}
-    </Draggable>
-    ))
+  // const data = queriesList.map((query, index) => (
+  //   <Draggable 
+  //     key={query.id} 
+  //     draggableId={`${query.id}`} 
+  //     index={index}
+  //   >
+  //     {(provided) => (
+  //       <li 
+  //         {...provided.draggableProps} 
+  //         ref={provided.innerRef} 
+  //         {...provided.dragHandleProps}
+  //         >
+  //           <QueryCard query={query.query} getResponseTimes={getResponseTimes}/>
+  //       </li>
+  //     )}
+  //   </Draggable>
+  //   ))
   // const [data, setData] = useState([]);
 
   // call to database for all searches made on current API
@@ -86,7 +86,7 @@ const PreviousSearches = ({ uri, uriID, history, getResponseTimes, queriesList, 
               {...provided.dragHandleProps}
               ref={provided.innerRef}
             >
-              {data}
+              {/* {data} */}
               {provided.placeholder}
             </ul>
           )}

@@ -15,7 +15,7 @@ contextBridge.exposeInMainWorld(
     },
     receive: (channel, func) => {
       console.log('im in receive in preload.js')
-      let validChannels = ["idFromMain"];
+      let validChannels = ["idFromMain", "fromMain"];
       if (validChannels.includes(channel)) {
         // Deliberately strip event as it includes `sender` 
         ipcRenderer.on(channel, (event, ...args) => { 

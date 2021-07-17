@@ -132,24 +132,39 @@ ipcMain.on("activate", () => {
 });
 
 //-------------------------------------------------------------------------------
+
 //! #1 loginToMain - User logins 
-ipcMain.on("loginToMain", async (event, arg) => {
+//ipcMain.on(channels.GET_USER_AUTH, async (event, arg) => {
+  ipcMain.on("loginToMain", async (event, arg) => {
+  //Get Users Name and Password from Login Form
   try {
-  //send all URLs associated with that user from db after getting user ID from above
-  let userId;
-    const getUrlsQuery = {
-      text: 'SELECT _id, url, nickname FROM graphqlurls WHERE user_id = $1',
-      values: [userId]
+    let userId
+    const validateUserQuery = {
+      text : 'SELECT * FROM users WHERE username = $1 AND password = $2',
+      values: [arg.username, arg.password],
     }
-    const queryResult = await db.query(getUrlsQuery);
-    const results = queryResult.rows;
-    event.sender.send("UrlsfromMain", results)
+
+    //Check to see if valid username and password combination exists
+    const validUsers = await db.query(validateUserQuery)
+    if(validUsers.rows.length){
+      userId=validUsers.rows[0]._id;
+      event.sender.send("fromMain", true)
+    } 
+
+  const getUrlsQuery = {
+    text: 'SELECT _id, url, nickname FROM graphqlurls WHERE user_id = $1',
+    values: [userId]
+  }
+  const queryResult = await db.query(getUrlsQuery);
+  const results = queryResult.rows;
+  event.sender.send("UrlsfromMain", results)
 
   } catch (err) {
     console.log(err)
     return err;
   }  
 });
+
 
 // Function that conducts load test on endpoint
 const loadTest = async (CHILD_PROCESSES, URL, QUERY) => {
@@ -366,7 +381,7 @@ ipcMain.on("loadTestQueryToMain", async (event, arg) => {
     console.log(err)
     return err;
   }  
-})
+});
   
 
   //----------------------------------------
@@ -395,4 +410,3 @@ ipcMain.on("loadTestQueryToMain", async (event, arg) => {
               //   `
               // }).then(result => console.log(result))
               //----------------------------------------
-              
