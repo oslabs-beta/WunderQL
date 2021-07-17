@@ -40,49 +40,17 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
       return;
     }
     console.log('Query is being sent to main process...')
-
-    // Make GraphQL API query at a rate of 1 request per 5 milliseconds
-    // TODO: Make the rate of requests change based on user interaction 
-    // setInterval(() => {
-    //   ipcRenderer.send(channels.GET_RESPONSE_TIME, {
-    //     uriID: uriID,
-    //     query: query,
-    //     uri: uri,
-    //   });
-    // }, 5)
     
-    // ipcRenderer.send(channels.GET_RESPONSE_TIME, {
-    //   uriID: uriID,
-    //   query: query,
-    //   uri: uri,
-    // });
-    window.api.send('QueryDetailstoMain', {
+    // Send uriID, uri, and query to main process
+    window.api.send('queryTestToMain', {
       uriID: uriID,
       query: query,
       uri: uri,   
     })
     
-    // Listen for resposne times from main
+    // Listen for resposne times from main process (function defined in App.js)
     getResponseTimes();
-
-    // Initiate load test when user clicks 'Submit Query'
-    // TODO: Move this to new component, and don't hardcode numofChildProcesses
-    // ipcRenderer.send(channels.TEST_LOAD, {
-    //   numOfChildProccesses: 3,
-    //   query: query,
-    //   uri: uri,
-    // })
   };
-
-  // commented out because calculating runtime from FE (for now)
-  // useEffect(() => {
-  //   getResponseTimes();
-    
-  //   // Clean the listener after the component is dismounted
-  //   return () => {
-  //     ipcRenderer.removeAllListeners();
-  //   };
-  // }, [getResponseTimes]);
 
   return (
     <div id='test-query' style={themeStyle}> 
