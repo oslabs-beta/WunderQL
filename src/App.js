@@ -220,6 +220,12 @@ const fakeURIs = [
   'no more raubern',
 ]
 
+// Listen for queries from main process
+// window.api.receiveArray("queriesFromMain", (event, arg) => {
+//   console.log('listening on queriesFromMain in App.js');
+  
+// })
+
 function App() {
   // const [dark, setDark] = useState(false); // or true?
   const [uri, setURI] = useState('(please enter a URI to begin)');
@@ -247,7 +253,7 @@ function App() {
   // get response time for one query call; function updates state here then sent to test-query
   const getResponseTimes = () => {
     // ipcRenderer.on(channels.GET_RESPONSE_TIME, (event, arg) => {
-    window.api.receiveArray("ResponseTimesFromMain", (event, arg) => {
+    window.api.receiveArray("responseTimesFromMain", (event, arg) => {
       console.log('Listening for response from main process...')
       // arg is received from DB as an array of objects
       // console.log('arg object received from electronjs: ', arg);

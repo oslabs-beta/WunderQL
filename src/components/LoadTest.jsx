@@ -10,6 +10,8 @@ const LoadTest = ({ uri, uriID, history, runtime, getResponseTimes }) => {
 
   const [query, setQuery] = useState('');
   const [loadAmount, setLoadAmount] = useState(null);
+  const [avgResponseTime, setavgResponseTime] = useState(0);
+  const [successOrFailure, setsuccessOrFailure] = useState('');
 
   const darkTheme = useDarkTheme();
   const themeStyle = {
@@ -25,6 +27,19 @@ const LoadTest = ({ uri, uriID, history, runtime, getResponseTimes }) => {
     //   uriID: uriID,
     //   query: query,
     // });
+    window.api.send("loadTestQueryToMain", {
+      numOfChildProccesses: loadAmount,
+      query: query,
+      uri: uri,
+      uriID: uriID,
+    })
+
+    window.api.receiveArray("loadTestResultsFromMain", (event, loadTestResults) => {
+      console.log('Listening for loadTest response from main process...')
+      console.log('loadTestResults', loadTestResults);
+      setavgResponseTime(loadTestResults.averageResponseTime.toFixed(2));
+      setsuccessOrFailure(loadTestResults.successOrFailure);
+    });
   };
 
   // commented out because calculating runtime from FE (for now)
@@ -54,6 +69,7 @@ const LoadTest = ({ uri, uriID, history, runtime, getResponseTimes }) => {
           name='loadAmount' 
           min='0' 
           max='1000'
+          onChange={(e) => setLoadAmount(e.target.value)}
           ></input>
         <Button 
           variant="contained" 
@@ -65,15 +81,11 @@ const LoadTest = ({ uri, uriID, history, runtime, getResponseTimes }) => {
       <div id='stats'>
         <div class='category'>
           <div class='category-title'>Average Batch Response Time for {loadAmount} Requests</div>
-          <div class='category-number'>{`${runtime}ms`}</div>
-          {/* <div class='category-number'>100</div> */}
-          {/* {runtime && (
-            <p>{`${runtime}`}</p>
-          )} */}
+          <div class='category-number'>{`${avgResponseTime} ms`}</div>
         </div>
         <div class='category'>
-          <div class='category-title'>Number of Requests to Failure</div>
-          <div class='category-number'>100</div>
+          <div class='category-title'>Result</div>
+          <div class='category-number'>{`${successOrFailure}`}</div>
         </div>
         <div class='category'>
           <div class='category-title'>Number of Null Responses</div>
