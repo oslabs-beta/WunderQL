@@ -38,24 +38,15 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
       return;
     }
     console.log('Query is being sent to main process...')
-
-    // Make GraphQL API query at a rate of 1 request per 5 milliseconds
-    // TODO: Make the rate of requests change based on user interaction 
-    // setInterval(() => {
-    //   ipcRenderer.send(channels.GET_RESPONSE_TIME, {
-    //     uriID: uriID,
-    //     query: query,
-    //     uri: uri,
-    //   });
-    // }, 5)
-
-    window.api.send('QueryDetailstoMain', {
+    
+    // Send uriID, uri, and query to main process
+    window.api.send('queryTestToMain', {
       uriID: uriID,
       query: query,
       uri: uri,   
     })
     
-    // Listen for resposne times from main
+    // Listen for resposne times from main process (function defined in App.js)
     getResponseTimes();
   };
 

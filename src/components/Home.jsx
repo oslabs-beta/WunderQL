@@ -43,14 +43,11 @@ const Home = ({ uri, setURI, nickname, setNickname, history, setHistory, setUriI
   const submitURI = () => {
     console.log(uri, ' : URI is being sent to main process...');
     
-    // ipcRenderer.send(channels.GET_ENDPOINT, uri);
-    window.api.send("EndpointToMain", uri);
+    // Send uri to main process
+    window.api.send("urlToMain", uri);
     
-    // ipcRenderer.on(channels.GET_ENDPOINT, (event, arg) => {
-    //   document.querySelector('#connected-text').style.display = 'block';
-    //   setUriID(arg);
-    // });
-    window.api.receive("fromMain", (id) => {
+    // Receive uriID from main process
+    window.api.receive("idFromMain", (id) => {
       console.log('Within window.api.receive in Home.jsx, id: ', id);
       document.querySelector('#connected-text').style.display = 'block';
       console.log('received from main process')

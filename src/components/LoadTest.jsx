@@ -12,7 +12,6 @@ const LoadTest = ({ uri, uriID, history, runtime, getResponseTimes }) => {
   const [avgResponseTime, setavgResponseTime] = useState(0);
   const [successOrFailure, setsuccessOrFailure] = useState('');
 
-
   const darkTheme = useDarkTheme();
   const themeStyle = {
     backgroundColor: darkTheme ? '#333' : 'white',
