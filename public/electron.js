@@ -8,8 +8,8 @@ const isDev = require("electron-is-dev");
 const childProc = require('child_process');
 //SQL database connection
 const db = require("../models/User");
-// Connnect to mongo database
 
+//-------Electron Setup--------------------------------------------------------
 function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
@@ -111,16 +111,12 @@ const mainMenuTemplate =  [
   }
 ];
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
+// This method will be called when Electron has finished initialization and is ready to create browser windows.
 app.whenReady().then(createWindow);
 // app.on('ready', createWindow)
 
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
+// Quit when all windows are closed, except on macOS. There, it's common for applications and their menu bar to stay active until the user quits
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
@@ -135,12 +131,14 @@ ipcMain.on("activate", () => {
   }
 });
 
+//-------------------------------------------------------------------------------
 
-
+//! #1 loginToMain - User logins 
 //ipcMain.on(channels.GET_USER_AUTH, async (event, arg) => {
   ipcMain.on("loginToMain", async (event, arg) => {
   //Get Users Name and Password from Login Form
   try {
+    let userId
     const validateUserQuery = {
       text : 'SELECT * FROM users WHERE username = $1 AND password = $2',
       values: [arg.username, arg.password],
@@ -148,38 +146,25 @@ ipcMain.on("activate", () => {
 
     //Check to see if valid username and password combination exists
     const validUsers = await db.query(validateUserQuery)
-    if(validUsers.rows[0]){
-      console.log("true", true)
+    if(validUsers.rows.length){
+      userId=validUsers.rows[0]._id;
       event.sender.send("fromMain", true)
-    } else {
-      console.log("false", false)
-      event.sender.send("fromMain", false)
-    }
+    } 
+
+  const getUrlsQuery = {
+    text: 'SELECT _id, url, nickname FROM graphqlurls WHERE user_id = $1',
+    values: [userId]
+  }
+  const queryResult = await db.query(getUrlsQuery);
+  const results = queryResult.rows;
+  event.sender.send("UrlsfromMain", results)
 
   } catch (err) {
     console.log(err)
     return err;
   }  
-})
+});
 
-// https://github.com
-// http://localhost:3000/oauth-callback
-//   // const request = net.request('http://localhost:3000/oauth-callback')
-//   request.on('response', (response) => {
-//     console.log(response)
-//     // console.log(`STATUS: ${response.statusCode}`)
-//     // console.log(`HEADERS: ${JSON.stringify(response.headers)}`)
-//     // response.on('data', (chunk) => {
-//     //   console.log(`BODY: ${chunk}`)
-//     // })
-//     // response.on('end', () => {
-//     //   console.log('No more data in response.')
-//     // })
-//   })
-//   request.end()
-// })
-
-//////////////////////////////////////////////////////////////
 
 // Function that conducts load test on endpoint
 const loadTest = async (CHILD_PROCESSES, URL, QUERY) => {
@@ -191,7 +176,6 @@ const loadTest = async (CHILD_PROCESSES, URL, QUERY) => {
     let childProcess = childProc.spawn("node", [`${__dirname}/child.js`, `--url=${URL}`, `--query=${QUERY}`])
     children.push(childProcess);
   }
-
   // Map child processes into promises that resolve to true or false 
   // Response times will be pushed to times array each time child process logs the response time
   let responses = children.map(function wait(child) {
@@ -214,21 +198,32 @@ const loadTest = async (CHILD_PROCESSES, URL, QUERY) => {
   responses = await Promise.all(responses);
 
   // Check if all promises were resolved successfully 
+  let successOrFailure;
+  let averageResponseTime;
   if (responses.filter(Boolean).length === responses.length) {
-    console.log('times: ', times);
     // Calculate average of all response times
     const sum = times.reduce((a, b) => a + b, 0);
     const avg = (sum / times.length) || 0;
     console.log(`average: ${avg}`);
-    console.log("success!");
+    console.log("success!");  
+    // Update load test response variables
+    successOrFailure = 'success';
+    averageResponseTime = avg;
   } else {
     console.log("failures!");
+    // Update load test response variables
+    successOrFailure = 'failure';
+    averageResponseTime = 0;
+  }
+
+  // Return whether load test was success/failure, and the average response time
+  return {
+    successOrFailure,
+    averageResponseTime
   }
 };
 
- //////////////////////////////////////////////////////////////
 // Function that checks response time of query
-// https://api.spacex.land/graphql/
 async function checkResponseTime(query, uri_ID) {
   let time1 = performance.now()
   await fetch(uri_ID, {
@@ -245,95 +240,149 @@ async function checkResponseTime(query, uri_ID) {
   return performance.now() - time1;
 };
 
-// Listening on channel 'get_endpoint' to receive endpoint from frontend
-// ipcMain.on(channels.GET_ENDPOINT, async (event, graphqlEndpoint) => {
-ipcMain.on("EndpointToMain", async (event, graphqlEndpoint) => {
-// ipcMain.on("EndpointToMain", async (event, graphqlEndpoint) => {
+//! #2 urlToMain - User selects a URL
+ipcMain.on("urlToMain", async (event, arg) => {
   try {
-    const insertEndpoint = {
-      text: 'INSERT INTO graphqlurls(url) VALUES ($1) RETURNING _id',
-      values: [graphqlEndpoint],
+    //check if the url exists 
+    const checkIfUrlExists = {
+      text: 'SELECT * FROM graphqlurls WHERE url = $1 AND user_id = $2',
+      values: [arg.graphqlEndpoint, arg.userId],
     };
-    const queryResult = await db.query(insertEndpoint);
-    const graphqlId = queryResult.rows[0]._id;
+    const existingUrlResult = await db.query(checkIfUrlExists);
+    const existingUrlId = existingUrlResult.rows;
+    
+    let urlId;
+
+    if (!existingUrlId.length) {
+      const insertUrl = {
+        text: 'INSERT INTO graphqlurls(url, nickname, user_id) VALUES ($1, $2, $3) RETURNING _id',
+        values: [arg.url, arg.nickname, arg.userId],
+      };
+      const queryResult = await db.query(insertUrl);
+      urlId = queryResult.rows[0]._id;
+    } else {
+      urlId = existingUrlId[0]._id;
+    }
     
     // Send id  back to frontend 
-    // event.sender.send(channels.GET_ENDPOINT, graphqlId);
-    event.sender.send("fromMain", graphqlId)
+    event.sender.send("idFromMain", urlId)
+
+   //get all queries for specific url (we have id from above)
+    const getQueriesQuery = {
+      text: 'SELECT _id, query_string, query_name FROM queries WHERE url_id = $1',
+      values: [urlId]
+    }
+    const queryResult = await db.query(getQueriesQuery);
+    const allQueries = queryResult.rows;
+
+    event.sender.send("queriesfromMain", allQueries)
+
+    //get dashboard summary for specific url - total queries, total tests, total load tests. If possible # of queries per day.
+
+    const query = {
+      text: `SELECT gu.url, COUNT(q._id) as number_of_queries, COUNT(rt._id) as number_of_tests, COUNT(lrt._id) as number_of_load_tests
+      FROM graphqlurls gu 
+      INNER JOIN queries q ON q.url_id = gu._id AND gu._id = $1
+      INNER JOIN response_times rt ON rt.query_id = q._id
+      INNER JOIN load_test_response_times lrt ON lrt.query_id = q._id
+      GROUP BY gu.url
+      `,
+      values: [arg.urlId]
+    }
+  
+    const dashboardQueryResult = await db.query(query);
+    const results = dashboardQueryResult.rows[0];
+    event.sender.send("totalsFromMain", results);
+
   } catch (err) {
     console.log(err)
     return err;
   }  
 })
 
-// Async await --- wait for function to finish before ipcMain sends back response
-// Sending a response back to the renderer process (React)
-ipcMain.on("QueryDetailstoMain", async (event, arg) => {
-// ipcMain.on("QueryDetailstoMain", async (event, arg) => {
-  let responseTime = await checkResponseTime(arg.query, arg.uri);
-  // Insert query string and url_id into the database 
+// Function that checks if query exists in db
+const checkIfQueryExist = async (queryString, urlId) => {
+  const checkIfQueryExist = {
+    text: 'select _id FROM queries WHERE query_string = $1 AND url_id = $2',
+    values: [queryString, urlId]
+  };
+  const existingQueryResult = await db.query(checkIfQueryExist);
+  const existingQueryID = existingQueryResult.rows;
+  
+  let queryId;
+
+  if (!existingQueryID.length) {
+    const insertQuery = {
+      text: 'INSERT INTO queries(query_string, url_id) VALUES ($1, $2) RETURNING _id',
+      values: [queryString, urlId],
+    };
+    const queryResult = await db.query(insertQuery);
+    queryId = queryResult.rows[0]._id;
+  } else {
+    queryId = existingQueryID[0]._id;
+  }
+  return queryId;
+}
+
+//! #3 queryTestToMain - User selects a query to test
+ipcMain.on("queryTestToMain", async (event, arg) => {
   try {
-      // Checking response time 
-    const { query, uriID } = arg;
-    const findURI = {
-      text: 'SELECT url FROM graphqlurls WHERE _id = $1',
-      values: [uriID]
-    }; 
-    const uriQueryResult = await db.query(findURI);
-    const uri = uriQueryResult.rows[0].url;
-    // console.log('uri from electronjs: ', uri);
+  let responseTime = await checkResponseTime(arg.query, arg.uri);
+  const queryId = checkIfQueryExist(arg.query, arg.uriID);
+  
+  // Insert response time with query_id into database 
+  const insertResponseTime = {
+    text: 'INSERT INTO response_times(response_time, query_id, date) VALUES ($1, $2, $3)',
+    values: [responseTime, queryId, new Date()]
+  };
+  await db.query(insertResponseTime);
+  
+  const getResponseTimes = {
+    text: 'SELECT * FROM response_times WHERE query_id = $1;',
+    values: [queryId]
+  };
+  const responseTimesQueryResults = await db.query(getResponseTimes);
+  const responseTimes = responseTimesQueryResults.rows;
 
-    //--------------------
-    const checkIfQueryExist = {
-      text: 'select _id FROM queries WHERE query_string = $1',
-      values: [query]
-    };
-    const existingQueryResult = await db.query(checkIfQueryExist);
-    const existingQueryID = existingQueryResult.rows;
-    // console.log('existingQueryID', existingQueryID);
-    
-    let queryId;
+  //Send back array of response times for that query
+  event.sender.send("responseTimesFromMain", responseTimes);
 
-    if (!existingQueryID.length) {
-      const insertQuery = {
-        text: 'INSERT INTO queries(query_string, url_id) VALUES ($1, $2) RETURNING _id',
-        values: [query, uriID],
-      };
-      const queryResult = await db.query(insertQuery);
-      // console.log('queryResult', queryResult)
-      queryId = queryResult.rows[0]._id;
-      // console.log('queryId in if condition', queryId)
-    } else {
-      queryId = existingQueryID[0]._id;
-      // console.log('queryId in else condition', queryId)
-    }
-
-    // Insert response time and query_id into database 
-    // Associate response time with query_id
-    const insertResponseTime = {
-      text: 'INSERT INTO response_times(response_time, query_id, date) VALUES ($1, $2, $3)',
-      values: [responseTime, queryId, new Date()]
-    };
-    await db.query(insertResponseTime);
-    
-    const getResponseTimes = {
-      text: 'SELECT * FROM response_times WHERE query_id = $1;',
-      values: [queryId]
-    };
-    const responseTimesQueryResults = await db.query(getResponseTimes);
-    const responseTimes = responseTimesQueryResults.rows;
-    // console.log('responseTimes', responseTimes);
-
-    // Send responseTime back to frontend 
-    // Pass back array of response times that match a certain query ID
-    // event.sender.send(channels.GET_RESPONSE_TIME, responseTimes);
-    event.sender.send("ResponseTimesFromMain", responseTimes);
   } catch (err) {
     console.log(err)
     return err;
   }  
 });
 
+//! #4 loadTestQueryToMain - User selects a query to load test 
+ipcMain.on("loadTestQueryToMain", async (event, arg) => {
+  try {
+    // Conduct load test
+    const loadTestResults = await loadTest(
+      arg.numOfChildProccesses,
+      arg.uri,
+      arg.query,
+    )
+    // Send average response time + success/failure back to frontend 
+    event.sender.send("loadTestResultsFromMain", loadTestResults)
+
+    const queryId = checkIfQueryExist(arg.query, arg.uriID);
+
+    //save load test results in db associating it to a specific query
+    const insertLoadTestResults = {
+      //create new row in load test response time table (date, number_of_child_processes, average_response_time, result, query_id)
+        text: 'INSERT INTO load_test_response_times (date, number_of_child_processes, average_response_time, result, query_id) VALUES($1, $2, $3, $4, $5)',
+        values: [new Date(), arg.numberOfChildProcesses, loadTestResults.averageResponseTime, loadTestResults.successOrFailure, queryId]
+      }
+    await db.query(insertLoadTestResults);
+  
+    //do we want to send history or 1 data point?: 'Select date, number_of_child_processes, average_response_time, result FROM load_test_response_times WHERE query_string = $1',
+
+  } catch (err) {
+    console.log(err)
+    return err;
+  }  
+});
+  
 
   //----------------------------------------
 // Example queries for https://api.spacex.land/graphql/
@@ -361,5 +410,3 @@ ipcMain.on("QueryDetailstoMain", async (event, arg) => {
               //   `
               // }).then(result => console.log(result))
               //----------------------------------------
-              
-  

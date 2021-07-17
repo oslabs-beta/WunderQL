@@ -25,6 +25,8 @@ const Login = ({user, setUser}) => {
         setUser({ loggedIn: validUser})
         console.log("from handleLogin authorize 1", user)
       })
+
+      
       console.log("from Login 2", user)
   };
   console.log("from Login outside Handlogin", user)
