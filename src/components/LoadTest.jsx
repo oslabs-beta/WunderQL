@@ -22,7 +22,6 @@ const LoadTest = ({ uri, uriID, history, runtime, getResponseTimes }) => {
     // Sends the message to Electron main process
     console.log('Query is being sent to main process...')
 
-    console.log('loadAmount', loadAmount);
     // Initiate load test when user clicks 'Submit Query'
     window.api.send("LoadTestQueryToMain", {
       numOfChildProccesses: loadAmount,
