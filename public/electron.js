@@ -263,21 +263,15 @@ ipcMain.on("urlToMain", async (event, arg) => {
     event.sender.send("queriesfromMain", allQueries)
 
     //get dashboard summary for specific url - total queries, total tests, total load tests. If possible # of queries per day.
-    
-    //! MISSING TWO DATA POINTS
-    // const query = {
-    //   text: `SELECT graphqlurls.url, COUNT(q.*) as number_of_queries, COUNT(rt.*) as number_of_tests, COUNT(lrt.*) as number_of_load_tests 
-    //   FROM graphqlurls
-    //   INNER JOIN queries q ON q.url_id = gu._id WHERE graphqlurls._id = $1 
-    //   INNER JOIN response_times rt ON rt.query_id = q._id
-    //   INNER JOIN load_test_response_times lrt ON lrt.query_id = q._id`,
-    // }
 
     const query = {
-      text: `SELECT gu.url, COUNT(q.*) as number_of_queries
-      FROM graphqlurls gu
-      INNER JOIN queries q ON q.url_id = gu._id WHERE gu._id = $1
-      GROUP BY gu.url`,
+      text: `SELECT gu.url, COUNT(q._id) as number_of_queries, COUNT(rt._id) as number_of_tests, COUNT(lrt._id) as number_of_load_tests
+      FROM graphqlurls gu 
+      INNER JOIN queries q ON q.url_id = gu._id AND gu._id = $1
+      INNER JOIN response_times rt ON rt.query_id = q._id
+      INNER JOIN load_test_response_times lrt ON lrt.query_id = q._id
+      GROUP BY gu.url
+      `,
       values: [arg.urlId]
     }
   
