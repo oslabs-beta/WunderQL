@@ -170,23 +170,23 @@ export default function NavBar(props) {
               </ListItem>
             </Link>
             <Link to="/loadtest" class='nav-list-item'>
-              <ListItem button key={3}>
+              <ListItem button key={4}>
                 <ListItemIcon><InboxIcon /></ListItemIcon>
                 <ListItemText primary='Load Test' />
               </ListItem>
             </Link>
             <Link to="/previoussearches" class='nav-list-item'>
-              <ListItem button key={4}>
+              <ListItem button key={5}>
                 <ListItemIcon><InboxIcon /></ListItemIcon>
                 <ListItemText primary='Past Searches' />
               </ListItem>
             </Link>
-            <Link to="/login" class='nav-list-item'>
+            {/* <Link to="/login" class='nav-list-item'>
               <ListItem button key={5}>
                 <ListItemIcon><InboxIcon /></ListItemIcon>
                 <ListItemText primary='Login' />
               </ListItem>
-            </Link>
+            </Link> */}
         </List>    
         <Divider />  
         <FormControlLabel
