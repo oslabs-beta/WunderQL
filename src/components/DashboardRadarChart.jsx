@@ -3,37 +3,37 @@ import { Radar, RadarChart, PolarGrid, Legend, PolarAngleAxis, PolarRadiusAxis, 
 
 const data = [
   {
-    subject: 'Math',
+    subject: 'Raubern',
     A: 120,
     B: 110,
     fullMark: 150,
   },
   {
-    subject: 'Chinese',
+    subject: 'Frank',
     A: 98,
     B: 130,
     fullMark: 150,
   },
   {
-    subject: 'English',
+    subject: 'Patrick',
     A: 86,
     B: 130,
     fullMark: 150,
   },
   {
-    subject: 'Geography',
+    subject: 'Laura',
     A: 99,
     B: 100,
     fullMark: 150,
   },
   {
-    subject: 'Physics',
+    subject: 'Esma',
     A: 85,
     B: 90,
     fullMark: 150,
   },
   {
-    subject: 'History',
+    subject: 'Ryan',
     A: 65,
     B: 85,
     fullMark: 150,
@@ -50,8 +50,8 @@ export default class RadarChartComponent extends PureComponent {
           <PolarGrid />
           <PolarAngleAxis dataKey="subject" />
           <PolarRadiusAxis angle={30} domain={[0, 150]} />
-          <Radar name="Mike" dataKey="A" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
-          <Radar name="Lily" dataKey="B" stroke="#82ca9d" fill="#82ca9d" fillOpacity={0.6} />
+          <Radar name="Billy" dataKey="A" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
+          <Radar name="Aki" dataKey="B" stroke="#82ca9d" fill="#82ca9d" fillOpacity={0.6} />
           <Legend />
         </RadarChart>
       </ResponsiveContainer>

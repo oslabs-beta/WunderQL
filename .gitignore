@@ -27,3 +27,5 @@ yarn-error.log*
 package-lock.json
 .sass-cache/
 index.css.map
+webpack-dev-server-error.log
+webpack-dev-server.log
