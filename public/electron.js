@@ -282,17 +282,26 @@ ipcMain.on("loadTestQueryToMain", async (event, arg) => {
     // Send average response time + success/failure back to frontend 
     event.sender.send("loadTestResultsFromMain", loadTestResults)
 
-    const queryId = checkIfQueryExist(arg.query, arg.uriID);
+    // Needed to use await to resolve the promise
+    const queryId = await checkIfQueryExist(arg.query, arg.uriID);
 
     //save load test results in db associating it to a specific query
     const insertLoadTestResults = {
       //create new row in load test response time table (date, number_of_child_processes, average_response_time, result, query_id)
         text: 'INSERT INTO load_test_response_times (date, number_of_child_processes, average_response_time, result, query_id) VALUES($1, $2, $3, $4, $5)',
-        values: [new Date(), arg.numberOfChildProcesses, loadTestResults.averageResponseTime, loadTestResults.successOrFailure, queryId]
+        values: [new Date(), arg.numOfChildProccesses, loadTestResults.averageResponseTime, loadTestResults.successOrFailure, queryId]
       }
     await db.query(insertLoadTestResults);
   
     //do we want to send history or 1 data point?: 'Select date, number_of_child_processes, average_response_time, result FROM load_test_response_times WHERE query_string = $1',
+    const selectResponseTimesAndLoadAmount = {
+      //create new row in load test response time table (date, number_of_child_processes, average_response_time, result, query_id)
+        text: 'SELECT number_of_child_processes,  average_response_time from load_test_response_times WHERE query_id = $1 ORDER BY number_of_child_processes',
+        values: [queryId]
+      }
+    const resultss = await db.query(selectResponseTimesAndLoadAmount);
+    console.log(resultss.rows)
+
 
   } catch (err) {
     console.log(err)

@@ -27,6 +27,7 @@ const LoadTest = ({ uri, uriID, setUriID, history, runtime, getResponseTimes }) 
       numOfChildProccesses: loadAmount,
       query: query,
       uri: uri,
+      uriID: uriID,
     })
 
     window.api.receiveArray("loadTestResultsFromMain", (event, loadTestResults) => {
