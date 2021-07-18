@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom'
 import LineChartComponent from "./LineChart";
-import { channels } from '../shared/constants';
 import Button from '@material-ui/core/Button';
 import { useDarkTheme } from "./ThemeContext";
 
@@ -23,10 +22,7 @@ const LoadTest = ({ uri, uriID, setUriID, history, runtime, getResponseTimes }) 
     // Sends the message to Electron main process
     console.log('Query is being sent to main process...')
 
-    // ipcRenderer.send(channels.GET_RESPONSE_TIME, {
-    //   uriID: uriID,
-    //   query: query,
-    // });
+    // Initiate load test when user clicks 'Submit Query'
     window.api.send("loadTestQueryToMain", {
       numOfChildProccesses: loadAmount,
       query: query,
@@ -39,18 +35,13 @@ const LoadTest = ({ uri, uriID, setUriID, history, runtime, getResponseTimes }) 
       console.log('loadTestResults', loadTestResults);
       setavgResponseTime(loadTestResults.averageResponseTime.toFixed(2));
       setsuccessOrFailure(loadTestResults.successOrFailure);
-    });
-  };
 
-  // commented out because calculating runtime from FE (for now)
-  useEffect(() => {
-    getResponseTimes();
-    
-    // Clean the listener after the component is dismounted
-    // return () => {
-    //   ipcRenderer.removeAllListeners();
-    // };
-  });
+    });
+  }
+
+  // useEffect(() => {
+  //   getResponseTimes();
+  // });
 
   return (
     <div id='test-query' style={themeStyle}> 
@@ -80,7 +71,7 @@ const LoadTest = ({ uri, uriID, setUriID, history, runtime, getResponseTimes }) 
       </div>
       <div id='stats'>
         <div class='category'>
-          <div class='category-title'>Average Batch Response Time for {loadAmount} Requests</div>
+          <div class='category-title'>Average Response Time for {loadAmount} Requests</div>
           <div class='category-number'>{`${avgResponseTime} ms`}</div>
         </div>
         <div class='category'>

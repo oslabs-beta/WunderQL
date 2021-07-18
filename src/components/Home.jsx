@@ -1,14 +1,9 @@
 import { useState, useEffect, useContext } from 'react';
 import { useHistory } from 'react-router';
-import { ThemeProvider } from '@material-ui/core/styles'
-import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { useDarkTheme } from './ThemeContext';
 
-import { channels } from '../shared/constants';
-
-
-const Home = ({ uri, setURI, nickname, setNickname, history, setHistory, setUriID, queriesList, uriList }) => {
+const Home = ({ uri, setURI, nickname, setNickname, history, setHistory, setUriID, queriesList, setQueriesList, uriList, userID }) => {
   
   const darkTheme = useDarkTheme();
   const themeStyle = {
@@ -49,8 +44,17 @@ const Home = ({ uri, setURI, nickname, setNickname, history, setHistory, setUriI
     console.log(uri, ' : URI is being sent to main process...');
     
     // Send uri to main process
-    window.api.send("urlToMain", uri);
+    window.api.send("urlToMain", {
+      uri,
+      nickname,
+      userID
+    });
     
+    window.api.receive("queriesFromMain", (allQueries) => {
+      console.log("In queriesfromMain in Test-Query.jsx", allQueries)
+      setQueriesList(allQueries)
+    })
+
     // Receive uriID from main process
     window.api.receive("idFromMain", (id) => {
       console.log('Within window.api.receive in Home.jsx, id: ', id);
@@ -59,10 +63,6 @@ const Home = ({ uri, setURI, nickname, setNickname, history, setHistory, setUriI
       setUriID(id);
     })
 
-    // ipcRenderer.on(channels.GET_HISTORY, (event, arg) => {
-    //   // history state updated and stored in App.js
-    //   setHistory(arg);
-    // })
   }
 
   
@@ -74,8 +74,6 @@ const Home = ({ uri, setURI, nickname, setNickname, history, setHistory, setUriI
   //     },
   //   },
   // }));
-
-  // const classes = useStyles();
 
   return (
     <div id='home' 
