@@ -151,7 +151,7 @@ export default function NavBar(props) {
         </div>
         <Divider />
         <List>
-            <Link to="/home" class='nav-list-item'>
+            <Link to="/" class='nav-list-item'>
               <ListItem button key={1}>
                 <ListItemIcon><InboxIcon /></ListItemIcon>
                 <ListItemText primary='Home' />

@@ -80,86 +80,76 @@ const MainContainer = ({ user, setUser, uri, setURI, nickname, setNickname, hist
   }
 
   return (
-    <div id='MainContainer'>
-      <ApolloProvider client={client}>
-      {/* <ThemeContext.Provider value={dark}> */}
-      <ThemeProvider>
-      {/* <ThemeProvider theme={theme}> */}
-        <CssBaseline />
-          {/* <Header /> */}
-          
-          {/* trying to make frameless win draggable */}
-          {/* <div className="title-bar">
-            <div className="titlebar-drag-region"></div>
-            <div className="title">Window Header</div>
-            <div className="title-bar-btns">
-              <button id="min-btn">-</button>
-              <button id="max-btn">+</button>
-              <button id="close-btn">x</button>
-            </div>
-          </div> */}
-           <h1>Welcome back to the Main Container</h1>
-          <Router>
-            <NavBar />
-            <Switch>
-              <Route path="/home">
-                <Home 
-                  // theme={theme} 
-                  uri={uri}
-                  setURI={setURI} 
-                  nickname={nickname}
-                  setNickname={setNickname}
-                  uriID={uriID} 
-                  setUriID={setUriID}
-                  history={history} 
-                  setHistory={setHistory}
-                  queriesList={queriesList}
-                  uriList={uriList}
-                  />
-              </Route>
-              <Route path="/dashboard">
-                <Dashboard uri={uri} uriID={uriID} history={history}/>
-              </Route>
-              <Route path="/testquery">
-                <TestQuery 
-                  client={client} 
-                  uri={uri} 
-                  uriID={uriID} 
-                  history={history}
-                  setHistory={setHistory}
-                  runtime={runtime}
-                  getResponseTimes={getResponseTimes}
-                  queriesList={queriesList}
-                  />
-              </Route>
-              <Route path="/loadtest">
-                <BatchTest 
-                  client={client} 
-                  uri={uri} 
-                  uriID={uriID} 
-                  history={history}
-                  setHistory={setHistory}
-                  runtime={runtime}
-                  setRuntime={setRuntime}
-                  getResponseTimes={getResponseTimes}
-                  />
-              </Route>
-              <Route path="/previoussearches">
-                <PreviousSearches 
-                  uri={uri} 
-                  uriID={uriID} 
-                  history={history}
-                  getResponseTimes={getResponseTimes}
-                  queriesList={queriesList}
-                  setQueriesList={setQueriesList}
-                  />
-              </Route>
-            </Switch>
-          </Router>
-          </ThemeProvider>
-        </ApolloProvider>
+    <div id='main-container'>
+      {/* <ThemeProvider> */}
+        {/* trying to make frameless win draggable */}
+        {/* <div className="title-bar">
+          <div className="titlebar-drag-region"></div>
+          <div className="title">Window Header</div>
+          <div className="title-bar-btns">
+            <button id="min-btn">-</button>
+            <button id="max-btn">+</button>
+            <button id="close-btn">x</button>
+          </div>
+        </div> */}
+        <Router>
+          <NavBar />
+          <Switch>
+            <Route exact path="/">
+              <Home 
+                uri={uri}
+                setURI={setURI} 
+                nickname={nickname}
+                setNickname={setNickname}
+                uriID={uriID} 
+                setUriID={setUriID}
+                history={history} 
+                setHistory={setHistory}
+                queriesList={queriesList}
+                uriList={uriList}
+                />
+            </Route>
+            <Route path="/dashboard">
+              <Dashboard uri={uri} uriID={uriID} history={history}/>
+            </Route>
+            <Route path="/testquery">
+              <TestQuery 
+                client={client} 
+                uri={uri} 
+                uriID={uriID} 
+                history={history}
+                setHistory={setHistory}
+                runtime={runtime}
+                getResponseTimes={getResponseTimes}
+                queriesList={queriesList}
+                />
+            </Route>
+            <Route path="/loadtest">
+              <BatchTest 
+                client={client} 
+                uri={uri} 
+                uriID={uriID} 
+                history={history}
+                setHistory={setHistory}
+                runtime={runtime}
+                setRuntime={setRuntime}
+                getResponseTimes={getResponseTimes}
+                />
+            </Route>
+            <Route path="/previoussearches">
+              <PreviousSearches 
+                uri={uri} 
+                uriID={uriID} 
+                history={history}
+                getResponseTimes={getResponseTimes}
+                queriesList={queriesList}
+                setQueriesList={setQueriesList}
+                />
+            </Route>
+          </Switch>
+        </Router>
+      {/* </ThemeProvider> */}
     </div>
-
   )
 }
 

@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 .titlebar-drag-region {
   top: 6px;
   left: 6px;
@@ -27,21 +28,6 @@
   -webkit-app-region: no-drag;
 }
 
-#App {
-  background-color: #ffffff;
-  color: black;
-  margin: 0;
-  padding: 0;
-  font-family: "Roboto", sans-serif;
-  letter-spacing: 1px;
-  display: grid;
-  grid-template-columns: 5fr 5fr;
-  grid-template-rows: 0.5fr 3fr 3fr;
-  grid-template-areas: "- -" "main main" "main main";
-  width: 100%;
-  height: 100vh;
-}
-
 html {
   width: 100%;
   height: 100%;
@@ -55,6 +41,26 @@ body {
   height: 100%;
   box-sizing: border-box;
   overflow: hidden;
+}
+
+#App {
+  background-color: #ffffff;
+  color: black;
+  font-family: "Roboto", sans-serif;
+  width: 100%;
+  height: 100%;
+}
+
+#main-container {
+  margin: 0;
+  padding: 0;
+  letter-spacing: 1px;
+  display: grid;
+  grid-template-columns: 5fr 5fr;
+  grid-template-rows: 0.5fr 3fr 3fr;
+  grid-template-areas: "- -" "main main" "main main";
+  width: 100%;
+  height: 100vh;
 }
 
 /* to be used in all components */
@@ -387,9 +393,4 @@ body {
   font-size: 0.8rem;
 }
 
-#login-form{
-  display: grid;
-  justify-content: center;
-  align-items: center;
-}
 /*# sourceMappingURL=index.css.map */

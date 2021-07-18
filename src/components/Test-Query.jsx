@@ -48,7 +48,7 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
       uri: uri,   
     })
     
-    // Listen for resposne times from main process (function defined in App.js)
+    // Listen for response times from main process (function defined in App.js)
     getResponseTimes();
   };
 
@@ -61,7 +61,7 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
           id='queries-list' 
           onChange={(e) => document.querySelector('#text-area').innerHTML = e.target.value}
           >
-          <option value="" disabled selected hidden>previously searched queries</option>
+          <option disabled selected hidden>previously searched queries</option>
           {/* {queries}    */}
           </select>
       </header>

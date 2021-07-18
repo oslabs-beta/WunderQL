@@ -45,7 +45,7 @@
     "eject": "react-scripts eject",
     "dev": "concurrently -k \"BROWSER=none npm start\" \"npm:electron\" \"sass --watch src/stylesheets:src/stylesheets\"",
     "dev-server": "cross-env NODE_ENV=development webpack serve --config ./webpack.development.js > dev-scripts/webpack-dev-server.log 2> dev-scripts/webpack-dev-server-error.log",
-    "devWebpack": "concurrently --success first \"node dev-scripts/prepareDevServer.js\" \"node dev-scripts/launchDevServer.js\" -k",
+    "devWebpack": "concurrently --success first \"node dev-scripts/prepareDevServer.js\" \"node dev-scripts/launchDevServer.js\" -k \"sass --watch src/stylesheets:src/stylesheets\"",
     "electron": "wait-on tcp:3000 && electron .",
     "server": "node server/server.js",
     "start2": "concurrently \"npm run start\" \"npm run server\" \"wait-on http://localhost:3000 && electron .\""

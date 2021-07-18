@@ -1,9 +1,7 @@
 const { fetch } = require('cross-fetch');
 const { performance } = require('perf_hooks');
 const path = require("path");
-const { User } = require('../models/User');
 const { app, BrowserWindow, Menu, ipcMain } = require("electron");
-const { channels } = require('../src/shared/constants');
 const isDev = require("electron-is-dev");
 const childProc = require('child_process');
 //SQL database connection

@@ -7,12 +7,9 @@ import {
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import { useState, useEffect } from 'react';
-import Home from './components/Home'
-import Dashboard from './components/Dashboard'
-import NavBar from './components/NavBar'
-import TestQuery from './components/Test-Query'
-import BatchTest from "./components/LoadTest";
+
 import Login from "./components/Login"
+
 // import Header from './components/Header'
 import PreviousSearches from './components/PreviousSearches';
 import './stylesheets/index.css';
@@ -254,32 +251,41 @@ function App() {
   }
     
   return (
-    <ApolloProvider client={client}>
       <ThemeProvider>
         <CssBaseline />
         <div id="App" style={themeStyle}>
-          <div className="title-bar">
-            <div className="titlebar-drag-region"></div>
-            <div className="title">Window Header</div>
-            <div className="title-bar-btns">
-              <button id="min-btn">-</button>
-              <button id="max-btn">+</button>
-              <button id="close-btn">x</button>
-            </div>
-          </div>
 
           <Router>
             <Switch>
-        <Route exact path='/'>
-          {user.loggedIn ? 
-          <MainContainer user={user} setUser={setUser} uri={uri} setURI={setURI} uriID={uriID} setRuntime={setRuntime} runtime={runtime} setQueriesList={setQueriesList} uriList={uriList}/> 
-          : <Login user={user} setUser={setUser} uri={uri} setURI={setURI} uriID={uriID} setRuntime={setRuntime} runtime={runtime} setQueriesList={setQueriesList} uriList={uriList}/>}
-        </Route>
+              <Route exact path='/'>
+                {user.loggedIn ? 
+                  <MainContainer 
+                    user={user} 
+                    setUser={setUser} 
+                    uri={uri} 
+                    setURI={setURI} 
+                    uriID={uriID} 
+                    setRuntime={setRuntime} 
+                    runtime={runtime} 
+                    setQueriesList={setQueriesList} 
+                    uriList={uriList}
+                    /> 
+                  : <Login 
+                      user={user} 
+                      setUser={setUser} 
+                      uri={uri} 
+                      setURI={setURI} 
+                      uriID={uriID}
+                      setRuntime={setRuntime} 
+                      runtime={runtime} 
+                      setQueriesList={setQueriesList} 
+                      uriList={uriList}
+                      />}
+              </Route>
             </Switch>
           </Router>
         </div>
       </ThemeProvider>
-    </ApolloProvider>
   );
 };
 
