@@ -1,12 +1,12 @@
 import { useState, useEffect, useContext } from "react";
 import { useLocation } from 'react-router-dom'
-import LineChartComponent from "./LineChart";
+import LineChartComponent from "./DashboardLineChart";
 // import { channels } from '../shared/constants';
 import Button from '@material-ui/core/Button';
 import { useDarkTheme } from "./ThemeContext";
 // const { ipcRenderer } = window.require("electron");
 
-const TestQuery = ({ url, urlID, history, setHistory, runtime, getResponseTimes, queriesList }) => {
+const TestQuery = ({ url, urlID, history, setHistory, runtime, avgResponseTime, getResponseTimes, queriesList }) => {
 
   const [query, setQuery] = useState(null);
   const [queryName, setQueryName] = useState(null);
@@ -19,11 +19,9 @@ const TestQuery = ({ url, urlID, history, setHistory, runtime, getResponseTimes,
 
   // configure query list to appear as drop down list
   const queries = [];
-  window.api.receiveArray('queriesFromMain', data => {
-    data.map((prevQuery, index) => queries.push(
-      <option value={prevQuery.query} id={index}>{prevQuery['Query Name']}</option>
-    ))
-  })
+  queriesList.map((prevQuery, index) => queries.push(
+    <option value={prevQuery.query} name={prevQuery.query_name}id={index}>{prevQuery.query_name}</option>
+  ))
     
   // this is for when a card was clicked in the 'previous searches' component and the query
   // is passed as a prop when user is rerouted back to this component
@@ -62,9 +60,17 @@ const TestQuery = ({ url, urlID, history, setHistory, runtime, getResponseTimes,
         <select
           name='queries-list' 
           id='queries-list' 
-          onChange={(e) => document.querySelector('#text-area').innerHTML = e.target.value}
+          onChange={(e) => {
+            document.querySelector('#text-area').innerHTML = e.target.value;
+            document.querySelector('#uri-name').innerHTML = e.target.name;
+            }}
           >
-          <option disabled selected hidden>previously searched queries</option>
+          <option 
+            disabled 
+            selected 
+            hidden
+            // value='previously searched queries'
+            >previously searched queries</option>
           {queries}   
         </select>
       </header>
@@ -74,12 +80,14 @@ const TestQuery = ({ url, urlID, history, setHistory, runtime, getResponseTimes,
           id='text-area'
           onChange={(e) => setQuery(e.target.value)}
           style={themeStyle}
+          required
           >{queryProp}</textarea>
         <input 
           id='uri-name' 
           placeholder='give your url a name' 
-          onChange={(e)=>setQueryName(e.target.value)
-          }></input>
+          onChange={(e)=>setQueryName(e.target.value)}
+          required
+          ></input>
         <Button 
           variant="contained" 
           id='send-query' 
@@ -89,12 +97,12 @@ const TestQuery = ({ url, urlID, history, setHistory, runtime, getResponseTimes,
       </div>
       <div id='stats'>
         <div class='category'>
-          <div class='category-title'>Query Response Time (ms)</div>
-          <div class='category-number'>{`${runtime}`}</div>
+          <div class='category-title'>Query Response Time</div>
+          <div class='category-number'>{`${runtime}ms`}</div>
         </div>
         <div class='category'>
           <div class='category-title'>Average Response Time</div>
-          <div class='category-number'>100</div>
+          <div class='category-number'>{`${avgResponseTime}ms`}</div>
         </div>
       </div>
       <div id='response-chart'> 

@@ -10,7 +10,7 @@ import Home from './Home'
 import Dashboard from './Dashboard'
 import NavBar from './NavBar'
 import TestQuery from './Test-Query'
-import BatchTest from "./LoadTest";
+import LoadTest from "./LoadTest";
 import PreviousSearches from './PreviousSearches';
 //import './src/stylesheets/index.css';
 import '../stylesheets/index.css'
@@ -230,10 +230,13 @@ const MainContainer = ({ user, setUser }) => {
   const [nickname, setNickname] = useState(null)
   const [urlID, setUrlID] = useState(0);
   const [runtime, setRuntime] = useState(0);
+  const [avgResponseTime, setAvgResponseTime] = useState(0);
   const [history, setHistory] = useState(null);
   const [queriesList, setQueriesList] = useState(fakeData);
+  const [dragList, setDragList] = useState([]);
   // const [urlList, setUrlList] = useState(fakeURIs); // to use in dashboard
 
+  // calculate single runtime, average runtime, and line-of-best-fit; to be used in test-query
   const getResponseTimes = () => {
     window.api.receiveArray("ResponseTimesFromMain", (event, arg) => {
       console.log('Listening for response from main process...')
@@ -245,10 +248,15 @@ const MainContainer = ({ user, setUser }) => {
       console.log('runtime: ', currRuntime);
       setRuntime(currRuntime);
 
+      // average of all runtimes
+      const responseTimeSum = arg.reduce((sum, curr) => sum += curr.response_time, 0);
+      const responseTimeAvg = responseTimeSum / arg.length;
+      setAvgResponseTime(responseTimeAvg.toFixed(1));
+
       // statistical analysis to plot line-of-best-fit
       const pastRuntimes = [];
-      let x_sum = 0
-      let y_sum = 0
+      let x_sum = 0;
+      let y_sum = 0;
       let numerator = 0;
       let denominator = 0;
         arg.forEach((query, index) => {
@@ -276,7 +284,10 @@ const MainContainer = ({ user, setUser }) => {
 
       setHistory(pastRuntimes);
     });
-  }
+  };
+
+  // acquire list of queries; to be sent to test-query, load-test, previous-searches
+  window.api.receiveArray('queriesFromMain', data => setQueriesList(data));
 
   return (
     <div id='main-container'>
@@ -301,45 +312,53 @@ const MainContainer = ({ user, setUser }) => {
                 setNickname={setNickname}
                 urlID={urlID} 
                 setUrlID={setUrlID}
-                history={history} 
-                setHistory={setHistory}
+                // history={history} 
+                // setHistory={setHistory}
                 queriesList={queriesList}
                 // urlList={urlList}
+                avgResponseTime={avgResponseTime}
                 />
             </Route>
             <Route path="/dashboard">
-              <Dashboard url={url} urlID={urlID} history={history}/>
+              <Dashboard 
+                url={url} 
+                urlID={urlID} 
+                // history={history}
+                />
             </Route>
             <Route path="/testquery">
               <TestQuery 
                 url={url} 
                 urlID={urlID} 
                 history={history}
-                setHistory={setHistory}
+                // setHistory={setHistory}
                 runtime={runtime}
                 getResponseTimes={getResponseTimes}
                 queriesList={queriesList}
                 />
             </Route>
             <Route path="/loadtest">
-              <BatchTest 
+              <LoadTest 
                 url={url} 
                 urlID={urlID} 
-                history={history}
-                setHistory={setHistory}
+                // history={history}
+                // setHistory={setHistory}
                 runtime={runtime}
                 setRuntime={setRuntime}
                 getResponseTimes={getResponseTimes}
+                queriesList={queriesList}
                 />
             </Route>
             <Route path="/previoussearches">
               <PreviousSearches 
                 url={url} 
                 urlID={urlID} 
-                history={history}
+                // history={history}
                 getResponseTimes={getResponseTimes}
                 queriesList={queriesList}
                 setQueriesList={setQueriesList}
+                dragList={dragList}
+                setDragList={setDragList}
                 />
             </Route>
           </Switch>

@@ -1,5 +1,4 @@
-import React, { PureComponent } from 'react';
-import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 const data01 = [
   { x: 100, y: 200, z: 200 },
@@ -24,39 +23,61 @@ const data02 = [
   { x: 420, y: 280, z: 200 },
 ];
 
-export default class ScatterChartComponent extends PureComponent {
-  static demoUrl = 'https://codesandbox.io/s/scatter-chart-with-double-yaxes-tiuob';
+const data = [
+  { numChildProcesses: 50, avgResponseTime: 500 },
+  { numChildProcesses: 50, avgResponseTime: 400 },
+  { numChildProcesses: 50, avgResponseTime: 550 },
+  { numChildProcesses: 50, avgResponseTime: 600 },
+  { numChildProcesses: 75, avgResponseTime: 700 },
+  { numChildProcesses: 25, avgResponseTime: 200 },
+  { numChildProcesses: 100, avgResponseTime: 900 },
+]
 
-  render() {
-    return (
-      <ResponsiveContainer width="100%" height="100%">
-        <ScatterChart
-          width={500}
-          height={400}
-          margin={{
-            top: 20,
-            right: 20,
-            bottom: 20,
-            left: 20,
-          }}
-        >
-          <CartesianGrid />
-          <XAxis type="number" dataKey="x" name="stature" unit="cm" />
-          <YAxis yAxisId="left" type="number" dataKey="y" name="weight" unit="kg" stroke="#8884d8" />
-          <YAxis
-            yAxisId="right"
-            type="number"
-            dataKey="z"
-            name="weight"
-            unit="kg"
-            orientation="right"
-            stroke="#82ca9d"
+// display data of num child processes versus average response time
+
+const ScatterChartComponent = () => {
+  return (
+    <ResponsiveContainer width="100%" height="100%">
+      <ScatterChart
+        width={500}
+        height={400}
+        margin={{
+          top: 20,
+          right: 20,
+          bottom: 20,
+          left: 20,
+        }}
+      >
+        <CartesianGrid />
+        <XAxis 
+          type="number" 
+          dataKey="numChildProcesses" 
+          name="Num Child Processes" 
+          // unit="" 
           />
-          <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-          <Scatter yAxisId="left" name="A school" data={data01} fill="#8884d8" />
-          <Scatter yAxisId="right" name="A school" data={data02} fill="#82ca9d" />
-        </ScatterChart>
-      </ResponsiveContainer>
-    );
-  }
+        <YAxis 
+          yAxisId="left" 
+          type="number" 
+          dataKey="avgResponseTime" 
+          name="Avg Response Time" 
+          unit="ms" 
+          stroke="#8884d8" />
+        {/* <YAxis
+          yAxisId="right"
+          type="number"
+          dataKey="z"
+          name="weight"
+          unit="kg"
+          orientation="right"
+          stroke="#82ca9d"
+        /> */}
+        <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+        <Scatter yAxisId="left" name="A school" data={data} fill="#8884d8" />
+        {/* <Legend /> */}
+        {/* <Scatter yAxisId="right" name="A school" data={data02} fill="#82ca9d" /> */}
+      </ScatterChart>
+    </ResponsiveContainer>
+  );
 }
+
+export default ScatterChartComponent;

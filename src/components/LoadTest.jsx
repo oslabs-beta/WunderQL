@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom'
-import LineChartComponent from "./LineChart";
+import LineChartComponent from "./DashboardLineChart";
 import ScatterChartComponent from "./DashboardScatterChart";
 import { channels } from '../shared/constants';
 import Button from '@material-ui/core/Button';
 import { useDarkTheme } from "./ThemeContext";
 
 
-const LoadTest = ({ uri, uriID, getResponseTimes }) => {
+const LoadTest = ({ uri, uriID, getResponseTimes, queriesList }) => {
 
   const [query, setQuery] = useState('');
   const [loadAmount, setLoadAmount] = useState(null);
@@ -19,6 +19,12 @@ const LoadTest = ({ uri, uriID, getResponseTimes }) => {
     backgroundColor: darkTheme ? '#333' : 'white',
     color: darkTheme ? '#CCC' : '#333'
   }
+
+  //configure list of queries to display in drop-down
+  const queries = [];
+  queriesList.map((prevQuery, index) => queries.push(
+    <option value={prevQuery.query} name={prevQuery.query_name}id={index}>{prevQuery.query_name}</option>
+  ))
 
   const sendQuery = () => {
     // Sends the message to Electron main process
@@ -57,6 +63,17 @@ const LoadTest = ({ uri, uriID, getResponseTimes }) => {
     <div id='test-query' style={themeStyle}> 
       <header class='uri'>
         <h2>Currently connected to: {uri}</h2>
+        <select
+          name='queries-list' 
+          id='queries-list' 
+          onChange={(e) => {
+            document.querySelector('#text-area').innerHTML = e.target.value;
+            document.querySelector('#uri-name').innerHTML = e.target.name;
+            }}
+          >
+          <option disabled selected hidden>previously searched queries</option>
+          {queries}   
+        </select>
       </header>
       <div id='query-space'>
         <textarea 
@@ -81,7 +98,7 @@ const LoadTest = ({ uri, uriID, getResponseTimes }) => {
       </div>
       <div id='stats'>
         <div class='category'>
-          <div class='category-title'>Average Batch Response Time for {loadAmount} Requests</div>
+          <div class='category-title'>Avg Batch Response Time for {loadAmount} Requests</div>
           <div class='category-number'>{`${avgResponseTime} ms`}</div>
         </div>
         <div class='category'>

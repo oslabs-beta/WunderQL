@@ -24,12 +24,13 @@ const Home = ({ url, setUrl, nickname, setNickname, history, setHistory, setUrlI
   
   // run as component mounts to get array of url names - will there be url id?
   const URLs = [];
-  useEffect(() => {
-    window.api.receive('UrlsfromMain', data => {
+  // useEffect(() => {
+    window.api.receiveArray('UrlsfromMain', data => {
+      console.log('trying to get urls from main: ', data)
       // configure uri list to appear as drop down list upon successful login
-      data.map((url, index) => URLs.push(<option value={url.url} id={index}>{url.name}</option>))
+      data.map((url, index) => URLs.push(<option value={url.url} name={url.nickname}id={index}>{url.nickname}</option>))
     });
-  })
+  // })
   
   // Send URI to electron.js; receive array of objects containing dates + runtime
   const submitUrl = () => {
@@ -59,13 +60,15 @@ const Home = ({ url, setUrl, nickname, setNickname, history, setHistory, setUrlI
         <input
           onChange={(e) => setUrl(e.target.value)}
           placeholder="GraphQL API"
-          id='home-uri'
+          id='home-uri-value'
+          required
           /> 
         <h3 class='prompt'>Give that bad boi a name!</h3>
         <input
           onChange={(e) => setNickname(e.target.value)}
           placeholder="URL nickname"
-          id='home-uri'
+          id='home-uri-name'
+          required
           /> 
       </div>
 
@@ -76,9 +79,17 @@ const Home = ({ url, setUrl, nickname, setNickname, history, setHistory, setUrlI
         <select 
           name='uris' 
           id='uris' 
-          onChange={(e) => setUrl(e.target.value)}
+          onChange={(e) => {
+            setUrl(e.target.value);
+            document.querySelector('#home-uri-value').innerHTML = e.target.value;
+            document.querySelector('#home-uri-name').innerHTML = e.target.name;
+          }}
           >
-          <option value="" disabled selected hidden>sheeeesh pick one already</option>
+          <option 
+            // value="sheeeeesh pick one already" 
+            disabled 
+            selected
+            hidden>sheeeesh pick one already</option>
           {URLs}      
         </select>
       </div>

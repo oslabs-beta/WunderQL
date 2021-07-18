@@ -145,7 +145,7 @@ body {
   align-items: center;
 }
 
-#home-uri {
+#home-uri-value, #home-uri-name {
   padding: 0.5rem;
   width: 70%;
   border-radius: 1rem;
