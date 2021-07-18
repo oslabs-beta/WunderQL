@@ -23,22 +23,26 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 // import { ThemeProvider, useDarkTheme } from "./src/components/ThemeContext";
 import { ThemeProvider, useDarkTheme } from "./ThemeContext";
 
-const MainContainer = ({ user, setUser, uri, setURI, nickname, setNickname, history, setHistory, uriID, setUriID, queriesList, uriList, runtime, setRuntime, setQueriesList }) => {
-  setURI('https://api.spacex.land/graphql/')
-  console.log(uri)
+const MainContainer = ({
+  uri, setURI,
+  uriID, setUriID,
+  nickname, setNickname,
+  history, setHistory,
+  queriesList, setQueriesList,
+  uriList, setUriList,
+  runtime, setRuntime,
+  userID
+}) => {
+  // setURI('https://api.spacex.land/graphql/')
+  // console.log(uri)
   const client = new ApolloClient({
     uri: uri,
     cache: new InMemoryCache()
   });
-  
+
   const getResponseTimes = () => {
-    // ipcRenderer.on(channels.GET_RESPONSE_TIME, (event, arg) => {
-    window.api.receiveArray("ResponseTimesFromMain", (event, arg) => {
+    window.api.receiveArray("responseTimesFromMain", (event, arg) => {
       console.log('Listening for response from main process...')
-      // arg is received from DB as an array of objects
-      // console.log('arg object received from electronjs: ', arg);
-      
-      // 
       
       // get the runtime of the most recent query
       const currRuntime = arg[arg.length - 1].response_time.toFixed(1);
@@ -114,7 +118,10 @@ const MainContainer = ({ user, setUser, uri, setURI, nickname, setNickname, hist
                   history={history} 
                   setHistory={setHistory}
                   queriesList={queriesList}
+                  setQueriesList={setQueriesList}
                   uriList={uriList}
+                  setUriList={setUriList}
+                  userID={userID}
                   />
               </Route>
               <Route path="/dashboard">
@@ -129,6 +136,7 @@ const MainContainer = ({ user, setUser, uri, setURI, nickname, setNickname, hist
                   setHistory={setHistory}
                   runtime={runtime}
                   getResponseTimes={getResponseTimes}
+                  setQueriesList={setQueriesList}
                   queriesList={queriesList}
                   />
               </Route>

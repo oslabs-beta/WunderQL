@@ -3,7 +3,6 @@ const { performance } = require('perf_hooks');
 const path = require("path");
 const { User } = require('../models/User');
 const { app, BrowserWindow, Menu, ipcMain } = require("electron");
-const { channels } = require('../src/shared/constants');
 const isDev = require("electron-is-dev");
 const childProc = require('child_process');
 const db = require("../models/User");
@@ -132,10 +131,10 @@ ipcMain.on("activate", () => {
 
 //! #1 loginToMain - User logins 
 //ipcMain.on(channels.GET_USER_AUTH, async (event, arg) => {
-  ipcMain.on("loginToMain", async (event, arg) => {
+ipcMain.on("loginToMain", async (event, arg) => {
   //Get Users Name and Password from Login Form
   try {
-    let userId
+    let userId;
     const validateUserQuery = {
       text : 'SELECT * FROM users WHERE username = $1 AND password = $2',
       values: [arg.username, arg.password],
@@ -146,6 +145,8 @@ ipcMain.on("activate", () => {
     if(validUsers.rows.length){
       userId=validUsers.rows[0]._id;
       event.sender.send("fromMain", true)
+      // Gets sent to App.js
+      event.sender.send("userIDfromMain", userId);
     } 
 
   const getUrlsQuery = {
@@ -161,7 +162,6 @@ ipcMain.on("activate", () => {
     return err;
   }  
 });
-
 
 // Function that conducts load test on endpoint
 const loadTest = async (CHILD_PROCESSES, URL, QUERY) => {
@@ -243,7 +243,7 @@ ipcMain.on("urlToMain", async (event, arg) => {
     //check if the url exists 
     const checkIfUrlExists = {
       text: 'SELECT * FROM graphqlurls WHERE url = $1 AND user_id = $2',
-      values: [arg.graphqlEndpoint, arg.userId],
+      values: [arg.uri, arg.userID],
     };
     const existingUrlResult = await db.query(checkIfUrlExists);
     const existingUrlId = existingUrlResult.rows;
@@ -253,7 +253,7 @@ ipcMain.on("urlToMain", async (event, arg) => {
     if (!existingUrlId.length) {
       const insertUrl = {
         text: 'INSERT INTO graphqlurls(url, nickname, user_id) VALUES ($1, $2, $3) RETURNING _id',
-        values: [arg.url, arg.nickname, arg.userId],
+        values: [arg.uri, arg.nickname, arg.userID],
       };
       const queryResult = await db.query(insertUrl);
       urlId = queryResult.rows[0]._id;
@@ -261,7 +261,7 @@ ipcMain.on("urlToMain", async (event, arg) => {
       urlId = existingUrlId[0]._id;
     }
     
-    // Send id  back to frontend 
+    // Send id  back to Home.jsx 
     event.sender.send("idFromMain", urlId)
 
    //get all queries for specific url (we have id from above)
@@ -272,19 +272,21 @@ ipcMain.on("urlToMain", async (event, arg) => {
     const queryResult = await db.query(getQueriesQuery);
     const allQueries = queryResult.rows;
 
-    event.sender.send("queriesfromMain", allQueries)
+    console.log('allQueries', allQueries)
+
+    event.sender.send("queriesFromMain", allQueries)
 
     //get dashboard summary for specific url - total queries, total tests, total load tests. If possible # of queries per day.
 
     const query = {
       text: `SELECT gu.url, COUNT(q._id) as number_of_queries, COUNT(rt._id) as number_of_tests, COUNT(lrt._id) as number_of_load_tests
-      FROM graphqlurls gu 
+      FROM graphqlurls gu
       INNER JOIN queries q ON q.url_id = gu._id AND gu._id = $1
       INNER JOIN response_times rt ON rt.query_id = q._id
       INNER JOIN load_test_response_times lrt ON lrt.query_id = q._id
       GROUP BY gu.url
       `,
-      values: [arg.urlId]
+      values: [urlId]
     }
   
     const dashboardQueryResult = await db.query(query);
@@ -298,20 +300,20 @@ ipcMain.on("urlToMain", async (event, arg) => {
 })
 
 // Function that checks if query exists in db
-const checkIfQueryExist = async (queryString, urlId) => {
+const checkIfQueryExist = async (queryString, urlId, queryName) => {
   const checkIfQueryExist = {
     text: 'select _id FROM queries WHERE query_string = $1 AND url_id = $2',
     values: [queryString, urlId]
   };
-  const existingQueryResult = await db.query(checkIfQueryExist);
+  const existingQueryResult = db.query(checkIfQueryExist);
   const existingQueryID = existingQueryResult.rows;
   
   let queryId;
 
-  if (!existingQueryID.length) {
+  if (!existingQueryID) {
     const insertQuery = {
-      text: 'INSERT INTO queries(query_string, url_id) VALUES ($1, $2) RETURNING _id',
-      values: [queryString, urlId],
+      text: 'INSERT INTO queries(query_string, url_id, query_name) VALUES ($1, $2, $3) RETURNING _id',
+      values: [queryString, urlId, queryName],
     };
     const queryResult = await db.query(insertQuery);
     queryId = queryResult.rows[0]._id;
@@ -325,7 +327,7 @@ const checkIfQueryExist = async (queryString, urlId) => {
 ipcMain.on("queryTestToMain", async (event, arg) => {
   try {
   let responseTime = await checkResponseTime(arg.query, arg.uri);
-  const queryId = checkIfQueryExist(arg.query, arg.uriID);
+  const queryId = await checkIfQueryExist(arg.query, arg.uriID, arg.name);
   
   // Insert response time with query_id into database 
   const insertResponseTime = {

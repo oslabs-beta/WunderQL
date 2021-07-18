@@ -23,13 +23,13 @@ const LoadTest = ({ uri, uriID, setUriID, history, runtime, getResponseTimes }) 
     console.log('Query is being sent to main process...')
 
     // Initiate load test when user clicks 'Submit Query'
-    window.api.send("LoadTestQueryToMain", {
+    window.api.send("loadTestQueryToMain", {
       numOfChildProccesses: loadAmount,
       query: query,
       uri: uri,
     })
 
-    window.api.receiveArray("LoadTestResultsFromMain", (event, loadTestResults) => {
+    window.api.receiveArray("loadTestResultsFromMain", (event, loadTestResults) => {
       console.log('Listening for loadTest response from main process...')
       console.log('loadTestResults', loadTestResults);
       setavgResponseTime(loadTestResults.averageResponseTime.toFixed(2));

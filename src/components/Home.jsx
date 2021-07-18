@@ -3,7 +3,7 @@ import { useHistory } from 'react-router';
 import Button from '@material-ui/core/Button';
 import { useDarkTheme } from './ThemeContext';
 
-const Home = ({ uri, setURI, nickname, setNickname, history, setHistory, setUriID, queriesList, uriList }) => {
+const Home = ({ uri, setURI, nickname, setNickname, history, setHistory, setUriID, queriesList, setQueriesList, uriList, userID }) => {
   
   const darkTheme = useDarkTheme();
   const themeStyle = {
@@ -44,8 +44,17 @@ const Home = ({ uri, setURI, nickname, setNickname, history, setHistory, setUriI
     console.log(uri, ' : URI is being sent to main process...');
     
     // Send uri to main process
-    window.api.send("urlToMain", uri);
+    window.api.send("urlToMain", {
+      uri,
+      nickname,
+      userID
+    });
     
+    window.api.receive("queriesFromMain", (allQueries) => {
+      console.log("In queriesfromMain in Test-Query.jsx", allQueries)
+      setQueriesList(allQueries)
+    })
+
     // Receive uriID from main process
     window.api.receive("idFromMain", (id) => {
       console.log('Within window.api.receive in Home.jsx, id: ', id);

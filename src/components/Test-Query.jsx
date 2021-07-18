@@ -4,7 +4,7 @@ import LineChartComponent from "./LineChart";
 import Button from '@material-ui/core/Button';
 import { useDarkTheme } from "./ThemeContext";
 
-const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getResponseTimes, queriesList, setRuntime }) => {
+const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getResponseTimes, queriesList, setQueriesList, setRuntime }) => {
 
   const [query, setQuery] = useState(null);
   const [queryName, setQueryName] = useState(null);
@@ -15,10 +15,19 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
     color: darkTheme ? '#CCC' : '#333'
   }
 
+  // Receive queries when the user inputs their graphQL URl
+  
+
+  // MOVE THIS UP TO THE RECEIVE ARRATY
   // configure uri list to appear as drop down list upon successful login
   // when connected to backend, replace 'queriesList' with history
-  // const queries = [];
-  // queriesList.map((prevQuery, index) => queries.push(<option value={prevQuery.query} id={index}>{prevQuery['Query Name']}</option>))
+  const queries = [];
+  console.log(queriesList)
+  if(queriesList) {
+    queriesList.map((prevQuery, index) => queries.push(<option value={prevQuery.query_name} id={index}>{prevQuery.query_name}</option>))
+  }
+
+
 
   // this is for when a card was clicked in the 'previous searches' component and the query
   // is passed as a prop when user is rerouted back to this component
@@ -43,9 +52,10 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
     window.api.send('queryTestToMain', {
       uriID: uriID,
       query: query,
-      uri: uri,   
+      uri: uri,
+      name: queryName,   
     })
-    
+
     // Listen for resposne times from main process (function defined in App.js)
     getResponseTimes();
   };
@@ -59,8 +69,8 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
           id='queries-list' 
           onChange={(e) => document.querySelector('#text-area').innerHTML = e.target.value}
           >
-          <option value="" disabled selected hidden>previously searched queries</option>
-          {/* {queries}    */}
+          <option value="" selected >previously searched queries</option>
+            {queries}   
           </select>
       </header>
       <div id='query-space'>
@@ -72,7 +82,7 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
           >{queryProp}</textarea>
         <input 
           id='uri-name' 
-          placeholder='give your uri a name' 
+          placeholder='give your query a name' 
           onChange={(e)=>setQueryName(e.target.value)
           }></input>
         <Button 

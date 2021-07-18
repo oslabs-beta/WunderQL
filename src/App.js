@@ -233,12 +233,20 @@ function App() {
   const [history, setHistory] = useState(null);
   const [uriID, setUriID] = useState(0);
   const [runtime, setRuntime] = useState(0);
-  const [queriesList, setQueriesList] = useState(fakeData);
+  const [queriesList, setQueriesList] = useState(null);
   const [uriList, setUriList] = useState(fakeURIs); // to use in dashboard
   const [user, setUser] = useState({
     loggedIn: false
   });
+  const [userID, setuserID] = useState(null); // to use in dashboard
   // const toggleDarkMode = () => {console.log('changed theme'); setDark(prevDarkTheme => !prevDarkTheme)}
+
+  // Set userID when user is logged in 
+  window.api.receive("userIDfromMain", (userID) => {
+    console.log("In userIDfromMain in App.jsx", userID)
+    setuserID(userID)
+  })
+
 
   const client = new ApolloClient({
     uri: uri,
@@ -271,8 +279,17 @@ function App() {
             <Switch>
         <Route exact path='/'>
           {user.loggedIn ? 
-          <MainContainer user={user} setUser={setUser} uri={uri} setURI={setURI} uriID={uriID} setRuntime={setRuntime} runtime={runtime} setQueriesList={setQueriesList} uriList={uriList}/> 
-          : <Login user={user} setUser={setUser} uri={uri} setURI={setURI} uriID={uriID} setRuntime={setRuntime} runtime={runtime} setQueriesList={setQueriesList} uriList={uriList}/>}
+          <MainContainer 
+            uri={uri} setURI={setURI}
+            uriID={uriID} setUriID={setUriID}
+            nickname={nickname} setNickname={setNickname}
+            runtime={runtime} setRuntime={setRuntime}
+            history={history} setHistory={setHistory}
+            queriesList={queriesList} setQueriesList={setQueriesList}
+            uriList={uriList} setUriList={setUriList}
+            userID={userID}
+          /> 
+          : <Login user={user} setUser={setUser} />}
         </Route>
             </Switch>
           </Router>
@@ -283,3 +300,16 @@ function App() {
 };
 
 export default App;
+
+// const [dark, setDark] = useState(false); // or true?
+// const [uri, setURI] = useState('(please enter a URI to begin)');
+// const [nickname, setNickname] = useState(null)
+// const [history, setHistory] = useState(null);
+// const [uriID, setUriID] = useState(0);
+// const [runtime, setRuntime] = useState(0);
+// const [queriesList, setQueriesList] = useState(fakeData);
+// const [uriList, setUriList] = useState(fakeURIs); // to use in dashboard
+// const [user, setUser] = useState({
+//   loggedIn: false
+// });
+// const [userID, setuserID] = useState(null); // to use in dashboard
