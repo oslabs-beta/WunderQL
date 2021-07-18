@@ -7,13 +7,7 @@ import {
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import { useState, useEffect } from 'react';
-import Home from './components/Home'
-import Dashboard from './components/Dashboard'
-import NavBar from './components/NavBar'
-import TestQuery from './components/Test-Query'
-import BatchTest from "./components/LoadTest";
 import Login from "./components/Login"
-import PreviousSearches from './components/PreviousSearches';
 import './stylesheets/index.css';
 
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
@@ -22,195 +16,195 @@ import MainContainer from "./components/MainContainer";
 
 
 // fake data for cards in previous-searches
-const fakeData = [
-  {
-    id: 1,
-    'Query Name': 'Rocket ships',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 1) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
+// const fakeData = [
+//   {
+//     id: 1,
+//     'Query Name': 'Rocket ships',
+//     'Num of runtimes': 38,
+//     'Avg Runtime(ms)': 150,
+//     'Last Date Ran': new Date().toDateString(),
+//     query: `query {
+//       launchesPast(limit: 1) {
+//         mission_name
+//         launch_date_local
+//         launch_site {
+//           site_name_long
+//         }
+//       }
+//     }`
     
-  },
-  {
-    id: 2,
-    'Query Name': 'Raubern ships',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 2) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
+//   },
+//   {
+//     id: 2,
+//     'Query Name': 'Raubern ships',
+//     'Num of runtimes': 38,
+//     'Avg Runtime(ms)': 150,
+//     'Last Date Ran': new Date().toDateString(),
+//     query: `query {
+//       launchesPast(limit: 2) {
+//         mission_name
+//         launch_date_local
+//         launch_site {
+//           site_name_long
+//         }
+//       }
+//     }`
     
-  },
-  {
-    id: 3,
-    'Query Name': 'Raubern sucks',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 3) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
+//   },
+//   {
+//     id: 3,
+//     'Query Name': 'Raubern sucks',
+//     'Num of runtimes': 38,
+//     'Avg Runtime(ms)': 150,
+//     'Last Date Ran': new Date().toDateString(),
+//     query: `query {
+//       launchesPast(limit: 3) {
+//         mission_name
+//         launch_date_local
+//         launch_site {
+//           site_name_long
+//         }
+//       }
+//     }`
     
-  },
-  {
-    id: 4,
-    'Query Name': 'Rockets dont suck',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 4) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
+//   },
+//   {
+//     id: 4,
+//     'Query Name': 'Rockets dont suck',
+//     'Num of runtimes': 38,
+//     'Avg Runtime(ms)': 150,
+//     'Last Date Ran': new Date().toDateString(),
+//     query: `query {
+//       launchesPast(limit: 4) {
+//         mission_name
+//         launch_date_local
+//         launch_site {
+//           site_name_long
+//         }
+//       }
+//     }`
     
-  },
-  {
-    id: 5,
-    'Query Name': 'Rocket is bbygorl',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 5) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
+//   },
+//   {
+//     id: 5,
+//     'Query Name': 'Rocket is bbygorl',
+//     'Num of runtimes': 38,
+//     'Avg Runtime(ms)': 150,
+//     'Last Date Ran': new Date().toDateString(),
+//     query: `query {
+//       launchesPast(limit: 5) {
+//         mission_name
+//         launch_date_local
+//         launch_site {
+//           site_name_long
+//         }
+//       }
+//     }`
     
-  },
-  {
-    id: 6,
-    'Query Name': 'Rocket me',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 6) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
+//   },
+//   {
+//     id: 6,
+//     'Query Name': 'Rocket me',
+//     'Num of runtimes': 38,
+//     'Avg Runtime(ms)': 150,
+//     'Last Date Ran': new Date().toDateString(),
+//     query: `query {
+//       launchesPast(limit: 6) {
+//         mission_name
+//         launch_date_local
+//         launch_site {
+//           site_name_long
+//         }
+//       }
+//     }`
     
-  },
-  {
-    id: 7,
-    'Query Name': 'i ship rockets',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 7) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
+//   },
+//   {
+//     id: 7,
+//     'Query Name': 'i ship rockets',
+//     'Num of runtimes': 38,
+//     'Avg Runtime(ms)': 150,
+//     'Last Date Ran': new Date().toDateString(),
+//     query: `query {
+//       launchesPast(limit: 7) {
+//         mission_name
+//         launch_date_local
+//         launch_site {
+//           site_name_long
+//         }
+//       }
+//     }`
     
-  },
-  {
-    id: 8,
-    'Query Name': 'me like rockets',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 8) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
+//   },
+//   {
+//     id: 8,
+//     'Query Name': 'me like rockets',
+//     'Num of runtimes': 38,
+//     'Avg Runtime(ms)': 150,
+//     'Last Date Ran': new Date().toDateString(),
+//     query: `query {
+//       launchesPast(limit: 8) {
+//         mission_name
+//         launch_date_local
+//         launch_site {
+//           site_name_long
+//         }
+//       }
+//     }`
     
-  },
-  {
-    id: 9,
-    'Query Name': 'Rocket rocket rocket',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 9) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
+//   },
+//   {
+//     id: 9,
+//     'Query Name': 'Rocket rocket rocket',
+//     'Num of runtimes': 38,
+//     'Avg Runtime(ms)': 150,
+//     'Last Date Ran': new Date().toDateString(),
+//     query: `query {
+//       launchesPast(limit: 9) {
+//         mission_name
+//         launch_date_local
+//         launch_site {
+//           site_name_long
+//         }
+//       }
+//     }`
     
-  },
-  {
-    id: 10,
-    'Query Name': 'Rocks in a rocket',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 10) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
+//   },
+//   {
+//     id: 10,
+//     'Query Name': 'Rocks in a rocket',
+//     'Num of runtimes': 38,
+//     'Avg Runtime(ms)': 150,
+//     'Last Date Ran': new Date().toDateString(),
+//     query: `query {
+//       launchesPast(limit: 10) {
+//         mission_name
+//         launch_date_local
+//         launch_site {
+//           site_name_long
+//         }
+//       }
+//     }`
     
-  },
-  {
-    id: 11,
-    'Query Name': 'Rocket of rocks',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 11) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
+//   },
+//   {
+//     id: 11,
+//     'Query Name': 'Rocket of rocks',
+//     'Num of runtimes': 38,
+//     'Avg Runtime(ms)': 150,
+//     'Last Date Ran': new Date().toDateString(),
+//     query: `query {
+//       launchesPast(limit: 11) {
+//         mission_name
+//         launch_date_local
+//         launch_site {
+//           site_name_long
+//         }
+//       }
+//     }`
     
-  },
-];
+//   },
+// ];
 
 const fakeURIs = [
   'raubern big dum-dum',
@@ -219,12 +213,6 @@ const fakeURIs = [
   'why is raubern',
   'no more raubern',
 ]
-
-// Listen for queries from main process
-// window.api.receiveArray("queriesFromMain", (event, arg) => {
-//   console.log('listening on queriesFromMain in App.js');
-  
-// })
 
 function App() {
   const [dark, setDark] = useState(false); // or true?
@@ -280,16 +268,27 @@ function App() {
         <Route exact path='/'>
           {user.loggedIn ? 
           <MainContainer 
-            uri={uri} setURI={setURI}
-            uriID={uriID} setUriID={setUriID}
-            nickname={nickname} setNickname={setNickname}
-            runtime={runtime} setRuntime={setRuntime}
-            history={history} setHistory={setHistory}
-            queriesList={queriesList} setQueriesList={setQueriesList}
-            uriList={uriList} setUriList={setUriList}
+            uri={uri}
+            setURI={setURI}
+            uriID={uriID}
+            setUriID={setUriID}
+            nickname={nickname}
+            setNickname={setNickname}
+            runtime={runtime}
+            setRuntime={setRuntime}
+            history={history}
+            setHistory={setHistory}
+            queriesList={queriesList}
+            setQueriesList={setQueriesList}
+            uriList={uriList}
+            setUriList={setUriList}
             userID={userID}
           /> 
-          : <Login user={user} setUser={setUser} />}
+          :
+          <Login
+            user={user}
+            setUser={setUser}
+          />}
         </Route>
             </Switch>
           </Router>
@@ -300,16 +299,3 @@ function App() {
 };
 
 export default App;
-
-// const [dark, setDark] = useState(false); // or true?
-// const [uri, setURI] = useState('(please enter a URI to begin)');
-// const [nickname, setNickname] = useState(null)
-// const [history, setHistory] = useState(null);
-// const [uriID, setUriID] = useState(0);
-// const [runtime, setRuntime] = useState(0);
-// const [queriesList, setQueriesList] = useState(fakeData);
-// const [uriList, setUriList] = useState(fakeURIs); // to use in dashboard
-// const [user, setUser] = useState({
-//   loggedIn: false
-// });
-// const [userID, setuserID] = useState(null); // to use in dashboard

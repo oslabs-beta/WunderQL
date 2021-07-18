@@ -1,10 +1,10 @@
-const { fetch } = require('cross-fetch');
-const { performance } = require('perf_hooks');
+// const { fetch } = require('cross-fetch');
+// const { performance } = require('perf_hooks');
 const path = require("path");
 const { User } = require('../models/User');
 const { app, BrowserWindow, Menu, ipcMain } = require("electron");
 const isDev = require("electron-is-dev");
-const childProc = require('child_process');
+const { checkResponseTime, loadTest, checkIfQueryExist } = require('./utils');
 const db = require("../models/User");
 
 //-------Electron Setup--------------------------------------------------------
@@ -129,6 +129,7 @@ ipcMain.on("activate", () => {
 
 //-------------------------------------------------------------------------------
 
+
 //! #1 loginToMain - User logins 
 //ipcMain.on(channels.GET_USER_AUTH, async (event, arg) => {
 ipcMain.on("loginToMain", async (event, arg) => {
@@ -162,80 +163,6 @@ ipcMain.on("loginToMain", async (event, arg) => {
     return err;
   }  
 });
-
-// Function that conducts load test on endpoint
-const loadTest = async (CHILD_PROCESSES, URL, QUERY) => {
-  let times = []; // array of response times of all child processes
-  let children = []; // array of all child processes created
-
-  for (let i = 0; i < CHILD_PROCESSES; i++) {
-    // Spawn the child process
-    let childProcess = childProc.spawn("node", [`${__dirname}/child.js`, `--url=${URL}`, `--query=${QUERY}`])
-    children.push(childProcess);
-  }
-  // Map child processes into promises that resolve to true or false 
-  // Response times will be pushed to times array each time child process logs the response time
-  let responses = children.map(function wait(child) {
-    return new Promise(function c(res) {
-      child.stdout.on('data', (data) => {
-        console.log(`child stdout: ${data}`);
-        times.push(parseInt(data));
-      });
-      child.on("exit", function (code) {
-        if (code === 0) {
-          res(true);
-        } else {
-          res(false);
-        }
-      });
-    });
-  });
-  
-  // Wait until all promises have been resolved
-  responses = await Promise.all(responses);
-
-  // Check if all promises were resolved successfully 
-  let successOrFailure;
-  let averageResponseTime;
-  if (responses.filter(Boolean).length === responses.length) {
-    // Calculate average of all response times
-    const sum = times.reduce((a, b) => a + b, 0);
-    const avg = (sum / times.length) || 0;
-    console.log(`average: ${avg}`);
-    console.log("success!");  
-    // Update load test response variables
-    successOrFailure = 'success';
-    averageResponseTime = avg;
-  } else {
-    console.log("failures!");
-    // Update load test response variables
-    successOrFailure = 'failure';
-    averageResponseTime = 0;
-  }
-
-  // Return whether load test was success/failure, and the average response time
-  return {
-    successOrFailure,
-    averageResponseTime
-  }
-};
-
-// Function that checks response time of query
-async function checkResponseTime(query, uri_ID) {
-  let time1 = performance.now()
-  await fetch(uri_ID, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      query: `
-        ${query}
-      `,
-    }),
-  })
-  return performance.now() - time1;
-};
 
 //! #2 urlToMain - User selects a URL
 ipcMain.on("urlToMain", async (event, arg) => {
@@ -272,7 +199,7 @@ ipcMain.on("urlToMain", async (event, arg) => {
     const queryResult = await db.query(getQueriesQuery);
     const allQueries = queryResult.rows;
 
-    console.log('allQueries', allQueries)
+    // console.log('allQueries', allQueries)
 
     event.sender.send("queriesFromMain", allQueries)
 
@@ -299,35 +226,13 @@ ipcMain.on("urlToMain", async (event, arg) => {
   }  
 })
 
-// Function that checks if query exists in db
-const checkIfQueryExist = async (queryString, urlId, queryName) => {
-  const checkIfQueryExist = {
-    text: 'select _id FROM queries WHERE query_string = $1 AND url_id = $2',
-    values: [queryString, urlId]
-  };
-  const existingQueryResult = db.query(checkIfQueryExist);
-  const existingQueryID = existingQueryResult.rows;
-  
-  let queryId;
-
-  if (!existingQueryID) {
-    const insertQuery = {
-      text: 'INSERT INTO queries(query_string, url_id, query_name) VALUES ($1, $2, $3) RETURNING _id',
-      values: [queryString, urlId, queryName],
-    };
-    const queryResult = await db.query(insertQuery);
-    queryId = queryResult.rows[0]._id;
-  } else {
-    queryId = existingQueryID[0]._id;
-  }
-  return queryId;
-}
-
 //! #3 queryTestToMain - User selects a query to test
 ipcMain.on("queryTestToMain", async (event, arg) => {
   try {
   let responseTime = await checkResponseTime(arg.query, arg.uri);
+  console.log('responseTime', responseTime)
   const queryId = await checkIfQueryExist(arg.query, arg.uriID, arg.name);
+  console.log('queryId in electron.js', queryId)
   
   // Insert response time with query_id into database 
   const insertResponseTime = {
@@ -345,6 +250,17 @@ ipcMain.on("queryTestToMain", async (event, arg) => {
 
   //Send back array of response times for that query
   event.sender.send("responseTimesFromMain", responseTimes);
+  // console.log(responseTimes)
+
+  // Once new query is in database, send updated state to Test-Query so the new query name is reflected in the dropdown
+  const getQueriesQuery = {
+    text: 'SELECT _id, query_string, query_name FROM queries WHERE url_id = $1',
+    values: [arg.uriID]
+  }
+  const queryResult = await db.query(getQueriesQuery);
+  const allQueries = queryResult.rows;
+  // console.log('allQueries', allQueries)
+  event.sender.send("queriesFromMain", allQueries)
 
     // Insert response time and query_id into database 
     // Associate response time with query_id
@@ -383,31 +299,3 @@ ipcMain.on("loadTestQueryToMain", async (event, arg) => {
     return err;
   }  
 });
-  
-
-  //----------------------------------------
-// Example queries for https://api.spacex.land/graphql/
-// query {
-//     launchesPast(limit: 10) {
-//         mission_name
-//         launch_date_local
-//         launch_site {
-//             site_name_long
-//           }
-//         }
-//       }
-      
-      // client.query({
-        //   query: gql`
-            // query {
-            //     launchesPast(limit: 10) {
-            //         mission_name
-            //         launch_date_local
-            //         launch_site {
-            //             site_name_long
-            //           }
-            //         }
-            //       }
-              //   `
-              // }).then(result => console.log(result))
-              //----------------------------------------

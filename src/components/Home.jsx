@@ -63,10 +63,6 @@ const Home = ({ uri, setURI, nickname, setNickname, history, setHistory, setUriI
       setUriID(id);
     })
 
-    // ipcRenderer.on(channels.GET_HISTORY, (event, arg) => {
-    //   // history state updated and stored in App.js
-    //   setHistory(arg);
-    // })
   }
 
   
@@ -78,8 +74,6 @@ const Home = ({ uri, setURI, nickname, setNickname, history, setHistory, setUriI
   //     },
   //   },
   // }));
-
-  // const classes = useStyles();
 
   return (
     <div id='home' 
