@@ -1,4 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 .titlebar-drag-region {
   top: 6px;
   left: 6px;
@@ -51,6 +50,53 @@ body {
   height: 100%;
 }
 
+/* to be used in all components */
+.uri {
+  grid-area: uri;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/*/////////////////////////////////////////////////////*/
+/*/////////////////////// Login ///////////////////////*/
+/*/////////////////////////////////////////////////////*/
+#login-form {
+  grid-area: main;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+}
+
+#logo {
+  margin-bottom: 1rem;
+}
+
+#username, #password {
+  padding: 0.5rem;
+  border-radius: 1rem;
+  border: 1px solid gainsboro;
+  margin: 1rem;
+}
+
+#login-button-div {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#login-button {
+  letter-spacing: 2px;
+  padding: 0.2rem 0.8rem;
+}
+
+/*/////////////////////////////////////////////////////*/
+/*////////////////// Main Container ///////////////////*/
+/*/////////////////////////////////////////////////////*/
 #main-container {
   margin: 0;
   padding: 0;
@@ -61,14 +107,6 @@ body {
   grid-template-areas: "- -" "main main" "main main";
   width: 100%;
   height: 100vh;
-}
-
-/* to be used in all components */
-.uri {
-  grid-area: uri;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 /*/////////////////////////////////////////////////////*/
@@ -238,7 +276,7 @@ body {
   grid-area: stats;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
 }
 
@@ -255,7 +293,7 @@ body {
 }
 
 .dash-num {
-  background-color: lightgray;
+  background-color: #ecbdac;
   border: 1px solid lightgray;
   border-radius: 40px;
   width: 250px;

@@ -1,44 +1,244 @@
 import { useState, useEffect, useContext } from 'react';
 import { useHistory } from 'react-router';
-import Button from '@material-ui/core/Button';
 
 import {
   BrowserRouter as Router,
   Switch,
   Route,
 } from "react-router-dom";
-// import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Home from './Home'
 import Dashboard from './Dashboard'
 import NavBar from './NavBar'
 import TestQuery from './Test-Query'
 import BatchTest from "./LoadTest";
-// import Header from './components/Header'
 import PreviousSearches from './PreviousSearches';
 //import './src/stylesheets/index.css';
 import '../stylesheets/index.css'
 
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 // import { ThemeProvider, useDarkTheme } from "./src/components/ThemeContext";
 import { ThemeProvider, useDarkTheme } from "./ThemeContext";
 
-const MainContainer = ({ user, setUser, uri, setURI, nickname, setNickname, history, setHistory, uriID, setUriID, queriesList, uriList, runtime, setRuntime, setQueriesList }) => {
-  setURI('https://api.spacex.land/graphql/')
-  console.log(uri)
-  const client = new ApolloClient({
-    uri: uri,
-    cache: new InMemoryCache()
-  });
+// fake data for cards in previous-searches
+const fakeData = [
+  {
+    id: 1,
+    'Query Name': 'Rocket ships',
+    'Num of runtimes': 38,
+    'Avg Runtime(ms)': 150,
+    'Last Date Ran': new Date().toDateString(),
+    query: `query {
+      launchesPast(limit: 1) {
+        mission_name
+        launch_date_local
+        launch_site {
+          site_name_long
+        }
+      }
+    }`
+    
+  },
+  {
+    id: 2,
+    'Query Name': 'Raubern ships',
+    'Num of runtimes': 38,
+    'Avg Runtime(ms)': 150,
+    'Last Date Ran': new Date().toDateString(),
+    query: `query {
+      launchesPast(limit: 2) {
+        mission_name
+        launch_date_local
+        launch_site {
+          site_name_long
+        }
+      }
+    }`
+    
+  },
+  {
+    id: 3,
+    'Query Name': 'Raubern sucks',
+    'Num of runtimes': 38,
+    'Avg Runtime(ms)': 150,
+    'Last Date Ran': new Date().toDateString(),
+    query: `query {
+      launchesPast(limit: 3) {
+        mission_name
+        launch_date_local
+        launch_site {
+          site_name_long
+        }
+      }
+    }`
+    
+  },
+  {
+    id: 4,
+    'Query Name': 'Rockets dont suck',
+    'Num of runtimes': 38,
+    'Avg Runtime(ms)': 150,
+    'Last Date Ran': new Date().toDateString(),
+    query: `query {
+      launchesPast(limit: 4) {
+        mission_name
+        launch_date_local
+        launch_site {
+          site_name_long
+        }
+      }
+    }`
+    
+  },
+  {
+    id: 5,
+    'Query Name': 'Rocket is bbygorl',
+    'Num of runtimes': 38,
+    'Avg Runtime(ms)': 150,
+    'Last Date Ran': new Date().toDateString(),
+    query: `query {
+      launchesPast(limit: 5) {
+        mission_name
+        launch_date_local
+        launch_site {
+          site_name_long
+        }
+      }
+    }`
+    
+  },
+  {
+    id: 6,
+    'Query Name': 'Rocket me',
+    'Num of runtimes': 38,
+    'Avg Runtime(ms)': 150,
+    'Last Date Ran': new Date().toDateString(),
+    query: `query {
+      launchesPast(limit: 6) {
+        mission_name
+        launch_date_local
+        launch_site {
+          site_name_long
+        }
+      }
+    }`
+    
+  },
+  {
+    id: 7,
+    'Query Name': 'i ship rockets',
+    'Num of runtimes': 38,
+    'Avg Runtime(ms)': 150,
+    'Last Date Ran': new Date().toDateString(),
+    query: `query {
+      launchesPast(limit: 7) {
+        mission_name
+        launch_date_local
+        launch_site {
+          site_name_long
+        }
+      }
+    }`
+    
+  },
+  {
+    id: 8,
+    'Query Name': 'me like rockets',
+    'Num of runtimes': 38,
+    'Avg Runtime(ms)': 150,
+    'Last Date Ran': new Date().toDateString(),
+    query: `query {
+      launchesPast(limit: 8) {
+        mission_name
+        launch_date_local
+        launch_site {
+          site_name_long
+        }
+      }
+    }`
+    
+  },
+  {
+    id: 9,
+    'Query Name': 'Rocket rocket rocket',
+    'Num of runtimes': 38,
+    'Avg Runtime(ms)': 150,
+    'Last Date Ran': new Date().toDateString(),
+    query: `query {
+      launchesPast(limit: 9) {
+        mission_name
+        launch_date_local
+        launch_site {
+          site_name_long
+        }
+      }
+    }`
+    
+  },
+  {
+    id: 10,
+    'Query Name': 'Rocks in a rocket',
+    'Num of runtimes': 38,
+    'Avg Runtime(ms)': 150,
+    'Last Date Ran': new Date().toDateString(),
+    query: `query {
+      launchesPast(limit: 10) {
+        mission_name
+        launch_date_local
+        launch_site {
+          site_name_long
+        }
+      }
+    }`
+    
+  },
+  {
+    id: 11,
+    'Query Name': 'Rocket of rocks',
+    'Num of runtimes': 38,
+    'Avg Runtime(ms)': 150,
+    'Last Date Ran': new Date().toDateString(),
+    query: `query {
+      launchesPast(limit: 11) {
+        mission_name
+        launch_date_local
+        launch_site {
+          site_name_long
+        }
+      }
+    }`
+    
+  },
+];
+const fakeURIs = [
+  'raubern big dum-dum',
+  'he dum-dum of all dum-dum',
+  'raubern scrum master? more like dum master',
+  'why is raubern',
+  'no more raubern',
+]
+
+/*
+HOME needs: list of URLs
+DASHBOARD NEEDS: 
+TEST needs: list of queries
+LOAD needs: list of load test queries
+PREV needs: list of queries
+*/
+
+const MainContainer = ({ user, setUser }) => {
   
+  const [url, setUrl] = useState('(please enter a URI to begin)');
+  const [nickname, setNickname] = useState(null)
+  const [urlID, setUrlID] = useState(0);
+  const [runtime, setRuntime] = useState(0);
+  const [history, setHistory] = useState(null);
+  const [queriesList, setQueriesList] = useState(fakeData);
+  // const [urlList, setUrlList] = useState(fakeURIs); // to use in dashboard
+
   const getResponseTimes = () => {
-    // ipcRenderer.on(channels.GET_RESPONSE_TIME, (event, arg) => {
     window.api.receiveArray("ResponseTimesFromMain", (event, arg) => {
       console.log('Listening for response from main process...')
       // arg is received from DB as an array of objects
       // console.log('arg object received from electronjs: ', arg);
-      
-      // 
       
       // get the runtime of the most recent query
       const currRuntime = arg[arg.length - 1].response_time.toFixed(1);
@@ -76,12 +276,10 @@ const MainContainer = ({ user, setUser, uri, setURI, nickname, setNickname, hist
 
       setHistory(pastRuntimes);
     });
-
   }
 
   return (
     <div id='main-container'>
-      {/* <ThemeProvider> */}
         {/* trying to make frameless win draggable */}
         {/* <div className="title-bar">
           <div className="titlebar-drag-region"></div>
@@ -97,26 +295,25 @@ const MainContainer = ({ user, setUser, uri, setURI, nickname, setNickname, hist
           <Switch>
             <Route exact path="/">
               <Home 
-                uri={uri}
-                setURI={setURI} 
+                url={url}
+                setUrl={setUrl} 
                 nickname={nickname}
                 setNickname={setNickname}
-                uriID={uriID} 
-                setUriID={setUriID}
+                urlID={urlID} 
+                setUrlID={setUrlID}
                 history={history} 
                 setHistory={setHistory}
                 queriesList={queriesList}
-                uriList={uriList}
+                // urlList={urlList}
                 />
             </Route>
             <Route path="/dashboard">
-              <Dashboard uri={uri} uriID={uriID} history={history}/>
+              <Dashboard url={url} urlID={urlID} history={history}/>
             </Route>
             <Route path="/testquery">
               <TestQuery 
-                client={client} 
-                uri={uri} 
-                uriID={uriID} 
+                url={url} 
+                urlID={urlID} 
                 history={history}
                 setHistory={setHistory}
                 runtime={runtime}
@@ -126,9 +323,8 @@ const MainContainer = ({ user, setUser, uri, setURI, nickname, setNickname, hist
             </Route>
             <Route path="/loadtest">
               <BatchTest 
-                client={client} 
-                uri={uri} 
-                uriID={uriID} 
+                url={url} 
+                urlID={urlID} 
                 history={history}
                 setHistory={setHistory}
                 runtime={runtime}
@@ -138,8 +334,8 @@ const MainContainer = ({ user, setUser, uri, setURI, nickname, setNickname, hist
             </Route>
             <Route path="/previoussearches">
               <PreviousSearches 
-                uri={uri} 
-                uriID={uriID} 
+                url={url} 
+                urlID={urlID} 
                 history={history}
                 getResponseTimes={getResponseTimes}
                 queriesList={queriesList}
@@ -148,7 +344,6 @@ const MainContainer = ({ user, setUser, uri, setURI, nickname, setNickname, hist
             </Route>
           </Switch>
         </Router>
-      {/* </ThemeProvider> */}
     </div>
   )
 }

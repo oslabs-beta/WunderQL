@@ -1,6 +1,3 @@
-// import React from 'react'
-// import TestQuery from './Test-Query';
-import LineChartComponent from './LineChart';
 import PieChartComponent from './DashboardPieChart';
 import BarChartComponent from './DashboardBarChart';
 import ScatterChartComponent from './DashboardScatterChart';
@@ -19,7 +16,7 @@ const Dashboard = ({ uri }) => {
   const darkTheme = useDarkTheme();
   const themeStyle = {
     backgroundColor: darkTheme ? '#333' : 'white',
-    color: darkTheme ? '#CCC' : '#333'
+    color: darkTheme ? 'white' : '#333'
   }
 
   return (
@@ -37,7 +34,7 @@ const Dashboard = ({ uri }) => {
           <BarChartComponent />
         </div>
         <div id='left'>
-          <div class='dashboard-stats'>
+          <div className='dashboard-stats'>
             <div class='dash-title'><h3>Total Unique Queries</h3></div>
             <div class='dash-num'><h1>100</h1></div>
           </div>

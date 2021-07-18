@@ -148,14 +148,14 @@ ipcMain.on("activate", () => {
       userId=validUsers.rows[0]._id;
       event.sender.send("fromMain", true)
     } 
-
-  const getUrlsQuery = {
-    text: 'SELECT _id, url, nickname FROM graphqlurls WHERE user_id = $1',
-    values: [userId]
-  }
-  const queryResult = await db.query(getUrlsQuery);
-  const results = queryResult.rows;
-  event.sender.send("UrlsfromMain", results)
+    // should the following go inside the above conditional?
+    const getUrlsQuery = {
+      text: 'SELECT _id, url, nickname FROM graphqlurls WHERE user_id = $1',
+      values: [userId]
+    }
+    const queryResult = await db.query(getUrlsQuery);
+    const results = queryResult.rows;
+    event.sender.send("UrlsfromMain", results)
 
   } catch (err) {
     console.log(err)

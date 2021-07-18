@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import { useDarkTheme } from "./ThemeContext";
 // const { ipcRenderer } = window.require("electron");
 
-const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getResponseTimes, queriesList, setRuntime }) => {
+const TestQuery = ({ url, urlID, history, setHistory, runtime, getResponseTimes, queriesList }) => {
 
   const [query, setQuery] = useState(null);
   const [queryName, setQueryName] = useState(null);
@@ -17,11 +17,14 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
     color: darkTheme ? '#CCC' : '#333'
   }
 
-  // configure uri list to appear as drop down list upon successful login
-  // when connected to backend, replace 'queriesList' with history
-  // const queries = [];
-  // queriesList.map((prevQuery, index) => queries.push(<option value={prevQuery.query} id={index}>{prevQuery['Query Name']}</option>))
-
+  // configure query list to appear as drop down list
+  const queries = [];
+  window.api.receiveArray('queriesFromMain', data => {
+    data.map((prevQuery, index) => queries.push(
+      <option value={prevQuery.query} id={index}>{prevQuery['Query Name']}</option>
+    ))
+  })
+    
   // this is for when a card was clicked in the 'previous searches' component and the query
   // is passed as a prop when user is rerouted back to this component
   let queryProp = null;
@@ -43,27 +46,27 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
     
     // Send uriID, uri, and query to main process
     window.api.send('queryTestToMain', {
-      uriID: uriID,
+      urlID: urlID,
       query: query,
-      uri: uri,   
+      url: url,   
     })
     
-    // Listen for response times from main process (function defined in App.js)
+    // Listen for response times from main process (function defined in MainContainer.jsx)
     getResponseTimes();
   };
 
   return (
     <div id='test-query' style={themeStyle}> 
       <header class='uri'>
-        <h2>Currently connected to: {uri}</h2>
+        <h2>Currently connected to: {url}</h2>
         <select
           name='queries-list' 
           id='queries-list' 
           onChange={(e) => document.querySelector('#text-area').innerHTML = e.target.value}
           >
           <option disabled selected hidden>previously searched queries</option>
-          {/* {queries}    */}
-          </select>
+          {queries}   
+        </select>
       </header>
       <div id='query-space'>
         <textarea 
@@ -74,7 +77,7 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
           >{queryProp}</textarea>
         <input 
           id='uri-name' 
-          placeholder='give your uri a name' 
+          placeholder='give your url a name' 
           onChange={(e)=>setQueryName(e.target.value)
           }></input>
         <Button 
@@ -88,23 +91,11 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
         <div class='category'>
           <div class='category-title'>Query Response Time (ms)</div>
           <div class='category-number'>{`${runtime}`}</div>
-          {/* <div class='category-number'>100</div> */}
-          {/* {runtime && (
-            <p>{`${runtime}`}</p>
-          )} */}
-        </div>
-        {/* <div class='category' id='failure'>
-          <div class='category-title'>Number of Requests to Failure</div>
-          <div class='category-number'>100</div>
         </div>
         <div class='category'>
-          <div class='category-title'>Number of Null Responses</div>
+          <div class='category-title'>Average Response Time</div>
           <div class='category-number'>100</div>
-        </div> */}
-        {/* <div class='category'>
-          <div class='category-title'>Response Time for Batch Test</div>
-          <div class='category-number'>100</div>
-        </div> */}
+        </div>
       </div>
       <div id='response-chart'> 
         <LineChartComponent history={history}/>

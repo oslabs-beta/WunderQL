@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import { useDarkTheme } from "./ThemeContext";
 
 
-const LoadTest = ({ uri, uriID, setUriID, history, runtime, getResponseTimes }) => {
+const LoadTest = ({ uri, uriID, getResponseTimes }) => {
 
   const [query, setQuery] = useState('');
   const [loadAmount, setLoadAmount] = useState(null);
@@ -44,14 +44,14 @@ const LoadTest = ({ uri, uriID, setUriID, history, runtime, getResponseTimes }) 
   };
 
   // commented out because calculating runtime from FE (for now)
-  useEffect(() => {
-    getResponseTimes();
+  // useEffect(() => {
+  //   getResponseTimes();
     
     // Clean the listener after the component is dismounted
     // return () => {
     //   ipcRenderer.removeAllListeners();
     // };
-  });
+  // });
 
   return (
     <div id='test-query' style={themeStyle}> 
