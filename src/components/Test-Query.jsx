@@ -19,8 +19,6 @@ const TestQuery = ({ url, urlID, history, runtime, avgResponseTime, getResponseT
 
     // Add the query name to the input box && update state
     const selectedName = event.target.selectedOptions[0].id;
-    document.querySelector('#uri-name').innerHTML = selectedName;
-    // document.querySelector('#uri-name').innerHTML = event.target.name;
     setQueryName(selectedName);
  }
 
@@ -36,7 +34,7 @@ const TestQuery = ({ url, urlID, history, runtime, avgResponseTime, getResponseT
   if(queriesList) {
     queriesList.map((prevQuery, index) => queries.push(
       <option 
-        id={index}
+        id={prevQuery.query_name}
         value={prevQuery.query_string} 
         name={prevQuery.query_name}
         >
@@ -101,7 +99,7 @@ const TestQuery = ({ url, urlID, history, runtime, avgResponseTime, getResponseT
           onChange={(e) => setQuery(e.target.value)}
           style={themeStyle}
           required
-          >{queryProp}</textarea>
+          >{query}</textarea>
           {/* >{query}</textarea> */}
         <input
           value={queryName}
