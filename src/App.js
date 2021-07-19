@@ -4,13 +4,13 @@ import {
   Route,
 } from "react-router-dom";
 // import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
-import CssBaseline from '@material-ui/core/CssBaseline';
+// import CssBaseline from '@material-ui/core/CssBaseline';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Login from "./components/Login"
 import './stylesheets/index.css';
 
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+// import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { ThemeProvider, useDarkTheme } from "./components/ThemeContext"; 
 import MainContainer from "./components/MainContainer";
 
@@ -27,6 +27,9 @@ function App() {
     loggedIn: false
   });
   const [userID, setuserID] = useState(null); // to use in dashboard
+  const [urlList, setUrlList] = useState([]); // to use in dashboard
+
+
   // const toggleDarkMode = () => {console.log('changed theme'); setDark(prevDarkTheme => !prevDarkTheme)}
 
   // Set userID when user is logged in 
@@ -50,8 +53,8 @@ function App() {
           <Switch>
             <Route exact path='/'>
               {user.loggedIn ? 
-                <MainContainer user={user} setUser={setUser} /> 
-                : <Login user={user} setUser={setUser} />}
+                <MainContainer user={user} setUser={setUser} urlList={urlList}/> 
+                : <Login user={user} setUser={setUser} setUrlList={setUrlList}/>}
             </Route>
           </Switch>
         </Router>

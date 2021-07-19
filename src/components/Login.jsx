@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-import axios from "axios";
-
-import { Link } from 'react-router-dom';
-import { channels } from '../shared/constants';
+// import axios from "axios";
+// import { Link } from 'react-router-dom';
+// import { channels } from '../shared/constants';
 
 import Button from '@material-ui/core/Button';
 import logo from '../../public/assets/logo-small.png'
@@ -11,7 +10,7 @@ import logo from '../../public/assets/logo-small.png'
 
 
 
-const Login = ({user, setUser}) => {
+const Login = ({user, setUser, setUrlList}) => {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -30,6 +29,8 @@ const Login = ({user, setUser}) => {
       console.log("from handleLogin authorize 1", user)
     })
 
+    // request URLs from the db as soon as user logs in...might need to add conditionals here
+    window.api.receive('UrlsfromMain', data => setUrlList(data));
       
   };
   console.log("from Login outside Handlogin", user)
@@ -42,7 +43,7 @@ const Login = ({user, setUser}) => {
       <div id='logo'>
         <img src={logo} alt='logo'></img>
       </div>
-      <form onClick={handleLogin} >
+      <form  >
           <div>
             <label htmlFor="username">Username: </label>
             <input 
@@ -67,6 +68,7 @@ const Login = ({user, setUser}) => {
           </div>
           <div id='login-button-div'>
             <Button 
+              onClick={handleLogin}
               variant="contained" 
               id='login-button' 
               color="primary"

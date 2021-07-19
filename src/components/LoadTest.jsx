@@ -1,13 +1,10 @@
-import { useState, useEffect } from "react";
-import { useLocation } from 'react-router-dom'
-import LineChartComponent from "./DashboardLineChart";
+import { useState } from "react";
 import ScatterChartComponent from "./DashboardScatterChart";
-import { channels } from '../shared/constants';
 import Button from '@material-ui/core/Button';
 import { useDarkTheme } from "./ThemeContext";
 
 
-const LoadTest = ({ uri, uriID, getResponseTimes, queriesList }) => {
+const LoadTest = ({ url, urlID, getResponseTimes, queriesList }) => {
 
   const [query, setQuery] = useState('');
   const [loadAmount, setLoadAmount] = useState(null);
@@ -34,8 +31,8 @@ const LoadTest = ({ uri, uriID, getResponseTimes, queriesList }) => {
     window.api.send("loadTestQueryToMain", {
       numOfChildProccesses: loadAmount,
       query: query,
-      uri: uri,
-      uriID: uriID,
+      url: url,
+      urlID: urlID,
     })
 
     window.api.receiveArray("loadTestResultsFromMain", (event, loadTestResults) => {
@@ -54,7 +51,7 @@ const LoadTest = ({ uri, uriID, getResponseTimes, queriesList }) => {
   return (
     <div id='test-query' style={themeStyle}> 
       <header class='uri'>
-        <h2>Currently connected to: {uri}</h2>
+        <h2>Currently connected to: {url}</h2>
         <select
           name='queries-list' 
           id='queries-list' 
@@ -104,7 +101,6 @@ const LoadTest = ({ uri, uriID, getResponseTimes, queriesList }) => {
 
       </div>
       <div id='response-chart'> 
-        {/* <LineChartComponent history={history}/> */}
         <ScatterChartComponent />
       </div>
     </div>

@@ -6,7 +6,7 @@ import { useDarkTheme } from './ThemeContext';
 
 
 
-const PreviousSearches = ({ uri, uriID, history, getResponseTimes, queriesList, dragList, setDragList }) => {
+const PreviousSearches = ({ url, urlID, history, getResponseTimes, queriesList, dragList, setDragList }) => {
 
   const darkTheme = useDarkTheme();
   const themeStyle = {
@@ -51,7 +51,7 @@ const PreviousSearches = ({ uri, uriID, history, getResponseTimes, queriesList, 
     <div id='previous-searches' style={themeStyle}>
 
       <header class='uri'>
-        <h2>All previous queries for: {uri}</h2>
+        <h2>All previous queries for: {url}</h2>
       </header>
 
       <DragDropContext onDragEnd={handleOnDragEnd}>

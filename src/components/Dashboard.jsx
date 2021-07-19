@@ -1,10 +1,9 @@
 import PieChartComponent from './DashboardPieChart';
 import BarChartComponent from './DashboardBarChart';
-import ScatterChartComponent from './DashboardScatterChart';
 import RadarChartComponent from './DashboardRadarChart';
 import { useDarkTheme } from './ThemeContext';
 
-const Dashboard = ({ uri }) => {
+const Dashboard = ({ url }) => {
   
   // total num unique queries (history prop - array of queries)
   // total num queries sent (can this be sent from db?)
@@ -22,7 +21,7 @@ const Dashboard = ({ uri }) => {
   return (
     <div id='dashboard' style={themeStyle}>
       <header class='uri'>
-        <h2>Summary for: {uri}</h2>
+        <h2>Summary for: {url}</h2>
       </header>
         <div id='top-left'>
           <RadarChartComponent />
@@ -39,7 +38,7 @@ const Dashboard = ({ uri }) => {
             <div class='dash-num'><h1>100</h1></div>
           </div>
           <div class='dashboard-stats'>
-            <div class='dash-title'><h3>Total URI Calls</h3></div>
+            <div class='dash-title'><h3>Total URL Calls</h3></div>
             <div class='dash-num'><h1>100000</h1></div>
           </div>
           <div class='dashboard-stats'>

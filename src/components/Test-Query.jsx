@@ -1,15 +1,15 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom'
 
 import LineChartComponent from "./DashboardLineChart";
 import Button from '@material-ui/core/Button';
 import { useDarkTheme } from "./ThemeContext";
 
-const TestQuery = ({ url, urlID, history, setHistory, runtime, avgResponseTime, getResponseTimes, queriesList, setQueriesList }) => {
+const TestQuery = ({ url, urlID, history, runtime, avgResponseTime, getResponseTimes, queriesList, setQueriesList }) => {
 // const TestQuery = ({ setRuntime }) => {
 
   const [query, setQuery] = useState(null);
-  const [queryName, setQueryName] = useState(null);
+  const [queryName, setQueryName] = useState('');
 
 
   // Invoked when user selects an option from the drop-down
@@ -63,7 +63,7 @@ const TestQuery = ({ url, urlID, history, setHistory, runtime, avgResponseTime, 
     window.api.send('queryTestToMain', {
       urlID: urlID,
       query: query,
-      uri: url,
+      url: url,
       name: queryName,   
     })
 
@@ -98,8 +98,8 @@ const TestQuery = ({ url, urlID, history, setHistory, runtime, avgResponseTime, 
           onChange={(e) => setQuery(e.target.value)}
           style={themeStyle}
           required
-          // >{queryProp}</textarea>
-          >{query}</textarea>
+          >{queryProp}</textarea>
+          {/* >{query}</textarea> */}
         <input
           value={queryName}
           id='uri-name' 

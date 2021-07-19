@@ -1,5 +1,9 @@
-import { useState, useEffect, useContext } from 'react';
-import { useHistory } from 'react-router';
+import { 
+  useState, 
+  // useEffect, 
+  // useContext 
+} from 'react';
+// import { useHistory } from 'react-router';
 
 import {
   BrowserRouter as Router,
@@ -16,7 +20,7 @@ import PreviousSearches from './PreviousSearches';
 import '../stylesheets/index.css'
 
 // import { ThemeProvider, useDarkTheme } from "./src/components/ThemeContext";
-import { ThemeProvider, useDarkTheme } from "./ThemeContext";
+// import { ThemeProvider, useDarkTheme } from "./ThemeContext";
 
 
 // fake data for cards in previous-searches
@@ -209,7 +213,7 @@ const fakeData = [
     
   },
 ];
-const fakeURIs = [
+const fakeURLs = [
   'raubern big dum-dum',
   'he dum-dum of all dum-dum',
   'raubern scrum master? more like dum master',
@@ -225,7 +229,7 @@ LOAD needs: list of load test queries
 PREV needs: list of queries
 */
 
-const MainContainer = ({ user, setUser }) => {
+const MainContainer = ({ user, setUser, urlList }) => {
   
   const [url, setUrl] = useState('(please enter a URL to begin)');
   const [nickname, setNickname] = useState(null)
@@ -233,9 +237,9 @@ const MainContainer = ({ user, setUser }) => {
   const [runtime, setRuntime] = useState(0);
   const [avgResponseTime, setAvgResponseTime] = useState(0);
   const [history, setHistory] = useState(null);
-  const [queriesList, setQueriesList] = useState(fakeData);
+  const [queriesList, setQueriesList] = useState([]);
   const [dragList, setDragList] = useState([]);
-  // const [urlList, setUrlList] = useState(fakeURIs); // to use in dashboard
+  // const [urlList, setUrlList] = useState([]); // to use in dashboard
 
   // calculate single runtime, average runtime, and line-of-best-fit; to be used in test-query
   const getResponseTimes = () => {
@@ -249,7 +253,9 @@ const MainContainer = ({ user, setUser }) => {
 
       // average of all runtimes
       const responseTimeSum = arg.reduce((sum, curr) => sum += curr.response_time, 0);
+      console.log('sum of all response times: ', responseTimeSum)
       const responseTimeAvg = responseTimeSum / arg.length;
+      console.log('avg of all response times: ', responseTimeAvg)
       setAvgResponseTime(responseTimeAvg.toFixed(1));
 
       // statistical analysis to plot line-of-best-fit
@@ -280,7 +286,8 @@ const MainContainer = ({ user, setUser }) => {
           best_fit: lineOfBestFit(index).toFixed(1)
         });
       });
-
+      
+      console.log('history of past runtimes (from maincontainer): ', history)
       setHistory(pastRuntimes);
     });
   };
@@ -314,8 +321,9 @@ const MainContainer = ({ user, setUser }) => {
                 // history={history} 
                 // setHistory={setHistory}
                 queriesList={queriesList}
-                // urlList={urlList}
-                avgResponseTime={avgResponseTime}
+                setQueriesList={setQueriesList}
+                urlList={urlList}
+                // userID={userID}
                 />
             </Route>
             <Route path="/dashboard">
@@ -332,8 +340,10 @@ const MainContainer = ({ user, setUser }) => {
                 history={history}
                 // setHistory={setHistory}
                 runtime={runtime}
+                avgResponseTime={avgResponseTime}
                 getResponseTimes={getResponseTimes}
                 queriesList={queriesList}
+                setQueriesList={setQueriesList}
                 />
             </Route>
             <Route path="/loadtest">

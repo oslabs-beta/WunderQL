@@ -1,13 +1,17 @@
 import { useState, useEffect, useContext } from 'react';
-import { useHistory } from 'react-router';
+// import { useHistory } from 'react-router';
 import Button from '@material-ui/core/Button';
 import { useDarkTheme } from './ThemeContext';
 
-
+const fakeURLs = [
+  'raubern big dum-dum',
+  'he dum-dum of all dum-dum',
+  'raubern scrum master? more like dum master',
+  'why is raubern',
+  'no more raubern',
+]
 
 const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory, setUrlID, queriesList, setQueriesList, urlList }) => {
-
-// const Home = ({ uri, setURI, setUriID, setQueriesList, uriList }) => {
   
   const darkTheme = useDarkTheme();
   const themeStyle = {
@@ -16,30 +20,34 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
   }
 
   // const routerDashboard = useHistory();
-  // const openUriDashboard = () => {
+  // const openUrlDashboard = () => {
   //   routerDashboard.push(
   //     '/dashboard', 
   //     {
-  //       uri: uri
+  //       url: url
   //     }
   //   )
   // }
   
-  // run as component mounts to get array of url names - will there be url id?
+  // configure url dropdown list in home
   const URLs = [];
-  // useEffect(() => {
-    window.api.receiveArray('UrlsfromMain', data => {
-      console.log('trying to get urls from main: ', data)
-      // configure uri list to appear as drop down list upon successful login
-      data.map((url, index) => URLs.push(<option value={url.url} name={url.nickname}id={index}>{url.nickname}</option>))
-    });
-  // })
+  urlList.map((url, index) => URLs.push(
+    <option 
+      key={index} 
+      id={url._id}
+      value={url.url} 
+      name={url.nickname}
+      >
+        {url.nickname}
+      </option>
+  ));
+
   
-  // Send URI to electron.js; receive array of objects containing dates + runtime
+  // Send URl to electron.js; receive array of objects containing dates + runtime
   const submitUrl = () => {
-    console.log(url, ' : URI is being sent to main process...');
+    console.log(url, ' : URL is being sent to main process...');
     
-    // Send uri to main process
+    // Send url to main process
     window.api.send("urlToMain", {
       url,
       nickname,
@@ -51,7 +59,7 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
       setQueriesList(allQueries)
     })
 
-    // Receive uriID from main process
+    // Receive urlID from main process
     window.api.receive("idFromMain", (id) => {
       console.log('Within window.api.receive in Home.jsx, id: ', id);
       document.querySelector('#connected-text').style.display = 'block';
@@ -60,6 +68,7 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
     })
   }
 
+  console.log('end of component: ', URLs)
   return (
     <div id='home' style={themeStyle}>
 
@@ -68,7 +77,7 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
       </header>   
 
       <div id='new-inputs'>
-        <h3 class='prompt'>Enter a URI to get started...</h3>
+        <h3 class='prompt'>Enter a URL to get started...</h3>
         <input
           onChange={(e) => setUrl(e.target.value)}
           placeholder="GraphQL API"
@@ -92,6 +101,7 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
           name='uris' 
           id='uris' 
           onChange={(e) => {
+            console.log('chosen from list: ', e.target.value)
             setUrl(e.target.value);
             document.querySelector('#home-uri-value').innerHTML = e.target.value;
             document.querySelector('#home-uri-name').innerHTML = e.target.name;
@@ -102,7 +112,7 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
             disabled 
             selected
             hidden>sheeeesh pick one already</option>
-          {URLs}      
+          {URLs}
         </select>
       </div>
 
