@@ -1,9 +1,10 @@
 import { useState, useEffect, useContext } from 'react';
-import { useHistory } from 'react-router';
+// import { useHistory } from 'react-router';
 import Button from '@material-ui/core/Button';
 import { useDarkTheme } from './ThemeContext';
 
-const Home = ({ uri, setURI, nickname, setNickname, history, setHistory, setUriID, queriesList, setQueriesList, uriList, userID }) => {
+
+const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory, setUrlID, setQueriesList, urlList, setTotalUniqueQueries, setTotalRuntimes }) => {
   
   const darkTheme = useDarkTheme();
   const themeStyle = {
@@ -11,105 +12,126 @@ const Home = ({ uri, setURI, nickname, setNickname, history, setHistory, setUriI
     color: darkTheme ? '#CCC' : '#333'
   }
 
-  const routerDashboard = useHistory();
-  const openUriDashboard = () => {
-    routerDashboard.push(
-      '/dashboard', 
-      {
-        uri: uri
-      }
-    )
-  }
+  // const routerDashboard = useHistory();
+  // const openUrlDashboard = () => {
+  //   routerDashboard.push(
+  //     '/dashboard', 
+  //     {
+  //       url: url
+  //     }
+  //   )
+  // }
+  
+  // configure url dropdown list in home
+  const URLs = [];
+  urlList.map((url, index) => URLs.push(
+    <option 
+      key={index} 
+      id={url._id}
+      value={url.url} 
+      name={url.nickname}
+      >
+        {url.nickname}
+      </option>
+  ));
 
-  // configure uri list to appear as drop down list upon successful login
-  const URIs = [];
-  uriList.map((uri, index) => URIs.push(<option value={uri} id={index}>{uri}</option>))
-    
-  // Send URI to electron.js; receive array of objects containing dates + runtime
-  // const submitURI = () => {
-  //   console.log(uri, ' : URI is being sent to main process...');
-  //   ipcRenderer.send(channels.GET_ENDPOINT, {uri: uri, name: nickname});
-  //   ipcRenderer.on(channels.GET_ENDPOINT, (event, arg) => {
-  //     document.querySelector('#connected-text').style.display = 'block';
-  //     setUriID(arg);
-  //   });
-  //   ipcRenderer.on(channels.GET_HISTORY, (event, arg) => {
-  //     // history is an array of all unique queries for a single URI
-  //     // history state updated and stored in App.js
-  //     setHistory(arg);
   
-  
-  // Send URI to electron.js; receive array of objects containing dates + runtime
-  const submitURI = () => {
-    console.log(uri, ' : URI is being sent to main process...');
+  // Send URl to electron.js; receive array of objects containing dates + runtime
+  const submitUrl = () => {
+    console.log(url, ' : URL is being sent to main process...');
     
-    // Send uri to main process
+    // Send url to main process
     window.api.send("urlToMain", {
-      uri,
-      nickname,
-      userID
+      url,
+      userID,
+      nickname
     });
     
     window.api.receive("queriesFromMain", (allQueries) => {
-      console.log("In queriesfromMain in Test-Query.jsx", allQueries)
+      console.log("In queriesfromMain in Home.jsx", allQueries)
       setQueriesList(allQueries)
+
+      // filter out duplicates and set amount of unique queries
+      // const uniqueQueries = allQueries.reduce((acc, curr) => !acc.includes(curr.query_name), []);
+      const uniqueQueries = [];
+      allQueries.forEach(el => {
+        if (!uniqueQueries.includes(el.query_name)) uniqueQueries.push(el.query_name)
+      })
+      console.log('uniqueQueries: ', uniqueQueries)
+      setTotalUniqueQueries(uniqueQueries.length);
     })
 
-    // Receive uriID from main process
+    // THIS ISNT WORKINGGGGG, WHY???
+    // console.log('BEFORE')
+    // window.api.receiveArray("responseTimesFromMain", (event, arg) => {
+    //   console.log('AFTER')
+    //   // set total amount of runtimes to date
+    //   console.log('homejsx: total calls: ', arg[arg.length - 1]._id);
+    //   setTotalRuntimes(arg[arg.length - 1]._id);
+    // })
+
+    // Receive urlID from main process
     window.api.receive("idFromMain", (id) => {
       console.log('Within window.api.receive in Home.jsx, id: ', id);
       document.querySelector('#connected-text').style.display = 'block';
       console.log('received from main process')
-      setUriID(id);
+      setUrlID(id);
     })
-
   }
 
-  
-  // Material UI Button
-  // const useStyles = makeStyles((theme) => ({
-  //   root: {
-  //     '& > *': {
-  //       margin: theme.spacing(1),
-  //     },
-  //   },
-  // }));
+  // fill in input boxes automatically
+  function polyfillUrl(e) {
+    document.querySelector('#home-uri-value').innerHTML = e.target.value;
+    document.querySelector('#home-uri-name').innerHTML = e.target.name;
+    setUrl(e.target.value);
+    setNickname(e.target.value);
+  }
 
   return (
-    <div id='home' 
-    // style={themeStyle}
-    >
+    <div id='home' style={themeStyle}>
 
       <header>
-        <h1 id='welcome'>Welcome back, developer!</h1>
+        <h1 id='welcome'>Welcome back!</h1>
       </header>   
 
       <div id='new-inputs'>
-        <h3 class='prompt'>Enter a URI to get started...</h3>
+        <h3 class='prompt'>Enter a URL to get started...</h3>
         <input
-          onChange={(e) => setURI(e.target.value)}
+          onChange={(e) => setUrl(e.target.value)}
           placeholder="GraphQL API"
-          id='home-uri'
+          id='home-uri-value'
+          required
           /> 
         <h3 class='prompt'>Give that bad boi a name!</h3>
         <input
           onChange={(e) => setNickname(e.target.value)}
-          placeholder="bbygorl"
-          id='home-uri'
+          placeholder="URL nickname"
+          id='home-uri-name'
+          required
           /> 
       </div>
 
       <div id='previous-inputs'>
         <h3>
-          <label for='uris' class='prompt'>Or select a previously searched URI:</label>
+          <label htmlFor='uris' class='prompt'>Or select a previously searched URL:</label>
         </h3>
         <select 
           name='uris' 
           id='uris' 
-          onChange={(e) => setURI(e.target.value)}
+          onChange={
+            polyfillUrl
+            // console.log('chosen from list: ', e.target.value)
+            // setUrl(e.target.value);
+            // document.querySelector('#home-uri-value').innerHTML = e.target.value;
+            // document.querySelector('#home-uri-name').innerHTML = e.target.name;
+          }
           >
-          <option value="" disabled selected hidden>sheeeesh pick one already</option>
-          {URIs}      
+          <option 
+            // value="sheeeeesh pick one already" 
+            disabled 
+            selected
+            hidden>sheeeesh pick one already</option>
+          {URLs}
         </select>
       </div>
 
@@ -118,8 +140,8 @@ const Home = ({ uri, setURI, nickname, setNickname, history, setHistory, setUriI
           variant="contained" 
           id='home-send' 
           color="primary"
-          onClick={submitURI}
-          >Connect to URI</Button>
+          onClick={submitUrl}
+          >Connect to URL</Button>
         <div id='connected-div'>
           <h3 id='connected-text'>Connected!</h3>
         </div>

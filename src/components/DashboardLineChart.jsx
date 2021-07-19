@@ -1,4 +1,4 @@
-import { ScatterChart, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 // import CustomTooltip from './CustomTooltip';
 
 const LineChartComponent = ({ history }) => {
@@ -32,7 +32,6 @@ const LineChartComponent = ({ history }) => {
       <LineChart
             id='line-chart'
             data={history}
-            // data={props.data}
             margin={{
               top: 5,
               right: 20,
@@ -52,13 +51,7 @@ const LineChartComponent = ({ history }) => {
           domain={['dataMin - 100', 'dataMax + 100']} 
           allowDecimals='false'
         />
-        <Tooltip content={<CustomTooltip />}
-          // payload="[{day: 'date'}]"
-          // formatter={payloadFormatter}
-          // label={date}
-          // content={<CustomTooltip date={history} />}
-        />
-        {/* <Legend /> */}
+        <Tooltip content={<CustomTooltip />} />
         <Line 
           type="monotone" 
           dataKey="runtime" 
@@ -66,6 +59,7 @@ const LineChartComponent = ({ history }) => {
           strokeWidth={0}
           // activeDot={{ r: 8 }} 
           animationEasing='linear'
+          isAnimationActive={false}
         />
         <Line type="monotone" dataKey="best_fit" dot={false} stroke="#8884d8" />
       </LineChart>

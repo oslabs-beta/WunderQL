@@ -27,21 +27,6 @@
   -webkit-app-region: no-drag;
 }
 
-#App {
-  background-color: #ffffff;
-  color: black;
-  margin: 0;
-  padding: 0;
-  font-family: "Roboto", sans-serif;
-  letter-spacing: 1px;
-  display: grid;
-  grid-template-columns: 5fr 5fr;
-  grid-template-rows: 0.5fr 3fr 3fr;
-  grid-template-areas: "- -" "main main" "main main";
-  width: 100%;
-  height: 100vh;
-}
-
 html {
   width: 100%;
   height: 100%;
@@ -57,12 +42,71 @@ body {
   overflow: hidden;
 }
 
+#App {
+  background-color: #ffffff;
+  color: black;
+  font-family: "Roboto", sans-serif;
+  width: 100%;
+  height: 100%;
+}
+
 /* to be used in all components */
 .uri {
   grid-area: uri;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/*/////////////////////////////////////////////////////*/
+/*/////////////////////// Login ///////////////////////*/
+/*/////////////////////////////////////////////////////*/
+#login-form {
+  grid-area: main;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+}
+
+#logo {
+  margin-bottom: 1rem;
+}
+
+#username, #password {
+  padding: 0.5rem;
+  border-radius: 1rem;
+  border: 1px solid gainsboro;
+  margin: 1rem;
+}
+
+#login-button-div {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#login-button {
+  letter-spacing: 2px;
+  padding: 0.2rem 0.8rem;
+}
+
+/*/////////////////////////////////////////////////////*/
+/*////////////////// Main Container ///////////////////*/
+/*/////////////////////////////////////////////////////*/
+#main-container {
+  margin: 0;
+  padding: 0;
+  letter-spacing: 1px;
+  display: grid;
+  grid-template-columns: 5fr 5fr;
+  grid-template-rows: 0.5fr 3fr 3fr;
+  grid-template-areas: "- -" "main main" "main main";
+  width: 100%;
+  height: 100vh;
 }
 
 /*/////////////////////////////////////////////////////*/
@@ -101,7 +145,7 @@ body {
   align-items: center;
 }
 
-#home-uri {
+#home-uri-value, #home-uri-name {
   padding: 0.5rem;
   width: 70%;
   border-radius: 1rem;
@@ -232,7 +276,7 @@ body {
   grid-area: stats;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
 }
 
@@ -249,7 +293,7 @@ body {
 }
 
 .dash-num {
-  background-color: lightgray;
+  background-color: #ecbdac;
   border: 1px solid lightgray;
   border-radius: 40px;
   width: 250px;
@@ -387,9 +431,4 @@ body {
   font-size: 0.8rem;
 }
 
-#login-form{
-  display: grid;
-  justify-content: center;
-  align-items: center;
-}
 /*# sourceMappingURL=index.css.map */

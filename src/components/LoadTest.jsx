@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
-import { useLocation } from 'react-router-dom'
-import LineChartComponent from "./LineChart";
+import { useState } from "react";
+import ScatterChartComponent from "./DashboardScatterChart";
 import Button from '@material-ui/core/Button';
 import { useDarkTheme } from "./ThemeContext";
 
 
-const LoadTest = ({ uri, uriID, setUriID, history, runtime, getResponseTimes }) => {
+const LoadTest = ({ url, urlID, getResponseTimes, queriesList }) => {
 
   const [query, setQuery] = useState('');
   const [loadAmount, setLoadAmount] = useState(null);
@@ -18,6 +17,12 @@ const LoadTest = ({ uri, uriID, setUriID, history, runtime, getResponseTimes }) 
     color: darkTheme ? '#CCC' : '#333'
   }
 
+  //configure list of queries to display in drop-down
+  const queries = [];
+  queriesList.map((prevQuery, index) => queries.push(
+    <option value={prevQuery.query} name={prevQuery.query_name}id={index}>{prevQuery.query_name}</option>
+  ))
+
   const sendQuery = () => {
     // Sends the message to Electron main process
     console.log('Query is being sent to main process...')
@@ -26,8 +31,8 @@ const LoadTest = ({ uri, uriID, setUriID, history, runtime, getResponseTimes }) 
     window.api.send("loadTestQueryToMain", {
       numOfChildProccesses: loadAmount,
       query: query,
-      uri: uri,
-      uriID: uriID,
+      url: url,
+      urlID: urlID,
     })
 
     window.api.receiveArray("loadTestResultsFromMain", (event, loadTestResults) => {
@@ -46,7 +51,18 @@ const LoadTest = ({ uri, uriID, setUriID, history, runtime, getResponseTimes }) 
   return (
     <div id='test-query' style={themeStyle}> 
       <header class='uri'>
-        <h2>Currently connected to: {uri}</h2>
+        <h2>Currently connected to: {url}</h2>
+        <select
+          name='queries-list' 
+          id='queries-list' 
+          onChange={(e) => {
+            document.querySelector('#text-area').innerHTML = e.target.value;
+            document.querySelector('#uri-name').innerHTML = e.target.name;
+            }}
+          >
+          <option disabled selected hidden>previously searched queries</option>
+          {queries}   
+        </select>
       </header>
       <div id='query-space'>
         <textarea 
@@ -71,7 +87,7 @@ const LoadTest = ({ uri, uriID, setUriID, history, runtime, getResponseTimes }) 
       </div>
       <div id='stats'>
         <div class='category'>
-          <div class='category-title'>Average Response Time for {loadAmount} Requests</div>
+          <div class='category-title'>Avg Batch Response Time for {loadAmount} Requests</div>
           <div class='category-number'>{`${avgResponseTime} ms`}</div>
         </div>
         <div class='category'>
@@ -85,7 +101,7 @@ const LoadTest = ({ uri, uriID, setUriID, history, runtime, getResponseTimes }) 
 
       </div>
       <div id='response-chart'> 
-        <LineChartComponent history={history}/>
+        <ScatterChartComponent />
       </div>
     </div>
   ) 

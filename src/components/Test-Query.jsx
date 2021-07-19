@@ -1,13 +1,15 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom'
-import LineChartComponent from "./LineChart";
+
+import LineChartComponent from "./DashboardLineChart";
 import Button from '@material-ui/core/Button';
 import { useDarkTheme } from "./ThemeContext";
 
-const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getResponseTimes, queriesList, setQueriesList, setRuntime }) => {
+const TestQuery = ({ url, urlID, history, runtime, avgResponseTime, getResponseTimes, queriesList }) => {
+// const TestQuery = ({ setRuntime }) => {
 
   const [query, setQuery] = useState(null);
-  const [queryName, setQueryName] = useState(null);
+  const [queryName, setQueryName] = useState('');
 
 
   // Invoked when user selects an option from the drop-down
@@ -18,7 +20,8 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
 
     // Add the query name to the input box && update state
     const selectedName = event.target.selectedOptions[0].id;
-    document.querySelector('#uri-name').innerHTML = selectedName;
+    // document.querySelector('#uri-name').innerHTML = selectedName;
+    // document.querySelector('#uri-name').innerHTML = event.target.name;
     setQueryName(selectedName);
  }
 
@@ -32,7 +35,15 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
   // when connected to backend, replace 'queriesList' with history
   const queries = [];
   if(queriesList) {
-    queriesList.map((prevQuery, index) => queries.push(<option value={prevQuery.query_string} id={prevQuery.query_name}>{prevQuery.query_name}</option>))
+    queriesList.map((prevQuery, index) => queries.push(
+      <option 
+        id={index}
+        value={prevQuery.query_string} 
+        name={prevQuery.query_name}
+        >
+          {prevQuery.query_name}
+        </option>
+    ))
   }
 
   // this is for when a card was clicked in the 'previous searches' component and the query
@@ -59,9 +70,9 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
     // setQuery(document.querySelector('#text-area').value);
     // Send uriID, uri, and query to main process
     window.api.send('queryTestToMain', {
-      uriID: uriID,
+      urlID: urlID,
       query: query,
-      uri: uri,
+      url: url,
       name: queryName,   
     })
 
@@ -69,21 +80,22 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
     getResponseTimes();
 
     // Receive updated queries times from main process
-    window.api.receive("queriesFromMain", (allQueries) => {
-      console.log("In queriesfromMain in Test-Query.jsx", allQueries)
-      setQueriesList(allQueries)
-    })
+    // window.api.receive("queriesFromMain", (allQueries) => {
+    //   console.log("In queriesfromMain in Test-Query.jsx", allQueries)
+    //   setQueriesList(allQueries)
+    // })
 
   };
 
   return (
     <div id='test-query' style={themeStyle}> 
       <header class='uri'>
-        <h2>Currently connected to: {uri}</h2>
+        <h2>Currently connected to: {url}</h2>
         <select
           name='queries-list' 
           id='queries-list' 
           onChange={handleChange}
+          // onFocus='this.size=5;' onBlur='this.size=1;' onChange='this.size=1; this.blur();'
           >
           <option value="" selected >previously searched queries</option>
           {queries}
@@ -95,12 +107,15 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
           id='text-area'
           onChange={(e) => setQuery(e.target.value)}
           style={themeStyle}
-          >{query}</textarea>
+          required
+          >{queryProp}</textarea>
+          {/* >{query}</textarea> */}
         <input
           value={queryName}
           id='uri-name' 
           placeholder='give your query a name' 
-          onChange={(e)=>setQueryName(e.target.value)}    
+          onChange={(e)=>setQueryName(e.target.value)} 
+          // required   
           />
         <Button 
           variant="contained" 
@@ -111,8 +126,12 @@ const TestQuery = ({ client, uri, uriID, history, setHistory, runtime, getRespon
       </div>
       <div id='stats'>
         <div class='category'>
-          <div class='category-title'>Query Response Time (ms)</div>
-          <div class='category-number'>{`${runtime}`}</div>
+          <div class='category-title'>Query Response Time</div>
+          <div class='category-number'>{`${runtime}ms`}</div>
+        </div>
+        <div class='category'>
+          <div class='category-title'>Average Response Time</div>
+          <div class='category-number'>{`${avgResponseTime}ms`}</div>
         </div>
       </div>
       <div id='response-chart'> 
