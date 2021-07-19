@@ -229,7 +229,7 @@ LOAD needs: list of load test queries
 PREV needs: list of queries
 */
 
-const MainContainer = ({ user, setUser, urlList }) => {
+const MainContainer = ({ user, setUser, userID, urlList }) => {
   
   const [url, setUrl] = useState('(please enter a URL to begin)');
   const [nickname, setNickname] = useState(null)
@@ -323,7 +323,7 @@ const MainContainer = ({ user, setUser, urlList }) => {
                 queriesList={queriesList}
                 setQueriesList={setQueriesList}
                 urlList={urlList}
-                // userID={userID}
+                userID={userID}
                 />
             </Route>
             <Route path="/dashboard">
@@ -343,7 +343,7 @@ const MainContainer = ({ user, setUser, urlList }) => {
                 avgResponseTime={avgResponseTime}
                 getResponseTimes={getResponseTimes}
                 queriesList={queriesList}
-                setQueriesList={setQueriesList}
+                // setQueriesList={setQueriesList}
                 />
             </Route>
             <Route path="/loadtest">

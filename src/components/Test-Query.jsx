@@ -5,7 +5,7 @@ import LineChartComponent from "./DashboardLineChart";
 import Button from '@material-ui/core/Button';
 import { useDarkTheme } from "./ThemeContext";
 
-const TestQuery = ({ url, urlID, history, runtime, avgResponseTime, getResponseTimes, queriesList, setQueriesList }) => {
+const TestQuery = ({ url, urlID, history, runtime, avgResponseTime, getResponseTimes, queriesList }) => {
 // const TestQuery = ({ setRuntime }) => {
 
   const [query, setQuery] = useState(null);
@@ -34,7 +34,15 @@ const TestQuery = ({ url, urlID, history, runtime, avgResponseTime, getResponseT
   // when connected to backend, replace 'queriesList' with history
   const queries = [];
   if(queriesList) {
-    queriesList.map((prevQuery, index) => queries.push(<option value={prevQuery.query_string} id={prevQuery.query_name}>{prevQuery.query_name}</option>))
+    queriesList.map((prevQuery, index) => queries.push(
+      <option 
+        id={index}
+        value={prevQuery.query_string} 
+        id={prevQuery.query_name}
+        >
+          {prevQuery.query_name}
+        </option>
+    ))
   }
 
   // this is for when a card was clicked in the 'previous searches' component and the query
@@ -71,10 +79,10 @@ const TestQuery = ({ url, urlID, history, runtime, avgResponseTime, getResponseT
     getResponseTimes();
 
     // Receive updated queries times from main process
-    window.api.receive("queriesFromMain", (allQueries) => {
-      console.log("In queriesfromMain in Test-Query.jsx", allQueries)
-      setQueriesList(allQueries)
-    })
+    // window.api.receive("queriesFromMain", (allQueries) => {
+    //   console.log("In queriesfromMain in Test-Query.jsx", allQueries)
+    //   setQueriesList(allQueries)
+    // })
 
   };
 

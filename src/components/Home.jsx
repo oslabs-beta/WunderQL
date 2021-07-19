@@ -50,12 +50,14 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
     // Send url to main process
     window.api.send("urlToMain", {
       url,
-      nickname,
-      userID
+      userID,
+      nickname
     });
     
     window.api.receive("queriesFromMain", (allQueries) => {
-      console.log("In queriesfromMain in Test-Query.jsx", allQueries)
+      //did someone move this?
+      // console.log("In queriesfromMain in Test-Query.jsx", allQueries)
+      console.log("In queriesfromMain in Home.jsx", allQueries)
       setQueriesList(allQueries)
     })
 

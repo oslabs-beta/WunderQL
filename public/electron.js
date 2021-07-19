@@ -155,7 +155,6 @@ ipcMain.on("loginToMain", async (event, arg) => {
     }
     const queryResult = await db.query(getUrlsQuery);
     const results = queryResult.rows;
-    console.log('urlsfrommain: ', results)
     event.sender.send("UrlsfromMain", results)
 
   } catch (err) {
@@ -199,7 +198,7 @@ ipcMain.on("urlToMain", async (event, arg) => {
     const queryResult = await db.query(getQueriesQuery);
     const allQueries = queryResult.rows;
 
-    // console.log('allQueries', allQueries)
+    console.log('allQueries', allQueries)
 
     event.sender.send("queriesFromMain", allQueries)
 
