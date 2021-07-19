@@ -66,8 +66,9 @@ const LineChartComponent = ({ history }) => {
           strokeWidth={0}
           // activeDot={{ r: 8 }} 
           animationEasing='linear'
+          isAnimationActive={false}
         />
-        <Line type="monotone" dataKey="best_fit" dot={false} stroke="#8884d8" />
+        <Line type="monotone" dataKey="best_fit" stroke="#8884d8" />
       </LineChart>
     </ResponsiveContainer>
   )

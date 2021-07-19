@@ -33,7 +33,7 @@ const Login = ({user, setUser}) => {
   //={() => setCount(count + 1)}>
   return (
     <div id="login-form">
-      <form onClick={handleLogin} >
+      <form >
           <div>
               <label htmlFor="username">Username: </label>
               <input name="username" placeholder='Username' id="username" type="username" required onChange={(e) => setUsername(e.target.value)} />
@@ -43,7 +43,7 @@ const Login = ({user, setUser}) => {
               <input name="password" placeholder='Password' id="password" type="password" required onChange={(e) => setPassword(e.target.value)} />
           </div>
           <div>
-              <button id="login__btn" type="submit">Login </button>
+              <button onClick={handleLogin} id="login__btn" type="submit">Login </button>
           </div>
       </form>
     </div>
