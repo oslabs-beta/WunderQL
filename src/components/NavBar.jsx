@@ -2,7 +2,6 @@ import React from 'react';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
@@ -16,7 +15,6 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
-// import MailIcon from '@material-ui/icons/Mail';
 
 // import { useContext } from 'react';
 import { useDarkTheme, useDarkThemeUpdate } from './ThemeContext';
@@ -114,9 +112,6 @@ export default function NavBar(props) {
           [classes.appBarShift]: open,
         })}
         style={{background:'linear-gradient(205deg, rgba(63,99,255,1) 0%, rgba(54,54,193,1) 21%, rgba(231,117,117,1) 100%)', 
-        // webkitUserSelect:'none',
-        // userSelect: 'none',
-        // webkitAppRegion: 'drag'
       }}
       >
         <Toolbar>
@@ -151,31 +146,31 @@ export default function NavBar(props) {
         </div>
         <Divider />
         <List>
-            <Link to="/home" class='nav-list-item'>
+            <Link to="/" class='nav-list-item' onClick={handleDrawerClose}>
               <ListItem button key={1}>
                 <ListItemIcon><InboxIcon /></ListItemIcon>
                 <ListItemText primary='Home' />
               </ListItem>
             </Link>
-            <Link to="/dashboard" class='nav-list-item'>
+            <Link to="/dashboard" class='nav-list-item' onClick={handleDrawerClose}>
               <ListItem button key={2}>
                 <ListItemIcon><InboxIcon /></ListItemIcon>
-                <ListItemText primary='URI Dashboard' />
+                <ListItemText primary='URL Dashboard' />
               </ListItem>
             </Link>
-            <Link to="/testquery" class='nav-list-item'>
+            <Link to="/testquery" class='nav-list-item' onClick={handleDrawerClose}>
               <ListItem button key={3}>
                 <ListItemIcon><InboxIcon /></ListItemIcon>
                 <ListItemText primary='Test Query' />
               </ListItem>
             </Link>
-            <Link to="/loadtest" class='nav-list-item'>
+            <Link to="/loadtest" class='nav-list-item' onClick={handleDrawerClose}>
               <ListItem button key={4}>
                 <ListItemIcon><InboxIcon /></ListItemIcon>
                 <ListItemText primary='Load Test' />
               </ListItem>
             </Link>
-            <Link to="/previoussearches" class='nav-list-item'>
+            <Link to="/previoussearches" class='nav-list-item' onClick={handleDrawerClose}>
               <ListItem button key={5}>
                 <ListItemIcon><InboxIcon /></ListItemIcon>
                 <ListItemText primary='Past Searches' />

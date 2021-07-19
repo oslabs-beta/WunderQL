@@ -1,7 +1,6 @@
 // const { fetch } = require('cross-fetch');
 // const { performance } = require('perf_hooks');
 const path = require("path");
-const { User } = require('../models/User');
 const { app, BrowserWindow, Menu, ipcMain } = require("electron");
 const isDev = require("electron-is-dev");
 const { checkResponseTime, loadTest, checkIfQueryExist } = require('./utils');
@@ -152,14 +151,14 @@ ipcMain.on("loginToMain", async (event, arg) => {
       // Gets sent to App.js
       event.sender.send("userIDfromMain", userId);
     } 
-
-  const getUrlsQuery = {
-    text: 'SELECT _id, url, nickname FROM graphqlurls WHERE user_id = $1',
-    values: [userId]
-  }
-  const queryResult = await db.query(getUrlsQuery);
-  const results = queryResult.rows;
-  event.sender.send("UrlsfromMain", results)
+    // should the following go inside the above conditional?
+    const getUrlsQuery = {
+      text: 'SELECT _id, url, nickname FROM graphqlurls WHERE user_id = $1',
+      values: [userId]
+    }
+    const queryResult = await db.query(getUrlsQuery);
+    const results = queryResult.rows;
+    event.sender.send("UrlsfromMain", results)
 
   } catch (err) {
     console.log(err)
@@ -173,7 +172,7 @@ ipcMain.on("urlToMain", async (event, arg) => {
     //check if the url exists 
     const checkIfUrlExists = {
       text: 'SELECT * FROM graphqlurls WHERE url = $1 AND user_id = $2',
-      values: [arg.uri, arg.userID],
+      values: [arg.url, arg.userID],
     };
     const existingUrlResult = await db.query(checkIfUrlExists);
     const existingUrlId = existingUrlResult.rows;
@@ -183,7 +182,7 @@ ipcMain.on("urlToMain", async (event, arg) => {
     if (!existingUrlId.length) {
       const insertUrl = {
         text: 'INSERT INTO graphqlurls(url, nickname, user_id) VALUES ($1, $2, $3) RETURNING _id',
-        values: [arg.uri, arg.nickname, arg.userID],
+        values: [arg.url, arg.nickname, arg.userID],
       };
       const queryResult = await db.query(insertUrl);
       urlId = queryResult.rows[0]._id;
@@ -202,7 +201,7 @@ ipcMain.on("urlToMain", async (event, arg) => {
     const queryResult = await db.query(getQueriesQuery);
     const allQueries = queryResult.rows;
 
-    // console.log('allQueries', allQueries)
+    console.log('allQueries', allQueries)
 
     event.sender.send("queriesFromMain", allQueries)
 
@@ -232,9 +231,9 @@ ipcMain.on("urlToMain", async (event, arg) => {
 //! #3 queryTestToMain - User selects a query to test
 ipcMain.on("queryTestToMain", async (event, arg) => {
   try {
-  let responseTime = await checkResponseTime(arg.query, arg.uri);
+  let responseTime = await checkResponseTime(arg.query, arg.url);
   console.log('responseTime', responseTime)
-  const queryId = await checkIfQueryExist(arg.query, arg.uriID, arg.name);
+  const queryId = await checkIfQueryExist(arg.query, arg.urlID, arg.name);
   console.log('queryId in electron.js', queryId)
   
   // Insert response time with query_id into database 
@@ -258,7 +257,7 @@ ipcMain.on("queryTestToMain", async (event, arg) => {
   // Once new query is in database, send updated state to Test-Query so the new query name is reflected in the dropdown
   const getQueriesQuery = {
     text: 'SELECT _id, query_string, query_name FROM queries WHERE url_id = $1',
-    values: [arg.uriID]
+    values: [arg.urlID]
   }
   const queryResult = await db.query(getQueriesQuery);
   const allQueries = queryResult.rows;
@@ -279,14 +278,14 @@ ipcMain.on("loadTestQueryToMain", async (event, arg) => {
     // Conduct load test
     const loadTestResults = await loadTest(
       arg.numOfChildProccesses,
-      arg.uri,
+      arg.url,
       arg.query,
     )
     // Send average response time + success/failure back to frontend 
     event.sender.send("loadTestResultsFromMain", loadTestResults)
 
     // Needed to use await to resolve the promise
-    const queryId = await checkIfQueryExist(arg.query, arg.uriID);
+    const queryId = await checkIfQueryExist(arg.query, arg.urlID);
 
     //save load test results in db associating it to a specific query
     const insertLoadTestResults = {

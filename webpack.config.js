@@ -50,7 +50,9 @@ module.exports = {
       },
       // loads .css files
       {
-        test: /\.css$/,
+        //trying to figure out why styling isnt hot-reloading
+        // test: /\.css$/,
+        test: /.(css|scss|sass)$/,
         include: [
           path.resolve(__dirname, "src"),
           path.resolve(__dirname, "node_modules/"),

@@ -1,58 +1,74 @@
-import { useState, useEffect, useContext } from 'react';
-import { useHistory } from 'react-router';
-import Button from '@material-ui/core/Button';
+import { 
+  useState, 
+  // useEffect, 
+  // useContext 
+} from 'react';
+// import { useHistory } from 'react-router';
 
 import {
   BrowserRouter as Router,
   Switch,
   Route,
 } from "react-router-dom";
-// import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Home from './Home'
 import Dashboard from './Dashboard'
 import NavBar from './NavBar'
 import TestQuery from './Test-Query'
-import BatchTest from "./LoadTest";
-// import Header from './components/Header'
+import LoadTest from "./LoadTest";
 import PreviousSearches from './PreviousSearches';
 //import './src/stylesheets/index.css';
 import '../stylesheets/index.css'
 
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 // import { ThemeProvider, useDarkTheme } from "./src/components/ThemeContext";
-import { ThemeProvider, useDarkTheme } from "./ThemeContext";
+// import { ThemeProvider, useDarkTheme } from "./ThemeContext";
 
-const MainContainer = ({
-  uri, setURI,
-  uriID, setUriID,
-  nickname, setNickname,
-  history, setHistory,
-  queriesList, setQueriesList,
-  uriList, setUriList,
-  runtime, setRuntime,
-  userID
-}) => {
-  // setURI('https://api.spacex.land/graphql/')
-  // console.log(uri)
-  const client = new ApolloClient({
-    uri: uri,
-    cache: new InMemoryCache()
-  });
+/*
+HOME needs: list of URLs
+DASHBOARD NEEDS: 
+TEST needs: list of queries
+LOAD needs: list of load test queries
+PREV needs: list of queries
+*/
 
+const MainContainer = ({ user, setUser, userID, urlList }) => {
+  
+  const [url, setUrl] = useState('(please enter a URL to begin)');
+  const [nickname, setNickname] = useState(null)
+  const [urlID, setUrlID] = useState(0);
+  const [runtime, setRuntime] = useState(0);
+  const [totalRuntimes, setTotalRuntimes] = useState(0);
+  const [avgResponseTime, setAvgResponseTime] = useState(0);
+  const [history, setHistory] = useState(null);
+  const [queriesList, setQueriesList] = useState([]);
+  const [totalUniqueQueries, setTotalUniqueQueries] = useState(0);
+  const [dragList, setDragList] = useState([]);
+  // const [urlList, setUrlList] = useState([]); // to use in dashboard
+
+  // calculate single runtime, average runtime, and line-of-best-fit; to be used in test-query
   const getResponseTimes = () => {
     window.api.receiveArray("responseTimesFromMain", (event, arg) => {
       console.log('Listening for response from main process...')
       
+      // set total amount of runtimes to date
+      // console.log('maincontainer: total calls: ', arg[arg.length - 1]._id);
+      // setTotalRuntimes(arg[arg.length - 1]._id);
+
       // get the runtime of the most recent query
       const currRuntime = arg[arg.length - 1].response_time.toFixed(1);
       console.log('runtime: ', currRuntime);
       setRuntime(currRuntime);
 
+      // average of all runtimes
+      const responseTimeSum = arg.reduce((sum, curr) => sum += curr.response_time, 0);
+      console.log('sum of all response times: ', responseTimeSum)
+      const responseTimeAvg = responseTimeSum / arg.length;
+      console.log('avg of all response times: ', responseTimeAvg)
+      setAvgResponseTime(responseTimeAvg.toFixed(1));
+
       // statistical analysis to plot line-of-best-fit
       const pastRuntimes = [];
-      let x_sum = 0
-      let y_sum = 0
+      let x_sum = 0;
+      let y_sum = 0;
       let numerator = 0;
       let denominator = 0;
         arg.forEach((query, index) => {
@@ -77,97 +93,98 @@ const MainContainer = ({
           best_fit: lineOfBestFit(index).toFixed(1)
         });
       });
-
+      
+      console.log('history of past runtimes (from maincontainer): ', history)
       setHistory(pastRuntimes);
     });
+  };
 
-  }
+  // acquire list of queries; to be sent to test-query, load-test, previous-searches
+  window.api.receiveArray('queriesFromMain', data => setQueriesList(data));
 
   return (
-    <div id='MainContainer'>
-      <ApolloProvider client={client}>
-      {/* <ThemeContext.Provider value={dark}> */}
-      <ThemeProvider>
-      {/* <ThemeProvider theme={theme}> */}
-        <CssBaseline />
-          {/* <Header /> */}
-          
-          {/* trying to make frameless win draggable */}
-          {/* <div className="title-bar">
-            <div className="titlebar-drag-region"></div>
-            <div className="title">Window Header</div>
-            <div className="title-bar-btns">
-              <button id="min-btn">-</button>
-              <button id="max-btn">+</button>
-              <button id="close-btn">x</button>
-            </div>
-          </div> */}
-           <h1>Welcome back to the Main Container</h1>
-          <Router>
-            <NavBar />
-            <Switch>
-              <Route path="/home">
-                <Home 
-                  // theme={theme} 
-                  uri={uri}
-                  setURI={setURI} 
-                  nickname={nickname}
-                  setNickname={setNickname}
-                  uriID={uriID} 
-                  setUriID={setUriID}
-                  history={history} 
-                  setHistory={setHistory}
-                  queriesList={queriesList}
-                  setQueriesList={setQueriesList}
-                  uriList={uriList}
-                  setUriList={setUriList}
-                  userID={userID}
-                  />
-              </Route>
-              <Route path="/dashboard">
-                <Dashboard uri={uri} uriID={uriID} history={history}/>
-              </Route>
-              <Route path="/testquery">
-                <TestQuery 
-                  client={client} 
-                  uri={uri} 
-                  uriID={uriID} 
-                  history={history}
-                  setHistory={setHistory}
-                  runtime={runtime}
-                  getResponseTimes={getResponseTimes}
-                  setQueriesList={setQueriesList}
-                  queriesList={queriesList}
-                  />
-              </Route>
-              <Route path="/loadtest">
-                <BatchTest 
-                  client={client} 
-                  uri={uri} 
-                  uriID={uriID} 
-                  history={history}
-                  setHistory={setHistory}
-                  runtime={runtime}
-                  setRuntime={setRuntime}
-                  getResponseTimes={getResponseTimes}
-                  />
-              </Route>
-              <Route path="/previoussearches">
-                <PreviousSearches 
-                  uri={uri} 
-                  uriID={uriID} 
-                  history={history}
-                  getResponseTimes={getResponseTimes}
-                  queriesList={queriesList}
-                  setQueriesList={setQueriesList}
-                  />
-              </Route>
-            </Switch>
-          </Router>
-          </ThemeProvider>
-        </ApolloProvider>
+    <div id='main-container'>
+        {/* trying to make frameless win draggable */}
+        {/* <div className="title-bar">
+          <div className="titlebar-drag-region"></div>
+          <div className="title">Window Header</div>
+          <div className="title-bar-btns">
+            <button id="min-btn">-</button>
+            <button id="max-btn">+</button>
+            <button id="close-btn">x</button>
+          </div>
+        </div> */}
+        <Router>
+          <NavBar />
+          <Switch>
+            <Route exact path="/">
+              <Home 
+                url={url}
+                setUrl={setUrl} 
+                nickname={nickname}
+                setNickname={setNickname}
+                urlID={urlID} 
+                setUrlID={setUrlID}
+                // history={history} 
+                // setHistory={setHistory}
+                queriesList={queriesList}
+                setQueriesList={setQueriesList}
+                setTotalUniqueQueries={setTotalUniqueQueries}
+                urlList={urlList}
+                userID={userID}
+                setTotalRuntimes={setTotalRuntimes}
+                />
+            </Route>
+            <Route path="/dashboard">
+              <Dashboard 
+                url={url} 
+                urlID={urlID} 
+                totalRuntimes={totalRuntimes}
+                // setTotalRuntimes={setTotalRuntimes}
+                totalUniqueQueries={totalUniqueQueries}
+                // history={history}
+                />
+            </Route>
+            <Route path="/testquery">
+              <TestQuery 
+                url={url} 
+                urlID={urlID} 
+                history={history}
+                // setHistory={setHistory}
+                runtime={runtime}
+                avgResponseTime={avgResponseTime}
+                getResponseTimes={getResponseTimes}
+                queriesList={queriesList}
+                // setQueriesList={setQueriesList}
+                />
+            </Route>
+            <Route path="/loadtest">
+              <LoadTest 
+                url={url} 
+                urlID={urlID} 
+                // history={history}
+                // setHistory={setHistory}
+                runtime={runtime}
+                setRuntime={setRuntime}
+                getResponseTimes={getResponseTimes}
+                queriesList={queriesList}
+                />
+            </Route>
+            <Route path="/previoussearches">
+              <PreviousSearches 
+                url={url} 
+                urlID={urlID} 
+                // history={history}
+                getResponseTimes={getResponseTimes}
+                queriesList={queriesList}
+                setQueriesList={setQueriesList}
+                dragList={dragList}
+                setDragList={setDragList}
+                />
+            </Route>
+          </Switch>
+        </Router>
     </div>
-
   )
 }
 
