@@ -19,7 +19,8 @@ module.exports = merge(base, {
     watchContentBase: true, // Watch the content base for changes
     watchOptions: {
       ignored: /node_modules/ // Ignore this path, probably not needed since we define contentBase above
-    }
+    },
+    historyApiFallback: true,
   },
   plugins: [
     new MiniCssExtractPlugin(),

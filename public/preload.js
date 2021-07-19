@@ -24,7 +24,7 @@ contextBridge.exposeInMainWorld(
       }
     },
     receiveArray: (channel, arg) => {
-      let validChannels = ["responseTimesFromMain", "loadTestResultsFromMain"];
+      let validChannels = ["responseTimesFromMain", "loadTestResultsFromMain", "totalsFromMain"];
       if (validChannels.includes(channel)) {
         ipcRenderer.on(channel, (event, arg));
       }
