@@ -149,7 +149,7 @@ ipcMain.on("loginToMain", async (event, arg) => {
       userId=validUsers.rows[0]._id;
       event.sender.send("fromMain", true)
       // Gets sent to App.js
-      event.sender.send("userIDfromMain", userId);
+      event.sender.send("userIdfromMain", userId);
     } 
     // should the following go inside the above conditional?
     const getUrlsQuery = {
@@ -318,7 +318,8 @@ ipcMain.on("loadTestQueryToMain", async (event, arg) => {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Get allLoadTestResults from database and send all load test results to LoadTest.jsx
     const selectAllLoadTestResults = {
-        text: 'SELECT number_of_child_processes,average_response_time,result from load_test_response_times'
+        text: 'SELECT number_of_child_processes, average_response_time, result FROM load_test_response_times WHERE query_id = $1',
+        values: [queryId]
       }
     const result = await db.query(selectAllLoadTestResults);
     const allLoadTestResults = result.rows;
