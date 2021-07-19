@@ -6,10 +6,24 @@ import { useDarkTheme } from "./ThemeContext";
 
 const LoadTest = ({ url, urlID, getResponseTimes, queriesList }) => {
 
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(null);
+  const [loadTestQueryName, setloadTestQueryName] = useState('');
   const [loadAmount, setLoadAmount] = useState(null);
   const [avgResponseTime, setavgResponseTime] = useState(0);
   const [successOrFailure, setsuccessOrFailure] = useState('');
+
+
+
+  // Invoked when user selects an option from the drop-down
+  function handleChange(event) {
+    // Add the query string to the text box && update state
+    document.querySelector('#text-area').innerHTML = event.target.value
+    setQuery(event.target.value)
+
+    // Add the query name to the input box && update state
+    const selectedName = event.target.selectedOptions[0].id;
+    setloadTestQueryName(selectedName);
+  }
 
   const darkTheme = useDarkTheme();
   const themeStyle = {
@@ -20,8 +34,9 @@ const LoadTest = ({ url, urlID, getResponseTimes, queriesList }) => {
   //configure list of queries to display in drop-down
   const queries = [];
   queriesList.map((prevQuery, index) => queries.push(
-    <option value={prevQuery.query} name={prevQuery.query_name}id={index}>{prevQuery.query_name}</option>
+    <option value={prevQuery.query_string} name={prevQuery.query_name}id={prevQuery.query_name}>{prevQuery.query_name}</option>
   ))
+  console.log('queriesList', queriesList)
 
   const sendQuery = () => {
     // Sends the message to Electron main process
@@ -33,13 +48,14 @@ const LoadTest = ({ url, urlID, getResponseTimes, queriesList }) => {
       query: query,
       url: url,
       urlID: urlID,
+      loadTestQueryName: loadTestQueryName
     })
 
     window.api.receiveArray("loadTestResultsFromMain", (event, loadTestResults) => {
       console.log('Listening for loadTest response from main process...')
       console.log('loadTestResults', loadTestResults);
-      setavgResponseTime(loadTestResults.averageResponseTime.toFixed(2));
-      setsuccessOrFailure(loadTestResults.successOrFailure);
+      setavgResponseTime(loadTestResults[loadTestResults.length - 1].average_response_time.toFixed(2));
+      setsuccessOrFailure(loadTestResults[loadTestResults.length - 1].result);
 
     });
   }
@@ -55,10 +71,11 @@ const LoadTest = ({ url, urlID, getResponseTimes, queriesList }) => {
         <select
           name='queries-list' 
           id='queries-list' 
-          onChange={(e) => {
-            document.querySelector('#text-area').innerHTML = e.target.value;
-            document.querySelector('#uri-name').innerHTML = e.target.name;
-            }}
+          onChange={
+            // document.querySelector('#text-area').innerHTML = e.target.value;
+            // document.querySelector('#uri-name').innerHTML = e.target.name;
+            handleChange
+            }
           >
           <option disabled selected hidden>previously searched queries</option>
           {queries}   
@@ -69,7 +86,17 @@ const LoadTest = ({ url, urlID, getResponseTimes, queriesList }) => {
           placeholder='input for user query'
           id='text-area'
           onChange={(e) => setQuery(e.target.value)}
-          ></textarea>
+          required
+          >{query}</textarea>
+
+          <input
+          value={loadTestQueryName}
+          id='uri-name' 
+          placeholder='give your query a name' 
+          onChange={(e)=>setloadTestQueryName(e.target.value)} 
+          // required   
+          />
+
         <input 
           type='number' 
           id='load-amount' 
@@ -78,6 +105,7 @@ const LoadTest = ({ url, urlID, getResponseTimes, queriesList }) => {
           max='1000'
           onChange={(e) => setLoadAmount(e.target.value)}
           ></input>
+
         <Button 
           variant="contained" 
           id='send-query' 
