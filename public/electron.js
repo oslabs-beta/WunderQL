@@ -6,7 +6,10 @@ const { app, BrowserWindow, Menu, ipcMain } = require("electron");
 const isDev = require("electron-is-dev");
 const { checkResponseTime, loadTest, checkIfQueryExist } = require('./utils');
 const db = require("../models/User");
-
+require('electron-reload')(__dirname, {
+  electron: path.join('__dirname', '../', 'node_modules', '.bin', 'electron')
+})
+console.log(path.join('__dirname', '../', 'node_modules', '.bin', 'electron'))
 //-------Electron Setup--------------------------------------------------------
 function createWindow() {
   // Create the browser window.

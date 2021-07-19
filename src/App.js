@@ -255,17 +255,17 @@ function App() {
         <div id="App" style={themeStyle}>
           <div className="title-bar">
             <div className="titlebar-drag-region"></div>
-            <div className="title">Window Header</div>
+            <div className="title">Window Header
+            </div>
             <div className="title-bar-btns">
               <button id="min-btn">-</button>
               <button id="max-btn">+</button>
               <button id="close-btn">x</button>
-            </div>
+            </div>   
           </div>
 
           <Router>
-            <Switch>
-        <Route exact path='/'>
+        <Route path='/'>
           {user.loggedIn ? 
           <MainContainer 
             uri={uri}
@@ -290,7 +290,6 @@ function App() {
             setUser={setUser}
           />}
         </Route>
-            </Switch>
           </Router>
         </div>
       </ThemeProvider>
