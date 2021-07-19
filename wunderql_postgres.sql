@@ -70,8 +70,3 @@ INSERT INTO response_times(response_time, query_id, date) VALUES (200.5, 1, '202
 
 INSERT INTO load_test_response_times (date, number_of_child_processes, average_response_time, result, query_id) VALUES('2021-07-17T20:23:12.820Z', 4, 300.5, 'Success', 1)
 
-
-
-  
-
-  
