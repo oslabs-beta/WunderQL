@@ -6,7 +6,6 @@ import Button from '@material-ui/core/Button';
 import { useDarkTheme } from "./ThemeContext";
 
 const TestQuery = ({ url, urlID, history, runtime, avgResponseTime, getResponseTimes, queriesList }) => {
-// const TestQuery = ({ setRuntime }) => {
 
   const [query, setQuery] = useState(null);
   const [queryName, setQueryName] = useState('');
@@ -78,12 +77,6 @@ const TestQuery = ({ url, urlID, history, runtime, avgResponseTime, getResponseT
 
     // Receive updated response times from main process (function defined in App.js)
     getResponseTimes();
-
-    // Receive updated queries times from main process
-    // window.api.receive("queriesFromMain", (allQueries) => {
-    //   console.log("In queriesfromMain in Test-Query.jsx", allQueries)
-    //   setQueriesList(allQueries)
-    // })
 
   };
 
