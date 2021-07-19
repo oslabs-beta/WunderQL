@@ -1,28 +1,42 @@
 import { useState, useEffect, useContext } from "react";
 import { useLocation } from 'react-router-dom'
+
 import LineChartComponent from "./DashboardLineChart";
-// import { channels } from '../shared/constants';
 import Button from '@material-ui/core/Button';
 import { useDarkTheme } from "./ThemeContext";
-// const { ipcRenderer } = window.require("electron");
 
-const TestQuery = ({ url, urlID, history, setHistory, runtime, avgResponseTime, getResponseTimes, queriesList }) => {
+const TestQuery = ({ url, urlID, history, setHistory, runtime, avgResponseTime, getResponseTimes, queriesList, setQueriesList }) => {
+// const TestQuery = ({ setRuntime }) => {
 
   const [query, setQuery] = useState(null);
   const [queryName, setQueryName] = useState(null);
+
+
+  // Invoked when user selects an option from the drop-down
+  function handleChange(event) {
+    // Add the query string to the text box && update state
+    document.querySelector('#text-area').innerHTML = event.target.value
+    setQuery(event.target.value)
+
+    // Add the query name to the input box && update state
+    const selectedName = event.target.selectedOptions[0].id;
+    document.querySelector('#uri-name').innerHTML = selectedName;
+    setQueryName(selectedName);
+ }
 
   const darkTheme = useDarkTheme();
   const themeStyle = {
     backgroundColor: darkTheme ? '#333' : 'white',
     color: darkTheme ? '#CCC' : '#333'
+  }  
+
+  // configure uri list to appear as drop down list upon successful login
+  // when connected to backend, replace 'queriesList' with history
+  const queries = [];
+  if(queriesList) {
+    queriesList.map((prevQuery, index) => queries.push(<option value={prevQuery.query_string} id={prevQuery.query_name}>{prevQuery.query_name}</option>))
   }
 
-  // configure query list to appear as drop down list
-  const queries = [];
-  queriesList.map((prevQuery, index) => queries.push(
-    <option value={prevQuery.query} name={prevQuery.query_name}id={index}>{prevQuery.query_name}</option>
-  ))
-    
   // this is for when a card was clicked in the 'previous searches' component and the query
   // is passed as a prop when user is rerouted back to this component
   let queryProp = null;
@@ -41,16 +55,27 @@ const TestQuery = ({ url, urlID, history, setHistory, runtime, avgResponseTime, 
       return;
     }
     console.log('Query is being sent to main process...')
-    
+    console.log('queryString:', query)
+    console.log('queryName:', queryName)
+
+    // setQuery(document.querySelector('#text-area').value);
     // Send uriID, uri, and query to main process
     window.api.send('queryTestToMain', {
       urlID: urlID,
       query: query,
-      url: url,   
+      uri: url,
+      name: queryName,   
     })
-    
-    // Listen for response times from main process (function defined in MainContainer.jsx)
+
+    // Receive updated response times from main process (function defined in App.js)
     getResponseTimes();
+
+    // Receive updated queries times from main process
+    window.api.receive("queriesFromMain", (allQueries) => {
+      console.log("In queriesfromMain in Test-Query.jsx", allQueries)
+      setQueriesList(allQueries)
+    })
+
   };
 
   return (
@@ -60,34 +85,28 @@ const TestQuery = ({ url, urlID, history, setHistory, runtime, avgResponseTime, 
         <select
           name='queries-list' 
           id='queries-list' 
-          onChange={(e) => {
-            document.querySelector('#text-area').innerHTML = e.target.value;
-            document.querySelector('#uri-name').innerHTML = e.target.name;
-            }}
+          onChange={handleChange}
           >
-          <option 
-            disabled 
-            selected 
-            hidden
-            // value='previously searched queries'
-            >previously searched queries</option>
-          {queries}   
-        </select>
+          <option value="" selected >previously searched queries</option>
+          {queries}
+          </select>
       </header>
       <div id='query-space'>
         <textarea 
-          placeholder='input for user query'
+          placeholder='Please enter a query...'
           id='text-area'
           onChange={(e) => setQuery(e.target.value)}
           style={themeStyle}
           required
-          >{queryProp}</textarea>
-        <input 
+          // >{queryProp}</textarea>
+          >{query}</textarea>
+        <input
+          value={queryName}
           id='uri-name' 
-          placeholder='give your url a name' 
-          onChange={(e)=>setQueryName(e.target.value)}
-          required
-          ></input>
+          placeholder='give your query a name' 
+          onChange={(e)=>setQueryName(e.target.value)} 
+          // required   
+          />
         <Button 
           variant="contained" 
           id='send-query' 

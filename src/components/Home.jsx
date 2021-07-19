@@ -4,7 +4,10 @@ import Button from '@material-ui/core/Button';
 import { useDarkTheme } from './ThemeContext';
 
 
-const Home = ({ url, setUrl, nickname, setNickname, history, setHistory, setUrlID, queriesList, urlList }) => {
+
+const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory, setUrlID, queriesList, setQueriesList, urlList }) => {
+
+// const Home = ({ uri, setURI, setUriID, setQueriesList, uriList }) => {
   
   const darkTheme = useDarkTheme();
   const themeStyle = {
@@ -36,9 +39,18 @@ const Home = ({ url, setUrl, nickname, setNickname, history, setHistory, setUrlI
   const submitUrl = () => {
     console.log(url, ' : URI is being sent to main process...');
     
-    // Send url and nickname to main process
-    window.api.send("urlToMain", {url, nickname});
+    // Send uri to main process
+    window.api.send("urlToMain", {
+      url,
+      nickname,
+      userID
+    });
     
+    window.api.receive("queriesFromMain", (allQueries) => {
+      console.log("In queriesfromMain in Test-Query.jsx", allQueries)
+      setQueriesList(allQueries)
+    })
+
     // Receive uriID from main process
     window.api.receive("idFromMain", (id) => {
       console.log('Within window.api.receive in Home.jsx, id: ', id);

@@ -18,6 +18,7 @@ import '../stylesheets/index.css'
 // import { ThemeProvider, useDarkTheme } from "./src/components/ThemeContext";
 import { ThemeProvider, useDarkTheme } from "./ThemeContext";
 
+
 // fake data for cards in previous-searches
 const fakeData = [
   {
@@ -226,7 +227,7 @@ PREV needs: list of queries
 
 const MainContainer = ({ user, setUser }) => {
   
-  const [url, setUrl] = useState('(please enter a URI to begin)');
+  const [url, setUrl] = useState('(please enter a URL to begin)');
   const [nickname, setNickname] = useState(null)
   const [urlID, setUrlID] = useState(0);
   const [runtime, setRuntime] = useState(0);
@@ -238,10 +239,8 @@ const MainContainer = ({ user, setUser }) => {
 
   // calculate single runtime, average runtime, and line-of-best-fit; to be used in test-query
   const getResponseTimes = () => {
-    window.api.receiveArray("ResponseTimesFromMain", (event, arg) => {
+    window.api.receiveArray("responseTimesFromMain", (event, arg) => {
       console.log('Listening for response from main process...')
-      // arg is received from DB as an array of objects
-      // console.log('arg object received from electronjs: ', arg);
       
       // get the runtime of the most recent query
       const currRuntime = arg[arg.length - 1].response_time.toFixed(1);

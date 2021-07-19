@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+
 import axios from "axios";
 
 import { Link } from 'react-router-dom';
@@ -6,6 +7,8 @@ import { channels } from '../shared/constants';
 
 import Button from '@material-ui/core/Button';
 import logo from '../../public/assets/logo-small.png'
+
+
 
 
 const Login = ({user, setUser}) => {
@@ -19,7 +22,7 @@ const Login = ({user, setUser}) => {
   const handleLogin = (e) => {
     e.preventDefault();
     console.log("From login user:", username,"password:", password)
-    //ipcRenderer.send(channels.GET_USER_AUTH,{username, password});
+
     window.api.send("loginToMain", {username, password});
     window.api.receive("fromMain", (validUser) => {
       console.log("from main validUser", validUser)
@@ -28,7 +31,6 @@ const Login = ({user, setUser}) => {
     })
 
       
-      console.log("from Login 2", user)
   };
   console.log("from Login outside Handlogin", user)
   

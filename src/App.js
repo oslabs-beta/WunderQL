@@ -7,13 +7,8 @@ import {
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import { useState, useEffect } from 'react';
-
 import Login from "./components/Login"
-
-// import Header from './components/Header'
-import PreviousSearches from './components/PreviousSearches';
 import './stylesheets/index.css';
-import { channels } from './shared/constants';
 
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { ThemeProvider, useDarkTheme } from "./components/ThemeContext"; 
@@ -31,7 +26,15 @@ function App() {
   const [user, setUser] = useState({
     loggedIn: false
   });
+  const [userID, setuserID] = useState(null); // to use in dashboard
   // const toggleDarkMode = () => {console.log('changed theme'); setDark(prevDarkTheme => !prevDarkTheme)}
+
+  // Set userID when user is logged in 
+  window.api.receive("userIDfromMain", (userID) => {
+    console.log("In userIDfromMain in App.jsx", userID)
+    setuserID(userID)
+  })
+
 
   // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const darkTheme = useDarkTheme();

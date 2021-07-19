@@ -30,10 +30,7 @@ const LoadTest = ({ uri, uriID, getResponseTimes, queriesList }) => {
     // Sends the message to Electron main process
     console.log('Query is being sent to main process...')
 
-    // ipcRenderer.send(channels.GET_RESPONSE_TIME, {
-    //   uriID: uriID,
-    //   query: query,
-    // });
+    // Initiate load test when user clicks 'Submit Query'
     window.api.send("loadTestQueryToMain", {
       numOfChildProccesses: loadAmount,
       query: query,
@@ -46,17 +43,12 @@ const LoadTest = ({ uri, uriID, getResponseTimes, queriesList }) => {
       console.log('loadTestResults', loadTestResults);
       setavgResponseTime(loadTestResults.averageResponseTime.toFixed(2));
       setsuccessOrFailure(loadTestResults.successOrFailure);
-    });
-  };
 
-  // commented out because calculating runtime from FE (for now)
+    });
+  }
+
   // useEffect(() => {
   //   getResponseTimes();
-    
-    // Clean the listener after the component is dismounted
-    // return () => {
-    //   ipcRenderer.removeAllListeners();
-    // };
   // });
 
   return (
