@@ -144,9 +144,9 @@ ipcMain.on("loginToMain", async (event, arg) => {
     const validUsers = await db.query(validateUserQuery)
     if(validUsers.rows.length){
       userId=validUsers.rows[0]._id;
-      event.sender.send("fromMain", true)
+      event.sender.send("userLoggedInFromMain", true)
       // Gets sent to App.js
-      event.sender.send("userIDfromMain", userId);
+      event.sender.send("userIdFromMain", userId);
     } 
     // should the following go inside the above conditional?
     const getUrlsQuery = {
@@ -156,6 +156,41 @@ ipcMain.on("loginToMain", async (event, arg) => {
     const queryResult = await db.query(getUrlsQuery);
     const results = queryResult.rows;
     event.sender.send("UrlsfromMain", results)
+
+  } catch (err) {
+    console.log(err)
+    return err;
+  }  
+});
+
+ipcMain.on("signUpToMain", async (event, arg) => {
+  //Get Users Name and Password from Login Form
+  let doesUserExist = false;
+  console.log("from electron.js function signUpToMain", arg)
+  try {
+
+    const doesUserExistsQuery = {
+      text : 'SELECT * FROM users WHERE username = $1 OR email = $2',
+      values: [arg.username, arg.email],
+    }
+
+    // Check to see if username or email already exists in database
+    const usersExist = await db.query(doesUserExistsQuery)
+    if(usersExist.rows.length){
+      doesUserExist= true;
+      console.log(`doesUserExist: ${doesUserExist} Need to implement a notifcation to say User or Email already exists`)
+    } else {
+      const createNewUserQuery = {
+        text: 'INSERT INTO users(username, password, email, name) VALUES ($1, $2, $3, $4) RETURNING _id',
+        values: [arg.username, arg.password, arg.email, arg.fullName]
+      }
+
+      const newUserID = await db.query(createNewUserQuery)
+      //do I need to send back to front end?
+      doesUserExist = true;
+      event.sender.send("fromMainSignup", doesUserExist)
+    }
+
 
   } catch (err) {
     console.log(err)
