@@ -132,40 +132,6 @@ ipcMain.on("activate", () => {
 //-------------------------------------------------------------------------------
 
 
-//! #1 loginToMain - User logins 
-//ipcMain.on(channels.GET_USER_AUTH, async (event, arg) => {
-ipcMain.on("loginToMain", async (event, arg) => {
-  //Get Users Name and Password from Login Form
-  try {
-    let userId;
-    const validateUserQuery = {
-      text : 'SELECT * FROM users WHERE username = $1 AND password = $2',
-      values: [arg.username, arg.password],
-    }
-
-    //Check to see if valid username and password combination exists
-    const validUsers = await db.query(validateUserQuery)
-    if(validUsers.rows.length){
-      userId=validUsers.rows[0]._id;
-      event.sender.send("userLoggedInFromMain", true)
-      // Gets sent to App.js
-      event.sender.send("userIdFromMain", userId);
-    } 
-    // should the following go inside the above conditional?
-    const getUrlsQuery = {
-      text: 'SELECT _id, url, nickname FROM graphqlurls WHERE user_id = $1',
-      values: [userId]
-    }
-    const queryResult = await db.query(getUrlsQuery);
-    const results = queryResult.rows;
-    event.sender.send("UrlsfromMain", results)
-
-  } catch (err) {
-    console.log(err)
-    return err;
-  }  
-});
-
 ipcMain.on("signUpToMain", async (event, arg) => {
   //Get Users Name and Password from Login Form
   let doesUserExist = false;
@@ -194,6 +160,43 @@ ipcMain.on("signUpToMain", async (event, arg) => {
       event.sender.send("fromMainSignup", doesUserExist)
     }
 
+
+  } catch (err) {
+    console.log(err)
+    return err;
+  }  
+});
+
+
+//! #1 loginToMain - User logins 
+//ipcMain.on(channels.GET_USER_AUTH, async (event, arg) => {
+ipcMain.on("loginToMain", async (event, arg) => {
+  //Get Users Name and Password from Login Form
+  try {
+    let userId;
+    const validateUserQuery = {
+      text : 'SELECT * FROM users WHERE username = $1 AND password = $2',
+      values: [arg.username, arg.password],
+    }
+
+    //Check to see if valid username and password combination exists
+    const validUsers = await db.query(validateUserQuery)
+    if(validUsers.rows.length){
+      userId=validUsers.rows[0]._id;
+      event.sender.send("userLoggedInFromMain", true)
+      // Gets sent to App.js
+      event.sender.send("userIdFromMain", userId);
+    } 
+
+
+    // should the following go inside the above conditional?
+    const getUrlsQuery = {
+      text: 'SELECT _id, url, nickname FROM graphqlurls WHERE user_id = $1',
+      values: [userId]
+    }
+    const queryResult = await db.query(getUrlsQuery);
+    const results = queryResult.rows;
+    event.sender.send("urlsFromMain", results)
 
   } catch (err) {
     console.log(err)
@@ -254,7 +257,7 @@ ipcMain.on("urlToMain", async (event, arg) => {
 
     
     const query = {
-      text: `SELECT gu.url, COUNT(q._id) as number_of_queries, COUNT(rt._id) as number_of_tests, COUNT(lrt._id) as number_of_load_tests
+      text: `SELECT COUNT(q._id) as number_of_queries, COUNT(rt._id) as number_of_tests, COUNT(lrt._id) as number_of_load_tests
       FROM graphqlurls gu
       INNER JOIN queries q ON q.url_id = gu._id AND gu._id = $1
       INNER JOIN response_times rt ON rt.query_id = q._id
