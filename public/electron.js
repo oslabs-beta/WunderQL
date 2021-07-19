@@ -146,7 +146,7 @@ ipcMain.on("loginToMain", async (event, arg) => {
       userId=validUsers.rows[0]._id;
       event.sender.send("fromMain", true)
       // Gets sent to App.js
-      event.sender.send("userIDfromMain", userId);
+      event.sender.send("userIdfromMain", userId);
     } 
     // should the following go inside the above conditional?
     const getUrlsQuery = {
@@ -291,15 +291,14 @@ ipcMain.on("loadTestQueryToMain", async (event, arg) => {
         values: [new Date(), arg.numOfChildProccesses, loadTestResults.averageResponseTime, loadTestResults.successOrFailure, queryId]
       }
     await db.query(insertLoadTestResults);
-  
-    //do we want to send history or 1 data point?: 'Select date, number_of_child_processes, average_response_time, result FROM load_test_response_times WHERE query_string = $1',
+
     const selectResponseTimesAndLoadAmount = {
       //create new row in load test response time table (date, number_of_child_processes, average_response_time, result, query_id)
-        text: 'SELECT number_of_child_processes,  average_response_time from load_test_response_times WHERE query_id = $1 ORDER BY number_of_child_processes',
+        text: 'SELECT number_of_child_processes, average_response_time FROM load_test_response_times WHERE query_id = $1 ORDER BY number_of_child_processes',
         values: [queryId]
       }
-    const resultss = await db.query(selectResponseTimesAndLoadAmount);
-    console.log(resultss.rows)
+    const loadTestGraphResults = await db.query(selectResponseTimesAndLoadAmount);
+    console.log(loadTestGraphResults.rows)
 
 
   } catch (err) {
