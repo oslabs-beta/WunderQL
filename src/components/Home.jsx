@@ -3,15 +3,8 @@ import { useState, useEffect, useContext } from 'react';
 import Button from '@material-ui/core/Button';
 import { useDarkTheme } from './ThemeContext';
 
-const fakeURLs = [
-  'raubern big dum-dum',
-  'he dum-dum of all dum-dum',
-  'raubern scrum master? more like dum master',
-  'why is raubern',
-  'no more raubern',
-]
 
-const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory, setUrlID, queriesList, setQueriesList, urlList }) => {
+const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory, setUrlID, setQueriesList, urlList, setTotalUniqueQueries, setTotalRuntimes }) => {
   
   const darkTheme = useDarkTheme();
   const themeStyle = {
@@ -55,11 +48,27 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
     });
     
     window.api.receive("queriesFromMain", (allQueries) => {
-      //did someone move this?
-      // console.log("In queriesfromMain in Test-Query.jsx", allQueries)
       console.log("In queriesfromMain in Home.jsx", allQueries)
       setQueriesList(allQueries)
+
+      // filter out duplicates and set amount of unique queries
+      // const uniqueQueries = allQueries.reduce((acc, curr) => !acc.includes(curr.query_name), []);
+      const uniqueQueries = [];
+      allQueries.forEach(el => {
+        if (!uniqueQueries.includes(el.query_name)) uniqueQueries.push(el.query_name)
+      })
+      console.log('uniqueQueries: ', uniqueQueries)
+      setTotalUniqueQueries(uniqueQueries.length);
     })
+
+    // THIS ISNT WORKINGGGGG, WHY???
+    // console.log('BEFORE')
+    // window.api.receiveArray("responseTimesFromMain", (event, arg) => {
+    //   console.log('AFTER')
+    //   // set total amount of runtimes to date
+    //   console.log('homejsx: total calls: ', arg[arg.length - 1]._id);
+    //   setTotalRuntimes(arg[arg.length - 1]._id);
+    // })
 
     // Receive urlID from main process
     window.api.receive("idFromMain", (id) => {
@@ -70,7 +79,14 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
     })
   }
 
-  console.log('end of component: ', URLs)
+  // fill in input boxes automatically
+  function polyfillUrl(e) {
+    document.querySelector('#home-uri-value').innerHTML = e.target.value;
+    document.querySelector('#home-uri-name').innerHTML = e.target.name;
+    setUrl(e.target.value);
+    setNickname(e.target.value);
+  }
+
   return (
     <div id='home' style={themeStyle}>
 
@@ -102,12 +118,13 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
         <select 
           name='uris' 
           id='uris' 
-          onChange={(e) => {
-            console.log('chosen from list: ', e.target.value)
-            setUrl(e.target.value);
-            document.querySelector('#home-uri-value').innerHTML = e.target.value;
-            document.querySelector('#home-uri-name').innerHTML = e.target.name;
-          }}
+          onChange={
+            polyfillUrl
+            // console.log('chosen from list: ', e.target.value)
+            // setUrl(e.target.value);
+            // document.querySelector('#home-uri-value').innerHTML = e.target.value;
+            // document.querySelector('#home-uri-name').innerHTML = e.target.name;
+          }
           >
           <option 
             // value="sheeeeesh pick one already" 

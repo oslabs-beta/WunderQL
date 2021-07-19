@@ -2,7 +2,7 @@ import { useHistory } from "react-router";
 import { useEffect } from "react";
 import { useDarkTheme } from "./ThemeContext";
 
-const QueryCard = ({ id, query, history, getResponseTimes }) => {
+const QueryCard = ({ id, query, name, history, getResponseTimes }) => {
 
   let routerHistory = useHistory();
   const darkTheme = useDarkTheme();
@@ -29,6 +29,7 @@ const QueryCard = ({ id, query, history, getResponseTimes }) => {
 
   return (
     <div id='card' onClick={openCard} style={themeStyle}>
+      {name}
       {query}
     </div>
   )

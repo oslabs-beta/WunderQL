@@ -10,7 +10,7 @@ import logo from '../../public/assets/logo-small.png'
 
 
 
-const Login = ({user, setUser, setUrlList}) => {
+const Login = ({user, setUser, setUrlList }) => {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -31,7 +31,9 @@ const Login = ({user, setUser, setUrlList}) => {
 
     // request URLs from the db as soon as user logs in...might need to add conditionals here
     window.api.receive('UrlsfromMain', data => setUrlList(data));
-      
+    
+
+
   };
   console.log("from Login outside Handlogin", user)
   

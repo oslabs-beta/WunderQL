@@ -31,7 +31,7 @@ const PreviousSearches = ({ url, urlID, history, getResponseTimes, queriesList, 
           ref={provided.innerRef} 
           {...provided.dragHandleProps}
           >
-            <QueryCard query={query.query} getResponseTimes={getResponseTimes}/>
+            <QueryCard query={query.query_string} name={query.query_name} id={query._id} getResponseTimes={getResponseTimes}/>
         </li>
       )}
     </Draggable>

@@ -22,205 +22,6 @@ import '../stylesheets/index.css'
 // import { ThemeProvider, useDarkTheme } from "./src/components/ThemeContext";
 // import { ThemeProvider, useDarkTheme } from "./ThemeContext";
 
-
-// fake data for cards in previous-searches
-const fakeData = [
-  {
-    id: 1,
-    'Query Name': 'Rocket ships',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 1) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
-    
-  },
-  {
-    id: 2,
-    'Query Name': 'Raubern ships',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 2) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
-    
-  },
-  {
-    id: 3,
-    'Query Name': 'Raubern sucks',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 3) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
-    
-  },
-  {
-    id: 4,
-    'Query Name': 'Rockets dont suck',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 4) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
-    
-  },
-  {
-    id: 5,
-    'Query Name': 'Rocket is bbygorl',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 5) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
-    
-  },
-  {
-    id: 6,
-    'Query Name': 'Rocket me',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 6) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
-    
-  },
-  {
-    id: 7,
-    'Query Name': 'i ship rockets',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 7) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
-    
-  },
-  {
-    id: 8,
-    'Query Name': 'me like rockets',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 8) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
-    
-  },
-  {
-    id: 9,
-    'Query Name': 'Rocket rocket rocket',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 9) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
-    
-  },
-  {
-    id: 10,
-    'Query Name': 'Rocks in a rocket',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 10) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
-    
-  },
-  {
-    id: 11,
-    'Query Name': 'Rocket of rocks',
-    'Num of runtimes': 38,
-    'Avg Runtime(ms)': 150,
-    'Last Date Ran': new Date().toDateString(),
-    query: `query {
-      launchesPast(limit: 11) {
-        mission_name
-        launch_date_local
-        launch_site {
-          site_name_long
-        }
-      }
-    }`
-    
-  },
-];
-const fakeURLs = [
-  'raubern big dum-dum',
-  'he dum-dum of all dum-dum',
-  'raubern scrum master? more like dum master',
-  'why is raubern',
-  'no more raubern',
-]
-
 /*
 HOME needs: list of URLs
 DASHBOARD NEEDS: 
@@ -235,9 +36,11 @@ const MainContainer = ({ user, setUser, userID, urlList }) => {
   const [nickname, setNickname] = useState(null)
   const [urlID, setUrlID] = useState(0);
   const [runtime, setRuntime] = useState(0);
+  const [totalRuntimes, setTotalRuntimes] = useState(0);
   const [avgResponseTime, setAvgResponseTime] = useState(0);
   const [history, setHistory] = useState(null);
   const [queriesList, setQueriesList] = useState([]);
+  const [totalUniqueQueries, setTotalUniqueQueries] = useState(0);
   const [dragList, setDragList] = useState([]);
   // const [urlList, setUrlList] = useState([]); // to use in dashboard
 
@@ -246,6 +49,10 @@ const MainContainer = ({ user, setUser, userID, urlList }) => {
     window.api.receiveArray("responseTimesFromMain", (event, arg) => {
       console.log('Listening for response from main process...')
       
+      // set total amount of runtimes to date
+      // console.log('maincontainer: total calls: ', arg[arg.length - 1]._id);
+      // setTotalRuntimes(arg[arg.length - 1]._id);
+
       // get the runtime of the most recent query
       const currRuntime = arg[arg.length - 1].response_time.toFixed(1);
       console.log('runtime: ', currRuntime);
@@ -322,14 +129,19 @@ const MainContainer = ({ user, setUser, userID, urlList }) => {
                 // setHistory={setHistory}
                 queriesList={queriesList}
                 setQueriesList={setQueriesList}
+                setTotalUniqueQueries={setTotalUniqueQueries}
                 urlList={urlList}
                 userID={userID}
+                setTotalRuntimes={setTotalRuntimes}
                 />
             </Route>
             <Route path="/dashboard">
               <Dashboard 
                 url={url} 
                 urlID={urlID} 
+                totalRuntimes={totalRuntimes}
+                // setTotalRuntimes={setTotalRuntimes}
+                totalUniqueQueries={totalUniqueQueries}
                 // history={history}
                 />
             </Route>

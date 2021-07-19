@@ -30,6 +30,7 @@ function App() {
   const [urlList, setUrlList] = useState([]); // to use in dashboard
 
 
+
   // const toggleDarkMode = () => {console.log('changed theme'); setDark(prevDarkTheme => !prevDarkTheme)}
 
   // Set userID when user is logged in 
@@ -53,8 +54,8 @@ function App() {
           <Switch>
             <Route exact path='/'>
               {user.loggedIn ? 
-                <MainContainer user={user} setUser={setUser} urlList={urlList} userID={userID}/> 
-                : <Login user={user} setUser={setUser} setUrlList={setUrlList}/>}
+                <MainContainer user={user} setUser={setUser} urlList={urlList} userID={userID} /> 
+                : <Login user={user} setUser={setUser} setUrlList={setUrlList} />}
             </Route>
           </Switch>
         </Router>
