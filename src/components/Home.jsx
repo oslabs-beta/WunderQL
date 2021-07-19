@@ -61,14 +61,13 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
       setTotalUniqueQueries(uniqueQueries.length);
     })
 
-    // THIS ISNT WORKINGGGGG, WHY???
-    // console.log('BEFORE')
-    // window.api.receiveArray("responseTimesFromMain", (event, arg) => {
-    //   console.log('AFTER')
-    //   // set total amount of runtimes to date
-    //   console.log('homejsx: total calls: ', arg[arg.length - 1]._id);
-    //   setTotalRuntimes(arg[arg.length - 1]._id);
-    // })
+    // Receive total # of calls from main, where it gets passed down to Dashboard
+    window.api.receiveArray("totalsFromMain", (event, arg) => {
+      console.log('this is within totalsFomMain in Home.jsx')
+      // set total amount of runtimes to date
+      // console.log('homejsx: total calls: ', arg[arg.length - 1]._id);
+      // setTotalRuntimes(arg[0].count);
+    })
 
     // Receive urlID from main process
     window.api.receive("idFromMain", (id) => {
