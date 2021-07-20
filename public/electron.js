@@ -154,10 +154,12 @@ ipcMain.on("signUpToMain", async (event, arg) => {
         values: [arg.username, arg.password, arg.email, arg.fullName]
       }
 
-      const newUserID = await db.query(createNewUserQuery)
+      let newUserID = await db.query(createNewUserQuery)
       //do I need to send back to front end?
       doesUserExist = true;
       event.sender.send("fromMainSignup", doesUserExist)
+      console.log("newUserID from electron.js", newUserID.rows[0]._id)
+      event.sender.send("userIdFromMain", newUserID.rows[0]._id);
     }
 
 

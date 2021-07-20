@@ -43,7 +43,9 @@ function App() {
                                   userID={userID} /> 
                               : <Signup 
                                   user={user} 
-                                  setUser={setUser} 
+                                  setUser={setUser}
+                                  userID={userID}
+                                  setuserID={setuserID}
                                   setUrlList={setUrlList}
                                   />}
                                   </Route>
