@@ -4,7 +4,15 @@ import RadarChartComponent from './DashboardRadarChart';
 import { useDarkTheme } from './ThemeContext';
 import { useEffect } from 'react';
 
-const Dashboard = ({ url, totalRuntimes, totalLoadTests, totalUniqueQueries }) => {
+/**More SQL queries (if possible):
+ * ! COUNT of load test passes and failures
+ * *
+ * ?
+ * TODO
+ */
+
+
+const Dashboard = ({ url, totalRuntimes, totalLoadTests, totalUniqueQueries, setTotalRuntimes, setTotalUniqueQueries, setTotalLoadTests }) => {
 
   // const [totalRuntimes, setTotalRuntimes] = useState(0);
   // const [totalLoadTests, setTotalLoadTests] = useState(0);
@@ -23,11 +31,11 @@ const Dashboard = ({ url, totalRuntimes, totalLoadTests, totalUniqueQueries }) =
   //   window.api.receive("totalsFromMain", (event, data) => {
   //     //data = [{ _id}]
   //     console.log('totals data from be: ', data)
-  //     setTotalUniqueQueries(data[0].number_of_queries)
-  //     setTotalRuntimes(data[0].number_of_tests)
-  //     setTotalLoadTests(data[0].number_of_load_tests)
+  //     setTotalUniqueQueries(data.number_of_queries)
+  //     setTotalRuntimes(data.number_of_tests)
+  //     setTotalLoadTests(data.number_of_load_tests)
   //   })
-  // })
+  // },[setTotalUniqueQueries, setTotalRuntimes, setTotalLoadTests])
 
   return (
     <div id='dashboard' style={themeStyle}>

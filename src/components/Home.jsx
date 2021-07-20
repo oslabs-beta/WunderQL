@@ -1,10 +1,11 @@
-import { useState, useEffect, useContext } from 'react';
-// import { useHistory } from 'react-router';
+import { useHistory } from 'react-router';
 import Button from '@material-ui/core/Button';
 import { useDarkTheme } from './ThemeContext';
 
 
 const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory, setUrlID, setQueriesList, urlList, setTotalUniqueQueries, setTotalRuntimes, setTotalLoadTests }) => {
+  
+  const routerHistory = useHistory();
   
   const darkTheme = useDarkTheme();
   const themeStyle = {
@@ -12,16 +13,6 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
     color: darkTheme ? '#CCC' : '#333'
   }
 
-  // const routerDashboard = useHistory();
-  // const openUrlDashboard = () => {
-  //   routerDashboard.push(
-  //     '/dashboard', 
-  //     {
-  //       url: url
-  //     }
-  //   )
-  // }
-  
   // configure url dropdown list in home
   const URLs = [];
   urlList.map((url, index) => URLs.push(
@@ -40,6 +31,9 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
   const submitUrl = () => {
     console.log(url, ' : URL is being sent to main process...');
     
+    // redirect to Dashboard after 1sec delay
+    setTimeout(()=>routerHistory.push('/dashboard'), 1000)
+
     // Send url to main process
     window.api.send("urlToMain", {
       url,
@@ -47,29 +41,37 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
       nickname
     });
     
+    //! WORK IN PROGRESS: configuring num queries per day for barchart
+    // const queriesPerDay = {};
+    // console.log('all runtimes: ', ALLRUNTIMES)
+    // ALLRUNTIMES.forEach((query, index) => {
+    //   const date = new Date(query.date).toDateString();
+    //   console.log('date: ', date)
+    //   queriesPerDay[date] = (queriesPerDay[date] || 0) + 1;
+    //   console.log('queriesPerDay for barchart: ', queriesPerDay)
+    // })
+
     window.api.receive("queriesFromMain", (allQueries) => {
       console.log("In queriesfromMain in Home.jsx", allQueries)
       setQueriesList(allQueries)
-
-
     })
 
 
     // obtain and set totals from BE
-    // useEffect(() => {
-      console.log('logging right before (totalsFromMain)')
-      window.api.receive("totalsFromMain", (data) => {
-        //data = [{ _id}]
-        console.log('totals data from be: ', data)
-        setTotalUniqueQueries(data.number_of_queries)
-        setTotalRuntimes(data.number_of_tests)
-        setTotalLoadTests(data.number_of_load_tests)
-      })
-    // })
+    console.log('logging right before (totalsFromMain)')
+    window.api.receive("totalsFromMain", (data) => {
+      //data = [{ _id}]
+      console.log('totals data from be: ', data)
+      setTotalUniqueQueries(data.number_of_queries)
+      setTotalRuntimes(data.number_of_tests)
+      setTotalLoadTests(data.number_of_load_tests)
+    })
+
     // Receive urlID from main process
     window.api.receive("idFromMain", (id) => {
       console.log('Within window.api.receive in Home.jsx, id: ', id);
       document.querySelector('#connected-text').style.display = 'block';
+      document.querySelector('#connected-loading').style.display = 'block';
       console.log('received from main process')
       setUrlID(id);
     })
@@ -136,6 +138,7 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
           >Connect to URL</Button>
         <div id='connected-div'>
           <h3 id='connected-text'>Connected!</h3>
+          <h3 id='connected-loading'>Loading Dashboard...</h3>
         </div>
       </div>
 
