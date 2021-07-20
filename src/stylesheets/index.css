@@ -91,7 +91,8 @@ body {
 
 #login-button {
   letter-spacing: 2px;
-  padding: 0.2rem 0.8rem;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
 }
 
 /*/////////////////////////////////////////////////////*/
@@ -184,20 +185,25 @@ body {
 }
 
 #home-send {
-  padding: 0.5rem 0.9rem;
+  padding: 0.5rem 0.8rem;
   margin-top: 1rem;
   letter-spacing: 1.5px;
+  border-radius: 2rem;
 }
 
 #connected-div {
   color: #bf0000;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-top: 5px;
 }
 
-#connected-text {
+#connected-text, #connected-loading {
   display: none;
+  margin: 5px;
+  padding: 0;
 }
 
 /*/////////////////////////////////////////////////////*/

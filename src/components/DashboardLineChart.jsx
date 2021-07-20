@@ -1,12 +1,9 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-// import CustomTooltip from './CustomTooltip';
 
 const LineChartComponent = ({ history }) => {
   const data = [];
   
-  console.log('data to be plotted: ', data)
-  // const date = history.date;
-  // const payloadFormatter = (value, name, props) => (['date', 'date2']);
+  console.log('linechartcomponent: data to be plotted: ', data)
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {  

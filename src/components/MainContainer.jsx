@@ -3,7 +3,6 @@ import {
   // useEffect, 
   // useContext 
 } from 'react';
-// import { useHistory } from 'react-router';
 
 import {
   BrowserRouter as Router,
@@ -15,8 +14,6 @@ import Dashboard from './Dashboard'
 import NavBar from './NavBar'
 import TestQuery from './Test-Query'
 import LoadTest from "./LoadTest";
-import PreviousSearches from './PreviousSearches';
-//import './src/stylesheets/index.css';
 import '../stylesheets/index.css'
 
 // import { ThemeProvider, useDarkTheme } from "./src/components/ThemeContext";
@@ -42,7 +39,6 @@ const MainContainer = ({ user, setUser, userID, urlList }) => {
   const [avgResponseTime, setAvgResponseTime] = useState(0);
   const [history, setHistory] = useState(null);
   const [queriesList, setQueriesList] = useState([]);
-  const [dragList, setDragList] = useState([]);
   // const [urlList, setUrlList] = useState([]); // to use in dashboard
 
   // calculate single runtime, average runtime, and line-of-best-fit; to be used in test-query
@@ -171,18 +167,6 @@ const MainContainer = ({ user, setUser, userID, urlList }) => {
                 setRuntime={setRuntime}
                 getResponseTimes={getResponseTimes}
                 queriesList={queriesList}
-                />
-            </Route>
-            <Route path="/previoussearches">
-              <PreviousSearches 
-                url={url} 
-                urlID={urlID} 
-                // history={history}
-                getResponseTimes={getResponseTimes}
-                queriesList={queriesList}
-                setQueriesList={setQueriesList}
-                dragList={dragList}
-                setDragList={setDragList}
                 />
             </Route>
           </Switch>
