@@ -1,23 +1,14 @@
 import React, { useState } from 'react';
-
-// import axios from "axios";
-// import { Link } from 'react-router-dom';
-// import { channels } from '../shared/constants';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import logo from '../../public/assets/logo-small.png'
-
-
 
 
 const Login = ({user, setUser, setUrlList }) => {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  //const [user, setUser] = useState({loggedIn: false});
-  //let authorize = false;
 
-  console.log("from Login", user)
   const handleLogin = (e) => {
     e.preventDefault();
 
@@ -28,22 +19,15 @@ const Login = ({user, setUser, setUrlList }) => {
 
     window.api.send("loginToMain", {username, password});
     window.api.receive("userLoggedInFromMain", (validUser) => {
-      console.log("from main validUser", validUser)
       setUser({ loggedIn: validUser})
-      console.log("from handleLogin authorize 1", user)
     })
 
     // request URLs from the db as soon as user logs in...might need to add conditionals here
     window.api.receive('urlsFromMain', data => setUrlList(data));
     
-
-
   };
-  console.log("from Login outside Handlogin", user)
-  
 
-  //<form onSubmit={handleLogin} >
-  //={() => setCount(count + 1)}>
+  
   return (
     <div id="login-form">
       <div id='logo'>
