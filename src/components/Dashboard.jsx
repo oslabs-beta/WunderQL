@@ -4,6 +4,14 @@ import RadarChartComponent from './DashboardRadarChart';
 import { useDarkTheme } from './ThemeContext';
 import { useEffect } from 'react';
 
+/**More SQL queries (if possible):
+ * ! COUNT of load test passes and failures
+ * *
+ * ?
+ * TODO
+ */
+
+
 const Dashboard = ({ url, totalRuntimes, totalLoadTests, totalUniqueQueries, setTotalRuntimes, setTotalUniqueQueries, setTotalLoadTests }) => {
 
   // const [totalRuntimes, setTotalRuntimes] = useState(0);

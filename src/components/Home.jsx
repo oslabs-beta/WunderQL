@@ -41,25 +41,32 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
       nickname
     });
     
+    //! WORK IN PROGRESS: configuring num queries per day for barchart
+    // const queriesPerDay = {};
+    // console.log('all runtimes: ', ALLRUNTIMES)
+    // ALLRUNTIMES.forEach((query, index) => {
+    //   const date = new Date(query.date).toDateString();
+    //   console.log('date: ', date)
+    //   queriesPerDay[date] = (queriesPerDay[date] || 0) + 1;
+    //   console.log('queriesPerDay for barchart: ', queriesPerDay)
+    // })
+
     window.api.receive("queriesFromMain", (allQueries) => {
       console.log("In queriesfromMain in Home.jsx", allQueries)
       setQueriesList(allQueries)
-
-
     })
 
 
     // obtain and set totals from BE
-    // useEffect(() => {
-      console.log('logging right before (totalsFromMain)')
-      window.api.receive("totalsFromMain", (data) => {
-        //data = [{ _id}]
-        console.log('totals data from be: ', data)
-        setTotalUniqueQueries(data.number_of_queries)
-        setTotalRuntimes(data.number_of_tests)
-        setTotalLoadTests(data.number_of_load_tests)
-      })
-    // })
+    console.log('logging right before (totalsFromMain)')
+    window.api.receive("totalsFromMain", (data) => {
+      //data = [{ _id}]
+      console.log('totals data from be: ', data)
+      setTotalUniqueQueries(data.number_of_queries)
+      setTotalRuntimes(data.number_of_tests)
+      setTotalLoadTests(data.number_of_load_tests)
+    })
+
     // Receive urlID from main process
     window.api.receive("idFromMain", (id) => {
       console.log('Within window.api.receive in Home.jsx, id: ', id);
