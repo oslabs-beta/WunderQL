@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router';
 import Button from '@material-ui/core/Button';
 import logo from '../../public/assets/logo-small.png'
 
@@ -9,6 +10,7 @@ const Signup = ({user, setUser, setUrlList }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+  const routerHistory = useHistory();
 
   console.log("from Signup", user)
   const handleSignup = (e) => {
@@ -25,66 +27,70 @@ const Signup = ({user, setUser, setUrlList }) => {
     })
   };
 
-  
-
   return (
     <div id="signup-form">
       <div id='signup'>
         <img src={logo} alt='logo'></img>
       </div>
-      <form  >
-          <div>
+      <form>
+        <div className='signup-div'>
           <label htmlFor="name">Full Name: </label>
-            <input 
-              name="name" 
-              placeholder='Full Name' 
-              id="name" 
-              type="name" 
-              required 
-              onChange={(e) => setfullName(e.target.value)} 
-              />
-          </div>
-          <div>
-            <label htmlFor="email">Email: </label>
-            <input 
-              name="email" 
-              placeholder='email' 
-              id="email" 
-              type="email" 
-              required 
-              onChange={(e) => setEmail(e.target.value)} 
-              />
-          </div>
-          <div>
-            <label htmlFor="username">Username: </label>
-            <input 
-              name="username" 
-              placeholder='Username' 
-              id="username" 
-              type="username" 
-              required 
-              onChange={(e) => setUsername(e.target.value)} 
-              />
-          </div>
-          <div>
-            <label htmlFor="password">Password: </label>
-            <input 
-              name="password" 
-              placeholder='Password' 
-              id="password" 
-              type="password" 
-              required 
-              onChange={(e) => setPassword(e.target.value)} 
-              />
-          </div>
-          <div id='signup-button-div'>
-            <Button 
-              onClick={handleSignup}
-              variant="contained" 
-              id='signup-button' 
-              color="primary"
-              >Signup</Button>
-          </div>
+          <input 
+            name="name" 
+            placeholder='Full Name' 
+            id="name" 
+            type="name" 
+            required 
+            onChange={(e) => setfullName(e.target.value)} 
+            />
+        </div>
+        <div className='signup-div'>
+          <label htmlFor="email">Email: </label>
+          <input 
+            name="email" 
+            placeholder='email' 
+            id="email" 
+            type="email" 
+            required 
+            onChange={(e) => setEmail(e.target.value)} 
+            />
+        </div>
+        <div className='signup-div'>
+          <label htmlFor="username">Username: </label>
+          <input 
+            name="username" 
+            placeholder='Username' 
+            id="username" 
+            type="username" 
+            required 
+            onChange={(e) => setUsername(e.target.value)} 
+            />
+        </div>
+        <div className='signup-div'>
+          <label htmlFor="password">Password: </label>
+          <input 
+            name="password" 
+            placeholder='Password' 
+            id="password" 
+            type="password" 
+            required 
+            onChange={(e) => setPassword(e.target.value)} 
+            />
+        </div>
+        <div id='signup-button-div'>
+          <Button 
+            onClick={()=>routerHistory.push('/')}
+            variant="contained" 
+            id='cancel-button' 
+            color="gray"
+            >Cancel</Button>
+          <Button 
+            onClick={handleSignup}
+            variant="contained" 
+            id='signup-button' 
+            color="primary"
+            >Signup</Button>
+        </div>
       </form>
     </div>
   )

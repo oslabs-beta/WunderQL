@@ -39,19 +39,8 @@ const ScatterChartComponent = () => {
           name="Avg Response Time" 
           unit="ms" 
           stroke="#8884d8" />
-        {/* <YAxis
-          yAxisId="right"
-          type="number"
-          dataKey="z"
-          name="weight"
-          unit="kg"
-          orientation="right"
-          stroke="#82ca9d"
-        /> */}
         <Tooltip cursor={{ strokeDasharray: '3 3' }} />
         <Scatter yAxisId="left" name="A school" data={data} fill="#8884d8" />
-        {/* <Legend /> */}
-        {/* <Scatter yAxisId="right" name="A school" data={data02} fill="#82ca9d" /> */}
       </ScatterChart>
     </ResponsiveContainer>
   );

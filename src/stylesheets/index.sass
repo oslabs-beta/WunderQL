@@ -73,15 +73,20 @@ body
 
 #login-form
   grid-area: main
-  display: flex
-  flex-direction: column
+  display: grid
+  // flex-direction: column
+  grid-template-rows: 10% 50% 5%
   justify-content: center
   align-items: center
+  padding-top: 10rem
   width: 100%
   height: 100vh
 
 #logo
-  margin-bottom: 1rem
+  display: flex
+  justify-content: center
+  align-items: center
+  margin-bottom: 0rem
 
 #username, #password
   padding: 0.5rem
@@ -92,13 +97,69 @@ body
 #login-button-div
   margin-top: 1rem
   display: flex
+  flex-direction: column
   justify-content: center
   align-items: center
 
 #login-button
   letter-spacing: 2px
-  padding: 0.2rem 0.8rem
+  padding: 0.4rem 1.3rem
+  border-radius: 2rem
 
+#signup-link-div
+  margin-top: 1rem
+
+#invalid-credentials
+  @extend #connected-div
+  margin-bottom: 5rem
+
+#invalid-text
+  @extend #connected-text
+
+/*/////////////////////////////////////////////////////*/
+/*////////////////////// Signup ///////////////////////*/
+/*/////////////////////////////////////////////////////*/
+
+#signup-form
+  grid-area: main
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  width: 100%
+  height: 100vh
+
+.signup-div
+  display: grid
+  grid-template-columns: 1fr 2fr
+  justify-content: center
+  align-items: center
+  margin: 0
+  padding: 0
+
+#name, #email
+  @extend #username
+  display: block
+
+#signup-button-div
+  margin-top: 1rem
+  display: flex
+  flex-direction: row
+  justify-content: space-evenly
+  align-items: center
+
+#signup-button
+  padding: 0.5rem 1.5rem
+  margin-top: 1rem
+  letter-spacing: 1.5px
+  border-radius: 2rem
+
+#cancel-button
+  padding: 0.5rem 1.5rem
+  margin-top: 1rem
+  letter-spacing: 1.5px
+  border-radius: 2rem
+  
 /*/////////////////////////////////////////////////////*/
 /*////////////////// Main Container ///////////////////*/
 /*/////////////////////////////////////////////////////*/
@@ -189,21 +250,27 @@ $input-height: 200px
   justify-content: center
   align-items: center
 
+  //button
 #home-send 
-  padding: 0.5rem 0.9rem
+  padding: 0.5rem 0.8rem
   margin-top: 1rem
   letter-spacing: 1.5px
+  border-radius: 2rem
 
 #connected-div 
   color: rgb(191, 0, 0)
   display: flex
+  flex-direction: column
   justify-content: center
   align-items: center
   // border: 2px solid blue
+  margin-top: 5px
 
-#connected-text 
+#connected-text, #connected-loading
   // margin-top: 2rem
   display: none
+  margin: 5px
+  padding: 0
 
 /*/////////////////////////////////////////////////////*/
 /*///////////////////// Nav Bar ///////////////////////*/
