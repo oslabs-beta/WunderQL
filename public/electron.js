@@ -5,10 +5,10 @@ const { app, BrowserWindow, Menu, ipcMain } = require("electron");
 const isDev = require("electron-is-dev");
 const { checkResponseTime, loadTest, checkIfQueryExist } = require('./utils');
 const db = require("../models/User");
-require('electron-reload')(__dirname, {
-  electron: path.join('__dirname', '../', 'node_modules', '.bin', 'electron')
-})
-console.log(path.join('__dirname', '../', 'node_modules', '.bin', 'electron'))
+// require('electron-reload')(__dirname, {
+//   electron: path.join('__dirname', '../', 'node_modules', '.bin', 'electron')
+// })
+// console.log(path.join('__dirname', '../', 'node_modules', '.bin', 'electron'))
 //-------Electron Setup--------------------------------------------------------
 function createWindow() {
   // Create the browser window.
@@ -171,7 +171,6 @@ ipcMain.on("signUpToMain", async (event, arg) => {
 
 
 //! #1 loginToMain - User logins 
-//ipcMain.on(channels.GET_USER_AUTH, async (event, arg) => {
 ipcMain.on("loginToMain", async (event, arg) => {
   //Get Users Name and Password from Login Form
   try {
@@ -245,37 +244,11 @@ ipcMain.on("urlToMain", async (event, arg) => {
     event.sender.send("queriesFromMain", allQueries)
 
 
-    // //* * /////////////////////////////////////////////////////////////////
-    // //get total amount of calls from database, where the count is received in Home.jsx 
-    // const getTotalAmountOfCalls = {
-    //   text: 'SELECT COUNT(response_time) FROM response_times',
-    // }
-    // const result = await db.query(getTotalAmountOfCalls);
-    // const totalResult = result.rows;
-    // console.log('totalResult in electron.js: ', totalResult)
-    // event.sender.send("totalCallsFromMain", totalResult)
-    // //get dashboard summary for specific url - total queries, total tests, total load tests. If possible # of queries per day.
-    // //* * /////////////////////////////////////////////////////////////////
-
-    
-    const query = {
-      text: `SELECT COUNT(q._id) as number_of_queries, COUNT(rt._id) as number_of_tests, COUNT(lrt._id) as number_of_load_tests
-      FROM graphqlurls gu
-      INNER JOIN queries q ON q.url_id = gu._id AND gu._id = $1
-      INNER JOIN response_times rt ON rt.query_id = q._id
-      INNER JOIN load_test_response_times lrt ON lrt.query_id = q._id
-      GROUP BY gu.url
-      `,
-      values: [urlId]
-    }
-    const dashboardQueryResult = await db.query(query);
-    const results = dashboardQueryResult.rows[0];
-    event.sender.send("totalsFromMain", results);
-
   } catch (err) {
     console.log(err)
     return err;
-  }  
+  }
+  
 })
 
 //! #3 queryTestToMain - User selects a query to test
@@ -358,7 +331,7 @@ ipcMain.on("loadTestQueryToMain", async (event, arg) => {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Get allLoadTestResults from database and send all load test results to LoadTest.jsx
     const selectAllLoadTestResults = {
-        text: 'SELECT number_of_child_processes, average_response_time, result FROM load_test_response_times WHERE query_id = $1',
+        text: 'SELECT * FROM load_test_response_times WHERE query_id = $1',
         values: [queryId]
       }
     const result = await db.query(selectAllLoadTestResults);
@@ -372,3 +345,61 @@ ipcMain.on("loadTestQueryToMain", async (event, arg) => {
     return err;
   }  
 });
+
+//! #5 dashboardToMain - User goes to dashboard
+ipcMain.on("dashboardToMain", async (event, arg) => {
+  console.log('in dashboardTomain', arg)
+
+    const uniqueQueries = {
+      text: `SELECT COUNT(q._id)
+      FROM graphqlurls gu
+      INNER JOIN queries q ON q.url_id = gu._id AND gu._id = $1`,
+      values: [arg]
+    }
+    const numberOfTests = {
+      text: `SELECT COUNT(rt._id)
+      FROM graphqlurls gu
+      INNER JOIN queries q ON q.url_id = gu._id AND gu._id = $1
+      INNER JOIN response_times rt ON rt.query_id = q._id`,
+      values: [arg]
+    }
+    const numberOfLoadTests = {
+      text: `SELECT COUNT(lrt._id)
+      FROM graphqlurls gu
+      INNER JOIN queries q ON q.url_id = gu._id AND gu._id = $1
+      INNER JOIN load_test_response_times lrt ON lrt.query_id = q._id`,
+      values: [arg]
+    }
+    const numberOfLoadTestSuccesses = {
+      text: `SELECT COUNT(lrt._id)
+      FROM graphqlurls gu
+      INNER JOIN queries q ON q.url_id = gu._id AND gu._id = $1
+      INNER JOIN load_test_response_times lrt ON lrt.query_id = q._id AND lrt.result = 'success'`,
+      values: [arg]
+    }
+    const numberOfLoadTestFailures = {
+      text: `SELECT COUNT(lrt._id)
+      FROM graphqlurls gu
+      INNER JOIN queries q ON q.url_id = gu._id AND gu._id = $1
+      INNER JOIN load_test_response_times lrt ON lrt.query_id = q._id AND lrt.result = 'failure'`,
+      values: [arg]
+    }
+      const result1 = await db.query(uniqueQueries);
+      const result2 = await db.query(numberOfTests);
+      const result3 = await db.query(numberOfLoadTests);
+      const result4 = await db.query(numberOfLoadTestSuccesses);
+      const result5 = await db.query(numberOfLoadTestFailures);
+      const number_of_queries = result1.rows[0].count;
+      const number_of_tests = result2.rows[0].count;
+      const number_of_load_tests = result3.rows[0].count;
+      const number_of_load_test_successes = result4.rows[0].count;
+      const number_of_load_tests_failures = result5.rows[0].count;
+      const results = {
+        number_of_queries: number_of_queries,
+        number_of_tests: number_of_tests,
+        number_of_load_tests: number_of_load_tests,
+        number_of_load_test_successes: number_of_load_test_successes,
+        number_of_load_tests_failures: number_of_load_tests_failures,
+    }
+    event.sender.send("totalsFromMain", results);
+})

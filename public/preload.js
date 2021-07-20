@@ -8,14 +8,14 @@ contextBridge.exposeInMainWorld(
     send: (channel, data) => {
       // whitelist channels
       console.log('this is in send within preload.js')
-      let validChannels = ["signUpToMain", "loginToMain", "urlToMain", "queryTestToMain", "loadTestQueryToMain"];
+      let validChannels = ["signUpToMain", "loginToMain", "urlToMain", "queryTestToMain", "loadTestQueryToMain", "dashboardToMain"];
       if (validChannels.includes(channel)) {
         ipcRenderer.send(channel, data);
       }
     },
     receive: (channel, func) => {
       console.log('im in receive in preload.js')
-      let validChannels = ["fromMainSignup", "userLoggedInFromMain", "userIdFromMain", "urlsFromMain", "idFromMain","totalsFromMain", "queriesFromMain"];
+      let validChannels = ["fromMainSignup", "userLoggedInFromMain", "userIdFromMain", "urlsFromMain", "idFromMain", "queriesFromMain", "totalsFromMain"];
       if (validChannels.includes(channel)) {
         // Deliberately strip event as it includes `sender` 
         ipcRenderer.on(channel, (event, ...args) => { 

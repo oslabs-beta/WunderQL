@@ -2,21 +2,13 @@ import PieChartComponent from './DashboardPieChart';
 import BarChartComponent from './DashboardBarChart';
 import RadarChartComponent from './DashboardRadarChart';
 import { useDarkTheme } from './ThemeContext';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-/**More SQL queries (if possible):
- * ! COUNT of load test passes and failures
- * *
- * ?
- * TODO
- */
+const Dashboard = ({ url, urlID }) => {
 
-
-const Dashboard = ({ url, totalRuntimes, totalLoadTests, totalUniqueQueries, setTotalRuntimes, setTotalUniqueQueries, setTotalLoadTests }) => {
-
-  // const [totalRuntimes, setTotalRuntimes] = useState(0);
-  // const [totalLoadTests, setTotalLoadTests] = useState(0);
-  // const [totalUniqueQueries, setTotalUniqueQueries] = useState(0);
+  const [totalRuntimes, setTotalRuntimes] = useState(0);
+  const [totalLoadTests, setTotalLoadTests] = useState(0);
+  const [totalUniqueQueries, setTotalUniqueQueries] = useState(0);
 
   const darkTheme = useDarkTheme();
   const themeStyle = {
@@ -24,18 +16,18 @@ const Dashboard = ({ url, totalRuntimes, totalLoadTests, totalUniqueQueries, set
     color: darkTheme ? 'white' : '#333'
   }
 
+  window.api.send("dashboardToMain", urlID);
   // obtain and set totals from BE
   // console.log('beforeeee')
   // useEffect(() => {
-  //   console.log('insideeee')
-  //   window.api.receive("totalsFromMain", (event, data) => {
-  //     //data = [{ _id}]
-  //     console.log('totals data from be: ', data)
-  //     setTotalUniqueQueries(data.number_of_queries)
-  //     setTotalRuntimes(data.number_of_tests)
-  //     setTotalLoadTests(data.number_of_load_tests)
-  //   })
-  // },[setTotalUniqueQueries, setTotalRuntimes, setTotalLoadTests])
+    // console.log('insideeee')
+    window.api.receive("totalsFromMain", (data) => {
+      //data = [{ _id}]
+      setTotalUniqueQueries(data.number_of_queries)
+      setTotalRuntimes(data.number_of_tests)
+      setTotalLoadTests(data.number_of_load_tests)
+    })
+  // })
 
   return (
     <div id='dashboard' style={themeStyle}>
