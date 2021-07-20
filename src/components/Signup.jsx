@@ -27,8 +27,6 @@ const Signup = ({user, setUser, setUrlList }) => {
     })
   };
 
-  
-
   return (
     <div id="signup-form">
       <div id='signup'>

@@ -1,9 +1,4 @@
-import { 
-  useState, 
-  // useEffect, 
-  // useContext 
-} from 'react';
-
+import { useState } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -14,7 +9,6 @@ import Dashboard from './Dashboard'
 import NavBar from './NavBar'
 import TestQuery from './Test-Query'
 import LoadTest from "./LoadTest";
-import '../stylesheets/index.css'
 
 // import { ThemeProvider, useDarkTheme } from "./src/components/ThemeContext";
 // import { ThemeProvider, useDarkTheme } from "./ThemeContext";
@@ -27,7 +21,7 @@ LOAD needs: list of load test queries
 PREV needs: list of queries
 */
 
-const MainContainer = ({ user, setUser, userID, urlList }) => {
+const MainContainer = ({ userID, urlList }) => {
   
   const [url, setUrl] = useState('(please enter a URL to begin)');
   const [nickname, setNickname] = useState(null)
@@ -39,16 +33,11 @@ const MainContainer = ({ user, setUser, userID, urlList }) => {
   const [avgResponseTime, setAvgResponseTime] = useState(0);
   const [history, setHistory] = useState(null);
   const [queriesList, setQueriesList] = useState([]);
-  // const [urlList, setUrlList] = useState([]); // to use in dashboard
 
   // calculate single runtime, average runtime, and line-of-best-fit; to be used in test-query
   const getResponseTimes = () => {
     window.api.receiveArray("responseTimesFromMain", (event, arg) => {
       console.log('Listening for response from main process...')
-      
-      // set total amount of runtimes to date
-      // console.log('maincontainer: total calls: ', arg[arg.length - 1]._id);
-      // setTotalRuntimes(arg[arg.length - 1]._id);
 
       // get the runtime of the most recent query
       const currRuntime = arg[arg.length - 1].response_time.toFixed(1);
@@ -138,9 +127,11 @@ const MainContainer = ({ user, setUser, userID, urlList }) => {
                 url={url} 
                 urlID={urlID} 
                 totalRuntimes={totalRuntimes}
-                // setTotalRuntimes={setTotalRuntimes}
+                setTotalRuntimes={setTotalRuntimes}
                 totalUniqueQueries={totalUniqueQueries}
+                setTotalUniqueQueries={setTotalUniqueQueries}
                 totalLoadTests={totalLoadTests}
+                setTotalLoadTests={setTotalLoadTests}
                 // history={history}
                 />
             </Route>

@@ -16,7 +16,6 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 
-// import { useContext } from 'react';
 import { useDarkTheme, useDarkThemeUpdate } from './ThemeContext';
 
 import { Link } from 'react-router-dom';
@@ -82,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function NavBar(props) {
+const NavBar = (props) => {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -105,7 +104,6 @@ export default function NavBar(props) {
 
   return (
     <div className={classes.root} style={themeStyle}>
-      {/* <CssBaseline /> */}
       <AppBar
         position="fixed"
         className={clsx(classes.appBar, {
@@ -188,27 +186,4 @@ export default function NavBar(props) {
   );
 }
 
-
-// import { Link } from 'react-router-dom';
-
-// const NavBar = () => {
-//   return(
-//     <div id='nav-bar'>
-//       <nav>
-//           <ul id='nav-list'>
-//             <li className='nav-list-item'>
-//               <Link to="/dashboard">Dashboard</Link>
-//             </li>
-//             <li className='nav-list-item'>
-//               <Link to="/testquery">Test Query</Link>
-//             </li>
-//             <li className='nav-list-item'>
-//               <Link to="/playground">Playground</Link>
-//             </li>
-//           </ul>
-//         </nav>
-//     </div>
-//   )
-// }
-
-// export default NavBar;
+export default NavBar;

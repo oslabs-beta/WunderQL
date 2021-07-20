@@ -12,8 +12,6 @@ const LoadTest = ({ url, urlID, getResponseTimes, queriesList }) => {
   const [avgResponseTime, setavgResponseTime] = useState(0);
   const [successOrFailure, setsuccessOrFailure] = useState('');
 
-
-
   // Invoked when user selects an option from the drop-down
   function handleChange(event) {
     // Add the query string to the text box && update state
@@ -59,10 +57,6 @@ const LoadTest = ({ url, urlID, getResponseTimes, queriesList }) => {
 
     });
   }
-
-  // useEffect(() => {
-  //   getResponseTimes();
-  // });
 
   return (
     <div id='test-query' style={themeStyle}> 

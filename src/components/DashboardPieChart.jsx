@@ -1,4 +1,3 @@
-import React, { PureComponent } from 'react';
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer, Tooltip, LabelList, Label } from 'recharts';
 
 const data01 = [

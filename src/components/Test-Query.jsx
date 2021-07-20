@@ -1,6 +1,4 @@
-import { useState, useEffect } from "react";
-import { useLocation } from 'react-router-dom'
-
+import { useState } from "react";
 import LineChartComponent from "./DashboardLineChart";
 import Button from '@material-ui/core/Button';
 import { useDarkTheme } from "./ThemeContext";
@@ -9,7 +7,6 @@ const TestQuery = ({ url, urlID, history, runtime, avgResponseTime, getResponseT
 
   const [query, setQuery] = useState(null);
   const [queryName, setQueryName] = useState('');
-
 
   // Invoked when user selects an option from the drop-down
   function handleChange(event) {
@@ -41,17 +38,6 @@ const TestQuery = ({ url, urlID, history, runtime, avgResponseTime, getResponseT
           {prevQuery.query_name}
         </option>
     ))
-  }
-
-  // this is for when a card was clicked in the 'previous searches' component and the query
-  // is passed as a prop when user is rerouted back to this component
-  let queryProp = null;
-  let location = useLocation();
-  if (location.state) {
-    console.log(location.state)
-    queryProp = location.state.queryProp;
-    console.log('queryProp sent from cards: ', queryProp)
-    // document.querySelector('#text-area').value = location.state.queryProp;
   }
 
   const sendQuery = () => {
@@ -86,7 +72,6 @@ const TestQuery = ({ url, urlID, history, runtime, avgResponseTime, getResponseT
           name='queries-list' 
           id='queries-list' 
           onChange={handleChange}
-          // onFocus='this.size=5;' onBlur='this.size=1;' onChange='this.size=1; this.blur();'
           >
           <option value="" selected >previously searched queries</option>
           {queries}
@@ -100,13 +85,12 @@ const TestQuery = ({ url, urlID, history, runtime, avgResponseTime, getResponseT
           style={themeStyle}
           required
           >{query}</textarea>
-          {/* >{query}</textarea> */}
         <input
           value={queryName}
           id='uri-name' 
           placeholder='give your query a name' 
           onChange={(e)=>setQueryName(e.target.value)} 
-          // required   
+          required   
           />
         <Button 
           variant="contained" 
