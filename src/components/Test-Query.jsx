@@ -37,7 +37,7 @@ const TestQuery = ({ url, urlID, history, runtime, avgResponseTime, getResponseT
   if(queriesList) {
     queriesList.map((prevQuery, index) => queries.push(
       <option 
-        id={index}
+        id={prevQuery.query_name}
         value={prevQuery.query_string} 
         name={prevQuery.query_name}
         >
