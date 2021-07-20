@@ -75,11 +75,9 @@ const Login = ({user, setUser, setUrlList }) => {
               id='login-button' 
               color="primary"
               >Login</Button>
-            <span>Not a User? 
-              <Link to='/signup'>
-                Sign Up
-              </Link>
-            </span>
+            <div id='signup-link-div'>Not a User?&nbsp;    
+              <Link to='/signup'>Sign Up</Link>
+            </div>
           </div>
       </form>
     </div>

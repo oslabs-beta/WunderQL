@@ -71,11 +71,7 @@ const LoadTest = ({ url, urlID, getResponseTimes, queriesList }) => {
         <select
           name='queries-list' 
           id='queries-list' 
-          onChange={
-            // document.querySelector('#text-area').innerHTML = e.target.value;
-            // document.querySelector('#uri-name').innerHTML = e.target.name;
-            handleChange
-            }
+          onChange={handleChange}
           >
           <option disabled selected hidden>previously searched queries</option>
           {queries}   
@@ -89,7 +85,7 @@ const LoadTest = ({ url, urlID, getResponseTimes, queriesList }) => {
           required
           >{query}</textarea>
 
-          <input
+        <input
           value={loadTestQueryName}
           id='uri-name' 
           placeholder='give your query a name' 
