@@ -170,18 +170,6 @@ export default function NavBar(props) {
                 <ListItemText primary='Load Test' />
               </ListItem>
             </Link>
-            <Link to="/previoussearches" class='nav-list-item' onClick={handleDrawerClose}>
-              <ListItem button key={5}>
-                <ListItemIcon><InboxIcon /></ListItemIcon>
-                <ListItemText primary='Past Searches' />
-              </ListItem>
-            </Link>
-            {/* <Link to="/login" class='nav-list-item'>
-              <ListItem button key={5}>
-                <ListItemIcon><InboxIcon /></ListItemIcon>
-                <ListItemText primary='Login' />
-              </ListItem>
-            </Link> */}
         </List>    
         <Divider />  
         <FormControlLabel

@@ -20,7 +20,7 @@ const TestQuery = ({ url, urlID, history, runtime, avgResponseTime, getResponseT
     // Add the query name to the input box && update state
     const selectedName = event.target.selectedOptions[0].id;
     setQueryName(selectedName);
- }
+  }
 
   const darkTheme = useDarkTheme();
   const themeStyle = {
