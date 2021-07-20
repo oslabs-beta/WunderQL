@@ -393,13 +393,13 @@ ipcMain.on("dashboardToMain", async (event, arg) => {
       const number_of_tests = result2.rows[0].count;
       const number_of_load_tests = result3.rows[0].count;
       const number_of_load_test_successes = result4.rows[0].count;
-      const number_of_load_tests_failures = result5.rows[0].count;
+      const number_of_load_test_failures = result5.rows[0].count;
       const results = {
         number_of_queries: number_of_queries,
         number_of_tests: number_of_tests,
         number_of_load_tests: number_of_load_tests,
         number_of_load_test_successes: number_of_load_test_successes,
-        number_of_load_tests_failures: number_of_load_tests_failures,
+        number_of_load_test_failures: number_of_load_test_failures,
     }
     event.sender.send("totalsFromMain", results);
 })

@@ -12,7 +12,8 @@ const data = [
 
 // display data of num child processes versus average response time
 
-const ScatterChartComponent = () => {
+const ScatterChartComponent = ({ loadTestHistory }) => {
+  console.log('loadtesthistory: ', loadTestHistory)
   return (
     <ResponsiveContainer width="100%" height="100%">
       <ScatterChart
@@ -28,19 +29,20 @@ const ScatterChartComponent = () => {
         <CartesianGrid />
         <XAxis 
           type="number" 
-          dataKey="numChildProcesses" 
+          dataKey="number_of_child_processes" 
           name="Num Child Processes" 
           // unit="" 
           />
         <YAxis 
           yAxisId="left" 
           type="number" 
-          dataKey="avgResponseTime" 
+          dataKey="average_response_time" 
           name="Avg Response Time" 
           unit="ms" 
-          stroke="#8884d8" />
+          stroke="#8884d8" 
+          domain={['dataMin - 50', 'dataMax + 50']} />
         <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-        <Scatter yAxisId="left" name="A school" data={data} fill="#8884d8" />
+        <Scatter yAxisId="left" name="A school" data={loadTestHistory} fill="#8884d8" />
       </ScatterChart>
     </ResponsiveContainer>
   );

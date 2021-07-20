@@ -40,16 +40,7 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
       userID,
       nickname
     });
-    
-    //! WORK IN PROGRESS: configuring num queries per day for barchart
-    // const queriesPerDay = {};
-    // console.log('all runtimes: ', ALLRUNTIMES)
-    // ALLRUNTIMES.forEach((query, index) => {
-    //   const date = new Date(query.date).toDateString();
-    //   console.log('date: ', date)
-    //   queriesPerDay[date] = (queriesPerDay[date] || 0) + 1;
-    //   console.log('queriesPerDay for barchart: ', queriesPerDay)
-    // })
+  
 
     window.api.receive("queriesFromMain", (allQueries) => {
       console.log("In queriesfromMain in Home.jsx", allQueries)
@@ -94,14 +85,14 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
       </header>   
 
       <div id='new-inputs'>
-        <h3 class='prompt'>Enter a URL to get started...</h3>
+        <h3 className='prompt'>Enter a URL to get started...</h3>
         <input
           onChange={(e) => setUrl(e.target.value)}
           placeholder="GraphQL API"
           id='home-uri-value'
           required
           /> 
-        <h3 class='prompt'>Give that bad boi a name!</h3>
+        <h3 className='prompt'>Give it a nickname!</h3>
         <input
           onChange={(e) => setNickname(e.target.value)}
           placeholder="URL nickname"
@@ -112,7 +103,7 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
 
       <div id='previous-inputs'>
         <h3>
-          <label htmlFor='uris' class='prompt'>Or select a previously searched URL:</label>
+          <label htmlFor='uris' className='prompt'>Or select a previously searched URL:</label>
         </h3>
         <select 
           name='uris' 
@@ -125,7 +116,7 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
             // value="sheeeeesh pick one already" 
             disabled 
             selected
-            hidden>sheeeesh pick one already</option>
+            hidden>(select one)</option>
           {URLs}
         </select>
       </div>

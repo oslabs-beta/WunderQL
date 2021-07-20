@@ -10,7 +10,8 @@ const LoadTest = ({ url, urlID, getResponseTimes, queriesList }) => {
   const [loadTestQueryName, setloadTestQueryName] = useState('');
   const [loadAmount, setLoadAmount] = useState(null);
   const [avgResponseTime, setavgResponseTime] = useState(0);
-  const [successOrFailure, setsuccessOrFailure] = useState('');
+  const [successOrFailure, setsuccessOrFailure] = useState('n/a');
+  const [loadTestHistory, setLoadTestHistory] = useState([])
 
   // Invoked when user selects an option from the drop-down
   function handleChange(event) {
@@ -54,14 +55,16 @@ const LoadTest = ({ url, urlID, getResponseTimes, queriesList }) => {
       console.log('loadTestResults', loadTestResults);
       setavgResponseTime(loadTestResults[loadTestResults.length - 1].average_response_time.toFixed(2));
       setsuccessOrFailure(loadTestResults[loadTestResults.length - 1].result);
-
+      
+      // array of all load tests ran; data to send to scatter plot
+      setLoadTestHistory(loadTestResults);
     });
   }
 
   return (
     <div id='test-query' style={themeStyle}> 
-      <header class='uri'>
-        <h2>Currently connected to: {url}</h2>
+      <header className='uri'>
+        <p>Currently connected to: <span><strong>{url}</strong></span></p>
         <select
           name='queries-list' 
           id='queries-list' 
@@ -104,22 +107,18 @@ const LoadTest = ({ url, urlID, getResponseTimes, queriesList }) => {
           >Send Query</Button>
       </div>
       <div id='stats'>
-        <div class='category'>
-          <div class='category-title'>Avg Batch Response Time for {loadAmount} Requests</div>
-          <div class='category-number'>{`${avgResponseTime} ms`}</div>
+        <div className='category'>
+          <div className='category-title'>Avg Batch Response Time for {loadAmount} Requests</div>
+          <div className='category-number'>{`${avgResponseTime} ms`}</div>
         </div>
-        <div class='category'>
-          <div class='category-title'>Result</div>
-          <div class='category-number'>{`${successOrFailure}`}</div>
-        </div>
-        <div class='category'>
-          <div class='category-title'>Number of Null Responses</div>
-          <div class='category-number'>100</div>
+        <div className='category'>
+          <div className='category-title'>Result</div>
+          <div className='category-number'>{`${successOrFailure}`}</div>
         </div>
 
       </div>
       <div id='response-chart'> 
-        <ScatterChartComponent />
+        <ScatterChartComponent loadTestHistory={loadTestHistory}/>
       </div>
     </div>
   ) 
