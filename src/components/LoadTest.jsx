@@ -12,8 +12,6 @@ const LoadTest = ({ url, urlID, getResponseTimes, queriesList }) => {
   const [avgResponseTime, setavgResponseTime] = useState(0);
   const [successOrFailure, setsuccessOrFailure] = useState('');
 
-
-
   // Invoked when user selects an option from the drop-down
   function handleChange(event) {
     // Add the query string to the text box && update state
@@ -60,10 +58,6 @@ const LoadTest = ({ url, urlID, getResponseTimes, queriesList }) => {
     });
   }
 
-  // useEffect(() => {
-  //   getResponseTimes();
-  // });
-
   return (
     <div id='test-query' style={themeStyle}> 
       <header class='uri'>
@@ -71,11 +65,7 @@ const LoadTest = ({ url, urlID, getResponseTimes, queriesList }) => {
         <select
           name='queries-list' 
           id='queries-list' 
-          onChange={
-            // document.querySelector('#text-area').innerHTML = e.target.value;
-            // document.querySelector('#uri-name').innerHTML = e.target.name;
-            handleChange
-            }
+          onChange={handleChange}
           >
           <option disabled selected hidden>previously searched queries</option>
           {queries}   
@@ -89,7 +79,7 @@ const LoadTest = ({ url, urlID, getResponseTimes, queriesList }) => {
           required
           >{query}</textarea>
 
-          <input
+        <input
           value={loadTestQueryName}
           id='uri-name' 
           placeholder='give your query a name' 

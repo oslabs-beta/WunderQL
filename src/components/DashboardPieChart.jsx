@@ -1,4 +1,3 @@
-import React, { PureComponent } from 'react';
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer, Tooltip, LabelList, Label } from 'recharts';
 
 const data01 = [
@@ -10,15 +9,6 @@ const data01 = [
 const data02 = [
   { name: 'Pass', value: 100 },
   { name: 'Fail', value: 300 },
-  // { name: 'B1', value: 100 },
-  // { name: 'B2', value: 80 },
-  // { name: 'B3', value: 40 },
-  // { name: 'B4', value: 30 },
-  // { name: 'B5', value: 50 },
-  // { name: 'C1', value: 100 },
-  // { name: 'C2', value: 200 },
-  // { name: 'D1', value: 150 },
-  // { name: 'D2', value: 50 },
 ];
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -36,7 +26,6 @@ const CustomTooltip = ({ active, payload, label }) => {
       </div>
     );
   }
-
   return null;
 };
 
@@ -50,10 +39,7 @@ function CustomLabel({viewBox, value1, value2}){
   )
 }
 
-export default class PieChartComponent extends PureComponent {
-  static demoUrl = 'https://codesandbox.io/s/pie-chart-of-two-levels-gor24';
-
-  render() {
+const PieChartComponent = () => {
     return (
       <ResponsiveContainer width="100%" height="100%">
         <PieChart width={400} height={400}>
@@ -84,5 +70,6 @@ export default class PieChartComponent extends PureComponent {
         </PieChart>
       </ResponsiveContainer>
     );
-  }
 }
+
+export default PieChartComponent;
