@@ -16,16 +16,16 @@ const Dashboard = ({ url, urlID }) => {
     color: darkTheme ? 'white' : '#333'
   }
 
+  window.api.send("dashboardToMain", urlID);
   // obtain and set totals from BE
   // console.log('beforeeee')
   // useEffect(() => {
     // console.log('insideeee')
-    window.api.receive("totalsFromMain", (event, data) => {
+    window.api.receive("totalsFromMain", (data) => {
       //data = [{ _id}]
-      console.log('totals data from be: ', data)
-      setTotalUniqueQueries(data[0].number_of_queries)
-      setTotalRuntimes(data[0].number_of_tests)
-      setTotalLoadTests(data[0].number_of_load_tests)
+      setTotalUniqueQueries(data.number_of_queries)
+      setTotalRuntimes(data.number_of_tests)
+      setTotalLoadTests(data.number_of_load_tests)
     })
   // })
 
