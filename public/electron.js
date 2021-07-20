@@ -331,7 +331,7 @@ ipcMain.on("loadTestQueryToMain", async (event, arg) => {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Get allLoadTestResults from database and send all load test results to LoadTest.jsx
     const selectAllLoadTestResults = {
-        text: 'SELECT number_of_child_processes, average_response_time, result FROM load_test_response_times WHERE query_id = $1',
+        text: 'SELECT * FROM load_test_response_times WHERE query_id = $1',
         values: [queryId]
       }
     const result = await db.query(selectAllLoadTestResults);
