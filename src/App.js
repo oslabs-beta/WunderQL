@@ -59,7 +59,7 @@ function App() {
                 : <Login user={user} setUser={setUser} setUrlList={setUrlList} />}
             </Route> */}
           <Route path='/signup'>
-          {user.loggedIn ? <MainContainer user={user} setUser={setUser} urlList={urlList} userID={userID} /> : <Signup user={user} setUser={setUser} setUrlList={setUrlList}/>}
+          {user.loggedIn ? <MainContainer user={user} setUser={setUser} urlList={urlList} userID={userID} /> : <Signup user={user} setUser={setUser} userID={userID} setuserID={setuserID} setUrlList={setUrlList}/>}
         </Route>
         <Route exact path='/'>
           {user.loggedIn ? <MainContainer user={user} setUser={setUser} urlList={urlList} userID={userID} /> : <Login user={user} setUser={setUser} setUrlList={setUrlList}/>}

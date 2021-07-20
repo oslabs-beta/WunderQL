@@ -3,28 +3,34 @@ import Button from '@material-ui/core/Button';
 import logo from '../../public/assets/logo-small.png'
 
 
-const Signup = ({user, setUser, setUrlList }) => {
+const Signup = ({user, setUser, userID, setuserID, setUrlList }) => {
+
   const [fullName, setfullName] = useState('');
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-
-  console.log("from Signup", user)
   const handleSignup = (e) => {
     e.preventDefault();
-    console.log("From signup user:", username,"password:", password, "email: ", "fullname: ", fullName)
+    //console.log("From signup user:", username,"password:", password, "email: ", "fullname: ", fullName)
 
     //send user info to backend
     window.api.send("signUpToMain", {username, password, email, fullName});
 
-    //if successfully created new user, log in 
+    //if successfully created new user, receive userID  
+    window.api.receive("userIdFromMain", (userID) => {
+      setuserID(userID)
+      console.log(userID)
+    })
+
+    //if successfully created new user, login 
     window.api.receive("fromMainSignup", (validUser) => {
-      console.log("from fromMainSignup if users exist", validUser)
       setUser({ loggedIn: validUser})
     })
-  };
 
+
+  };
+  console.log(userID)
   
 
   return (
