@@ -2,13 +2,13 @@ import PieChartComponent from './DashboardPieChart';
 import BarChartComponent from './DashboardBarChart';
 import RadarChartComponent from './DashboardRadarChart';
 import { useDarkTheme } from './ThemeContext';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-const Dashboard = ({ url, totalRuntimes, totalLoadTests, totalUniqueQueries }) => {
+const Dashboard = ({ url, urlID }) => {
 
-  // const [totalRuntimes, setTotalRuntimes] = useState(0);
-  // const [totalLoadTests, setTotalLoadTests] = useState(0);
-  // const [totalUniqueQueries, setTotalUniqueQueries] = useState(0);
+  const [totalRuntimes, setTotalRuntimes] = useState(0);
+  const [totalLoadTests, setTotalLoadTests] = useState(0);
+  const [totalUniqueQueries, setTotalUniqueQueries] = useState(0);
 
   const darkTheme = useDarkTheme();
   const themeStyle = {
@@ -19,14 +19,14 @@ const Dashboard = ({ url, totalRuntimes, totalLoadTests, totalUniqueQueries }) =
   // obtain and set totals from BE
   // console.log('beforeeee')
   // useEffect(() => {
-  //   console.log('insideeee')
-  //   window.api.receive("totalsFromMain", (event, data) => {
-  //     //data = [{ _id}]
-  //     console.log('totals data from be: ', data)
-  //     setTotalUniqueQueries(data[0].number_of_queries)
-  //     setTotalRuntimes(data[0].number_of_tests)
-  //     setTotalLoadTests(data[0].number_of_load_tests)
-  //   })
+    // console.log('insideeee')
+    window.api.receive("totalsFromMain", (event, data) => {
+      //data = [{ _id}]
+      console.log('totals data from be: ', data)
+      setTotalUniqueQueries(data[0].number_of_queries)
+      setTotalRuntimes(data[0].number_of_tests)
+      setTotalLoadTests(data[0].number_of_load_tests)
+    })
   // })
 
   return (
