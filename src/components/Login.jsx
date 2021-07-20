@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 // import axios from "axios";
 // import { Link } from 'react-router-dom';
 // import { channels } from '../shared/constants';
-
+import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import logo from '../../public/assets/logo-small.png'
 
@@ -23,14 +23,14 @@ const Login = ({user, setUser, setUrlList }) => {
     console.log("From login user:", username,"password:", password)
 
     window.api.send("loginToMain", {username, password});
-    window.api.receive("fromMain", (validUser) => {
+    window.api.receive("userLoggedInFromMain", (validUser) => {
       console.log("from main validUser", validUser)
       setUser({ loggedIn: validUser})
       console.log("from handleLogin authorize 1", user)
     })
 
     // request URLs from the db as soon as user logs in...might need to add conditionals here
-    window.api.receive('UrlsfromMain', data => setUrlList(data));
+    window.api.receive('urlsFromMain', data => setUrlList(data));
     
 
 
@@ -75,6 +75,11 @@ const Login = ({user, setUser, setUrlList }) => {
               id='login-button' 
               color="primary"
               >Login</Button>
+            <span>Not a User? 
+              <Link to='/signup'>
+                Sign Up
+              </Link>
+            </span>
           </div>
       </form>
     </div>

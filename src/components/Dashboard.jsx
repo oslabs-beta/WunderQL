@@ -4,23 +4,30 @@ import RadarChartComponent from './DashboardRadarChart';
 import { useDarkTheme } from './ThemeContext';
 import { useEffect } from 'react';
 
-const Dashboard = ({ url, totalRuntimes, setTotalRuntimes, totalUniqueQueries }) => {
+const Dashboard = ({ url, totalRuntimes, totalLoadTests, totalUniqueQueries }) => {
+
+  // const [totalRuntimes, setTotalRuntimes] = useState(0);
+  // const [totalLoadTests, setTotalLoadTests] = useState(0);
+  // const [totalUniqueQueries, setTotalUniqueQueries] = useState(0);
 
   const darkTheme = useDarkTheme();
   const themeStyle = {
     backgroundColor: darkTheme ? '#333' : 'white',
     color: darkTheme ? 'white' : '#333'
   }
-// console.log('beforeeee')
-// useEffect(() => {
-//     console.log('insideeee')
-//     window.api.receiveArray("responseTimesFromMain", (event, arg) => {
-//       console.log('insideeee2')
-//         // set total amount of runtimes to date
-//         console.log('total calls: ', arg[arg.length - 1]._id);
-//         setTotalRuntimes(arg[arg.length - 1]._id);
-//       })
-//   })
+
+  // obtain and set totals from BE
+  // console.log('beforeeee')
+  // useEffect(() => {
+  //   console.log('insideeee')
+  //   window.api.receive("totalsFromMain", (event, data) => {
+  //     //data = [{ _id}]
+  //     console.log('totals data from be: ', data)
+  //     setTotalUniqueQueries(data[0].number_of_queries)
+  //     setTotalRuntimes(data[0].number_of_tests)
+  //     setTotalLoadTests(data[0].number_of_load_tests)
+  //   })
+  // })
 
   return (
     <div id='dashboard' style={themeStyle}>
@@ -47,7 +54,7 @@ const Dashboard = ({ url, totalRuntimes, setTotalRuntimes, totalUniqueQueries })
           </div>
           <div class='dashboard-stats'>
             <div class='dash-title'><h3>Total Load Tests</h3></div>
-            <div class='dash-num'><h1>100</h1></div>
+            <div class='dash-num'><h1>{totalLoadTests}</h1></div>
           </div>
         </div>
     </div>

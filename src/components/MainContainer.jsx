@@ -37,10 +37,11 @@ const MainContainer = ({ user, setUser, userID, urlList }) => {
   const [urlID, setUrlID] = useState(0);
   const [runtime, setRuntime] = useState(0);
   const [totalRuntimes, setTotalRuntimes] = useState(0);
+  const [totalLoadTests, setTotalLoadTests] = useState(0);
+  const [totalUniqueQueries, setTotalUniqueQueries] = useState(0);
   const [avgResponseTime, setAvgResponseTime] = useState(0);
   const [history, setHistory] = useState(null);
   const [queriesList, setQueriesList] = useState([]);
-  const [totalUniqueQueries, setTotalUniqueQueries] = useState(0);
   const [dragList, setDragList] = useState([]);
   // const [urlList, setUrlList] = useState([]); // to use in dashboard
 
@@ -129,10 +130,11 @@ const MainContainer = ({ user, setUser, userID, urlList }) => {
                 // setHistory={setHistory}
                 queriesList={queriesList}
                 setQueriesList={setQueriesList}
-                setTotalUniqueQueries={setTotalUniqueQueries}
                 urlList={urlList}
                 userID={userID}
                 setTotalRuntimes={setTotalRuntimes}
+                setTotalUniqueQueries={setTotalUniqueQueries}
+                setTotalLoadTests={setTotalLoadTests}
                 />
             </Route>
             <Route path="/dashboard">
@@ -142,6 +144,7 @@ const MainContainer = ({ user, setUser, userID, urlList }) => {
                 totalRuntimes={totalRuntimes}
                 // setTotalRuntimes={setTotalRuntimes}
                 totalUniqueQueries={totalUniqueQueries}
+                totalLoadTests={totalLoadTests}
                 // history={history}
                 />
             </Route>

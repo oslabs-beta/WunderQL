@@ -8,6 +8,7 @@ import {
 
 import { useState } from 'react';
 import Login from "./components/Login"
+import Signup from "./components/Signup"
 import './stylesheets/index.css';
 
 // import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
@@ -34,8 +35,8 @@ function App() {
   // const toggleDarkMode = () => {console.log('changed theme'); setDark(prevDarkTheme => !prevDarkTheme)}
 
   // Set userID when user is logged in 
-  window.api.receive("userIDfromMain", (userID) => {
-    console.log("In userIDfromMain in App.jsx", userID)
+  window.api.receive("userIdFromMain", (userID) => {
+    console.log("In userIdFromMain in App.jsx", userID)
     setuserID(userID)
   })
 
@@ -52,11 +53,17 @@ function App() {
       <div id="App" style={themeStyle}>
         <Router>
           <Switch>
-            <Route exact path='/'>
+            {/* <Route exact path='/'>
               {user.loggedIn ? 
                 <MainContainer user={user} setUser={setUser} urlList={urlList} userID={userID} /> 
                 : <Login user={user} setUser={setUser} setUrlList={setUrlList} />}
-            </Route>
+            </Route> */}
+          <Route path='/signup'>
+          {user.loggedIn ? <MainContainer user={user} setUser={setUser} urlList={urlList} userID={userID} /> : <Signup user={user} setUser={setUser} setUrlList={setUrlList}/>}
+        </Route>
+        <Route exact path='/'>
+          {user.loggedIn ? <MainContainer user={user} setUser={setUser} urlList={urlList} userID={userID} /> : <Login user={user} setUser={setUser} setUrlList={setUrlList}/>}
+        </Route>
           </Switch>
         </Router>
       </div>

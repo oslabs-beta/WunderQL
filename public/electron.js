@@ -5,7 +5,10 @@ const { app, BrowserWindow, Menu, ipcMain } = require("electron");
 const isDev = require("electron-is-dev");
 const { checkResponseTime, loadTest, checkIfQueryExist } = require('./utils');
 const db = require("../models/User");
-
+require('electron-reload')(__dirname, {
+  electron: path.join('__dirname', '../', 'node_modules', '.bin', 'electron')
+})
+console.log(path.join('__dirname', '../', 'node_modules', '.bin', 'electron'))
 //-------Electron Setup--------------------------------------------------------
 function createWindow() {
   // Create the browser window.
@@ -129,6 +132,42 @@ ipcMain.on("activate", () => {
 //-------------------------------------------------------------------------------
 
 
+ipcMain.on("signUpToMain", async (event, arg) => {
+  //Get Users Name and Password from Login Form
+  let doesUserExist = false;
+  console.log("from electron.js function signUpToMain", arg)
+  try {
+
+    const doesUserExistsQuery = {
+      text : 'SELECT * FROM users WHERE username = $1 OR email = $2',
+      values: [arg.username, arg.email],
+    }
+
+    // Check to see if username or email already exists in database
+    const usersExist = await db.query(doesUserExistsQuery)
+    if(usersExist.rows.length){
+      doesUserExist= true;
+      console.log(`doesUserExist: ${doesUserExist} Need to implement a notifcation to say User or Email already exists`)
+    } else {
+      const createNewUserQuery = {
+        text: 'INSERT INTO users(username, password, email, name) VALUES ($1, $2, $3, $4) RETURNING _id',
+        values: [arg.username, arg.password, arg.email, arg.fullName]
+      }
+
+      const newUserID = await db.query(createNewUserQuery)
+      //do I need to send back to front end?
+      doesUserExist = true;
+      event.sender.send("fromMainSignup", doesUserExist)
+    }
+
+
+  } catch (err) {
+    console.log(err)
+    return err;
+  }  
+});
+
+
 //! #1 loginToMain - User logins 
 //ipcMain.on(channels.GET_USER_AUTH, async (event, arg) => {
 ipcMain.on("loginToMain", async (event, arg) => {
@@ -144,10 +183,12 @@ ipcMain.on("loginToMain", async (event, arg) => {
     const validUsers = await db.query(validateUserQuery)
     if(validUsers.rows.length){
       userId=validUsers.rows[0]._id;
-      event.sender.send("fromMain", true)
+      event.sender.send("userLoggedInFromMain", true)
       // Gets sent to App.js
-      event.sender.send("userIDfromMain", userId);
+      event.sender.send("userIdFromMain", userId);
     } 
+
+
     // should the following go inside the above conditional?
     const getUrlsQuery = {
       text: 'SELECT _id, url, nickname FROM graphqlurls WHERE user_id = $1',
@@ -155,7 +196,7 @@ ipcMain.on("loginToMain", async (event, arg) => {
     }
     const queryResult = await db.query(getUrlsQuery);
     const results = queryResult.rows;
-    event.sender.send("UrlsfromMain", results)
+    event.sender.send("urlsFromMain", results)
 
   } catch (err) {
     console.log(err)
@@ -166,6 +207,9 @@ ipcMain.on("loginToMain", async (event, arg) => {
 //! #2 urlToMain - User selects a URL
 ipcMain.on("urlToMain", async (event, arg) => {
   try {
+  
+    //* * ///////////////////////////////////////////////////////////////////////////////////////////////
+    //* * Check if URL Exists and Insert it not
     //check if the url exists 
     const checkIfUrlExists = {
       text: 'SELECT * FROM graphqlurls WHERE url = $1 AND user_id = $2',
@@ -173,9 +217,7 @@ ipcMain.on("urlToMain", async (event, arg) => {
     };
     const existingUrlResult = await db.query(checkIfUrlExists);
     const existingUrlId = existingUrlResult.rows;
-    
     let urlId;
-
     if (!existingUrlId.length) {
       const insertUrl = {
         text: 'INSERT INTO graphqlurls(url, nickname, user_id) VALUES ($1, $2, $3) RETURNING _id',
@@ -186,9 +228,9 @@ ipcMain.on("urlToMain", async (event, arg) => {
     } else {
       urlId = existingUrlId[0]._id;
     }
-    
     // Send id  back to Home.jsx 
     event.sender.send("idFromMain", urlId)
+    //* * ///////////////////////////////////////////////////////////////////////////////////////////////
 
    //get all queries for specific url (we have id from above)
     const getQueriesQuery = {
@@ -197,15 +239,25 @@ ipcMain.on("urlToMain", async (event, arg) => {
     }
     const queryResult = await db.query(getQueriesQuery);
     const allQueries = queryResult.rows;
-
     console.log('allQueries', allQueries)
-
     event.sender.send("queriesFromMain", allQueries)
 
-    //get dashboard summary for specific url - total queries, total tests, total load tests. If possible # of queries per day.
 
+    // //* * /////////////////////////////////////////////////////////////////
+    // //get total amount of calls from database, where the count is received in Home.jsx 
+    // const getTotalAmountOfCalls = {
+    //   text: 'SELECT COUNT(response_time) FROM response_times',
+    // }
+    // const result = await db.query(getTotalAmountOfCalls);
+    // const totalResult = result.rows;
+    // console.log('totalResult in electron.js: ', totalResult)
+    // event.sender.send("totalCallsFromMain", totalResult)
+    // //get dashboard summary for specific url - total queries, total tests, total load tests. If possible # of queries per day.
+    // //* * /////////////////////////////////////////////////////////////////
+
+    
     const query = {
-      text: `SELECT gu.url, COUNT(q._id) as number_of_queries, COUNT(rt._id) as number_of_tests, COUNT(lrt._id) as number_of_load_tests
+      text: `SELECT COUNT(q._id) as number_of_queries, COUNT(rt._id) as number_of_tests, COUNT(lrt._id) as number_of_load_tests
       FROM graphqlurls gu
       INNER JOIN queries q ON q.url_id = gu._id AND gu._id = $1
       INNER JOIN response_times rt ON rt.query_id = q._id
@@ -214,7 +266,6 @@ ipcMain.on("urlToMain", async (event, arg) => {
       `,
       values: [urlId]
     }
-  
     const dashboardQueryResult = await db.query(query);
     const results = dashboardQueryResult.rows[0];
     event.sender.send("totalsFromMain", results);
@@ -228,17 +279,19 @@ ipcMain.on("urlToMain", async (event, arg) => {
 //! #3 queryTestToMain - User selects a query to test
 ipcMain.on("queryTestToMain", async (event, arg) => {
   try {
-  let responseTime = await checkResponseTime(arg.query, arg.url);
-  console.log('responseTime', responseTime)
-  const queryId = await checkIfQueryExist(arg.query, arg.urlID, arg.name);
-  console.log('queryId in electron.js', queryId)
+    let responseTime = await checkResponseTime(arg.query, arg.url);
+    const queryId = await checkIfQueryExist(arg.query, arg.urlID, arg.name);
   
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Insert response time with query_id into database 
   const insertResponseTime = {
     text: 'INSERT INTO response_times(response_time, query_id, date) VALUES ($1, $2, $3)',
     values: [responseTime, queryId, new Date()]
   };
   await db.query(insertResponseTime);
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
   
   const getResponseTimes = {
     text: 'SELECT * FROM response_times WHERE query_id = $1;',
@@ -246,11 +299,11 @@ ipcMain.on("queryTestToMain", async (event, arg) => {
   };
   const responseTimesQueryResults = await db.query(getResponseTimes);
   const responseTimes = responseTimesQueryResults.rows;
-
   //Send back array of response times for that query
   event.sender.send("responseTimesFromMain", responseTimes);
-  // console.log(responseTimes)
 
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Once new query is in database, send updated state to Test-Query so the new query name is reflected in the dropdown
   const getQueriesQuery = {
     text: 'SELECT _id, query_string, query_name FROM queries WHERE url_id = $1',
@@ -258,11 +311,10 @@ ipcMain.on("queryTestToMain", async (event, arg) => {
   }
   const queryResult = await db.query(getQueriesQuery);
   const allQueries = queryResult.rows;
-  // console.log('allQueries', allQueries)
   event.sender.send("queriesFromMain", allQueries)
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // Insert response time and query_id into database 
-    // Associate response time with query_id
+
   } catch (err) {
     console.log(err)
     return err;
@@ -278,28 +330,39 @@ ipcMain.on("loadTestQueryToMain", async (event, arg) => {
       arg.url,
       arg.query,
     )
-    // Send average response time + success/failure back to frontend 
-    event.sender.send("loadTestResultsFromMain", loadTestResults)
 
-    // Needed to use await to resolve the promise
-    const queryId = await checkIfQueryExist(arg.query, arg.urlID);
-
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     //save load test results in db associating it to a specific query
+    const queryId = await checkIfQueryExist(arg.query, arg.urlID, arg.loadTestQueryName);
     const insertLoadTestResults = {
       //create new row in load test response time table (date, number_of_child_processes, average_response_time, result, query_id)
         text: 'INSERT INTO load_test_response_times (date, number_of_child_processes, average_response_time, result, query_id) VALUES($1, $2, $3, $4, $5)',
         values: [new Date(), arg.numOfChildProccesses, loadTestResults.averageResponseTime, loadTestResults.successOrFailure, queryId]
       }
     await db.query(insertLoadTestResults);
-  
-    //do we want to send history or 1 data point?: 'Select date, number_of_child_processes, average_response_time, result FROM load_test_response_times WHERE query_string = $1',
-    const selectResponseTimesAndLoadAmount = {
-      //create new row in load test response time table (date, number_of_child_processes, average_response_time, result, query_id)
-        text: 'SELECT number_of_child_processes,  average_response_time from load_test_response_times WHERE query_id = $1 ORDER BY number_of_child_processes',
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    // Once the load test result is inserted, we need the application to receive the new list of updated queries
+    const getQueriesQuery = {
+      text: 'SELECT _id, query_string, query_name FROM queries WHERE url_id = $1',
+      values: [arg.urlID]
+    }
+    const queryResult = await db.query(getQueriesQuery);
+    const allQueries = queryResult.rows;
+    event.sender.send("queriesFromMain", allQueries)
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Get allLoadTestResults from database and send all load test results to LoadTest.jsx
+    const selectAllLoadTestResults = {
+        text: 'SELECT number_of_child_processes, average_response_time, result FROM load_test_response_times WHERE query_id = $1',
         values: [queryId]
       }
-    const resultss = await db.query(selectResponseTimesAndLoadAmount);
-    console.log(resultss.rows)
+    const result = await db.query(selectAllLoadTestResults);
+    const allLoadTestResults = result.rows;
+    event.sender.send("loadTestResultsFromMain", allLoadTestResults);
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
   } catch (err) {
