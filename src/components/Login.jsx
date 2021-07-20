@@ -20,6 +20,10 @@ const Login = ({user, setUser, setUrlList }) => {
   console.log("from Login", user)
   const handleLogin = (e) => {
     e.preventDefault();
+
+    // display error if wrong credentials used
+    if (!user.loggedIn) document.querySelector('#invalid-text').style.display = 'block';
+
     console.log("From login user:", username,"password:", password)
 
     window.api.send("loginToMain", {username, password});
@@ -45,8 +49,8 @@ const Login = ({user, setUser, setUrlList }) => {
       <div id='logo'>
         <img src={logo} alt='logo'></img>
       </div>
-      <form  >
-          <div>
+      <form>
+          <div className='login-div'>
             <label htmlFor="username">Username: </label>
             <input 
               name="username" 
@@ -57,7 +61,7 @@ const Login = ({user, setUser, setUrlList }) => {
               onChange={(e) => setUsername(e.target.value)} 
               />
           </div>
-          <div>
+          <div className='login-div'>
             <label htmlFor="password">Password: </label>
             <input 
               name="password" 
@@ -80,6 +84,9 @@ const Login = ({user, setUser, setUrlList }) => {
             </div>
           </div>
       </form>
+      <div id='invalid-credentials'>
+        <h3 id='invalid-text'>Invalid username and/or password!</h3>
+      </div>
     </div>
   )
 };
