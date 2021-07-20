@@ -1,9 +1,10 @@
+/* eslint-disable react/react-in-jsx-scope */
 import { useHistory } from 'react-router';
 import Button from '@material-ui/core/Button';
 import { useDarkTheme } from './ThemeContext';
 
 
-const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory, setUrlID, setQueriesList, urlList, setTotalUniqueQueries, setTotalRuntimes, setTotalLoadTests }) => {
+const Home = ({ userID, url, setUrl, setUrlList, nickname, setNickname, history, setHistory, setUrlID, setQueriesList, urlList, setTotalUniqueQueries, setTotalRuntimes, setTotalLoadTests }) => {
   
   const routerHistory = useHistory();
   
@@ -11,34 +12,37 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
   const themeStyle = {
     backgroundColor: darkTheme ? '#333' : 'white',
     color: darkTheme ? '#CCC' : '#333'
-  }
+  };
 
   // configure url dropdown list in home
   const URLs = [];
-  urlList.map((url, index) => URLs.push(
-    <option 
-      key={index} 
-      id={url._id}
-      value={url.url} 
-      name={url.nickname}
+  if (urlList) {
+    urlList.map((url, index) => URLs.push(
+      <option 
+        key={index} 
+        id={url.nickname}
+        value={url.url} 
+        name={url.nickname}
       >
         {url.nickname}
       </option>
-  ));
+    ));
+  }
 
+  console.log('URLs: ', URLs);
   
   // Send URl to electron.js; receive array of objects containing dates + runtime
   const submitUrl = () => {
     console.log(url, ' : URL is being sent to main process...');
     
     // redirect to Dashboard after 1sec delay
-    setTimeout(()=>routerHistory.push('/dashboard'), 1000)
+    setTimeout(()=>routerHistory.push('/dashboard'), 1000);
 
     // Send url to main process
-    window.api.send("urlToMain", {
+    window.api.send('urlToMain', {
       url,
       userID,
-      nickname
+      nickname,
     });
     
     //! WORK IN PROGRESS: configuring num queries per day for barchart
@@ -51,39 +55,28 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
     //   console.log('queriesPerDay for barchart: ', queriesPerDay)
     // })
 
-    window.api.receive("queriesFromMain", (allQueries) => {
-      console.log("In queriesfromMain in Home.jsx", allQueries)
-      setQueriesList(allQueries)
-    })
+    window.api.receive('queriesFromMain', (allQueries) => {
+      console.log('In queriesfromMain in Home.jsx', allQueries);
+      setQueriesList(allQueries);
+    });
 
-
-    // obtain and set totals from BE
-    // useEffect(() => {
-      // console.log('logging right before (totalsFromMain)')
-      // window.api.receive("totalsFromMain", (data) => {
-      //   //data = [{ _id}]
-      //   console.log('totals data from be: ', data)
-      //   setTotalUniqueQueries(data.number_of_queries)
-      //   setTotalRuntimes(data.number_of_tests)
-      //   setTotalLoadTests(data.number_of_load_tests)
-      // })
-    // })
     // Receive urlID from main process
-    window.api.receive("idFromMain", (id) => {
+    window.api.receive('idFromMain', (id) => {
       console.log('Within window.api.receive in Home.jsx, id: ', id);
       document.querySelector('#connected-text').style.display = 'block';
       document.querySelector('#connected-loading').style.display = 'block';
-      console.log('received from main process')
+      console.log('received from main process');
       setUrlID(id);
-    })
-  }
+    });
+  };
 
   // fill in input boxes automatically
   function polyfillUrl(e) {
     document.querySelector('#home-uri-value').innerHTML = e.target.value;
-    document.querySelector('#home-uri-name').innerHTML = e.target.name;
+    // document.querySelector('#home-uri-name').innerHTML = e.target.name;
+    const selectedName = e.target.selectedOptions[0].id;
+    setNickname(selectedName);
     setUrl(e.target.value);
-    setNickname(e.target.value);
   }
 
   return (
@@ -94,25 +87,26 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
       </header>   
 
       <div id='new-inputs'>
-        <h3 class='prompt'>Enter a URL to get started...</h3>
+        <h3 className='prompt'>Enter a URL to get started...</h3>
         <input
           onChange={(e) => setUrl(e.target.value)}
           placeholder="GraphQL API"
           id='home-uri-value'
           required
-          /> 
-        <h3 class='prompt'>Give that bad boi a name!</h3>
+        /> 
+        <h3 className='prompt'>Give that bad boi a name!</h3>
         <input
+          // value={nickname}
           onChange={(e) => setNickname(e.target.value)}
           placeholder="URL nickname"
           id='home-uri-name'
           required
-          /> 
+        /> 
       </div>
 
       <div id='previous-inputs'>
         <h3>
-          <label htmlFor='uris' class='prompt'>Or select a previously searched URL:</label>
+          <label htmlFor='uris' className='prompt'>Or select a previously searched URL:</label>
         </h3>
         <select 
           name='uris' 
@@ -120,7 +114,7 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
           onChange={
             polyfillUrl
           }
-          >
+        >
           <option 
             // value="sheeeeesh pick one already" 
             disabled 
@@ -136,7 +130,7 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
           id='home-send' 
           color="primary"
           onClick={submitUrl}
-          >Connect to URL</Button>
+        >Connect to URL</Button>
         <div id='connected-div'>
           <h3 id='connected-text'>Connected!</h3>
           <h3 id='connected-loading'>Loading Dashboard...</h3>
@@ -144,7 +138,7 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
       </div>
 
     </div>
-  )
-}
+  );
+};
 
 export default Home;

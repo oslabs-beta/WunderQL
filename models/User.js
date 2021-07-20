@@ -1,6 +1,7 @@
 const { Pool } = require('pg');
+require('dotenv').config();
 
-const PG_URI = 'postgres://kpqnybxo:iM9oTXIotn97vMRFFB94Fcj175lKRusx@batyr.db.elephantsql.com/kpqnybxo';
+const PG_URI = process.env.DB_URI;
 
 // OLD postgres://rdkcxpwo:pI26-hSpDUGFQcUjN6Z5yUFQ0-cAVuCe@batyr.db.elephantsql.com/rdkcxpwo
 // NEW postgres://gwaljhkk:vSwCR3EcsirzCXYoppxs0e8-GAor-8_W@batyr.db.elephantsql.com/gwaljhkk
