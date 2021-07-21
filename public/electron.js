@@ -197,6 +197,7 @@ ipcMain.on('loginToMain', async (event, arg) => {
 
     //Check to see if valid username and password combination exists
     const validUsers = await db.query(validateUserQuery);
+    console.log(validUsers)
     if(validUsers.rows.length){
       userId=validUsers.rows[0]._id;
       event.sender.send('userLoggedInFromMain', true);
@@ -204,7 +205,7 @@ ipcMain.on('loginToMain', async (event, arg) => {
       event.sender.send('userIdFromMain', userId);
     } 
 
-
+    console.log(userId)
     // should the following go inside the above conditional?
     const getUrlsQuery = {
       text: 'SELECT _id, url, nickname FROM graphqlurls WHERE user_id = $1',
@@ -248,15 +249,15 @@ ipcMain.on('urlToMain', async (event, arg) => {
     event.sender.send('idFromMain', urlId);
     //* * ///////////////////////////////////////////////////////////////////////////////////////////////
 
-    //get all queries for specific url (we have id from above)
-    // const getQueriesQuery = {
-    //   text: 'SELECT _id, query_string, query_name FROM queries WHERE url_id = $1',
-    //   values: [urlId]
-    // }
-    // const queryResult = await db.query(getQueriesQuery);
-    // const allQueries = queryResult.rows;
-    // console.log('allQueries', allQueries)
-    // event.sender.send("queriesFromMain", allQueries)
+    // get all queries for specific url (we have id from above)
+    const getQueriesQuery = {
+      text: 'SELECT _id, query_string, query_name FROM queries WHERE url_id = $1',
+      values: [urlId]
+    };
+    const queryResult = await db.query(getQueriesQuery);
+    const allQueries = queryResult.rows;
+    console.log('allQueries', allQueries);
+    event.sender.send('queriesFromMain', allQueries);
 
     // // Send urls to Home.jsx so the options can update
     // const getUrlsQuery = {

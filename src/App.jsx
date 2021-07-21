@@ -31,9 +31,7 @@ function App() {
     backgroundColor: darkTheme ? '#333' : 'white',
     color: darkTheme ? '#CCC' : '#333'
   };
-    
-  console.log('right before return')
-  console.log(Login)
+
   return (
     <ThemeProvider>
       <div id="App" style={themeStyle}>
