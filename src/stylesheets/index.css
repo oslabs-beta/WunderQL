@@ -56,6 +56,11 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 1.5rem;
+}
+.uri p, .uri span {
+  margin: 0;
+  padding: 0;
 }
 
 /*/////////////////////////////////////////////////////*/
@@ -309,8 +314,9 @@ body {
   padding: 2rem;
   display: grid;
   grid-template-columns: 33% 33% 33%;
-  grid-template-rows: 10% 48% 48%;
-  grid-template-areas: "uri uri uri" "one two stats" "three three stats";
+  grid-template-rows: 10% 30% 60%;
+  grid-template-areas: "uri uri uri" "one two three" "four four five";
+  grid-gap: 1rem;
 }
 
 #line-chart {
@@ -319,10 +325,10 @@ body {
 }
 
 #top-left {
+  grid-area: one;
   display: flex;
   justify-content: center;
   align-items: center;
-  grid-area: one;
 }
 
 #top-mid {
@@ -332,19 +338,24 @@ body {
   align-items: center;
 }
 
-#bottom {
+#top-right {
   grid-area: three;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-#left {
-  grid-area: stats;
+#bottom-left {
+  grid-area: four;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
+}
+
+#bottom-right {
+  grid-area: five;
+  padding-bottom: 1rem;
 }
 
 .dashboard-stats {
@@ -464,38 +475,6 @@ body {
 #load-amount {
   font-size: 2rem;
   text-align: center;
-}
-
-/*/////////////////////////////////////////////////////*/
-/*//////////////// Previous Searches //////////////////*/
-/*/////////////////////////////////////////////////////*/
-#previous-searches {
-  grid-area: main;
-  padding: 2rem;
-  overflow: scroll;
-}
-
-#card {
-  width: 150px;
-  height: 200px;
-  border: 1px solid gray;
-  border-radius: 0.5rem;
-  padding: 0.5rem;
-  -webkit-box-shadow: 3px 4px 1px 2px #565656;
-  box-shadow: 3px 4px 6px 2px #565656;
-  background-color: white;
-  user-select: none;
-}
-
-#cards-list {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-#cards-list li {
-  list-style-type: none;
-  margin: 0.6rem;
-  font-size: 0.8rem;
 }
 
 /*# sourceMappingURL=index.css.map */

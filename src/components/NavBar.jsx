@@ -144,25 +144,25 @@ const NavBar = (props) => {
         </div>
         <Divider />
         <List>
-            <Link to="/" class='nav-list-item' onClick={handleDrawerClose}>
+            <Link to="/" className='nav-list-item' onClick={handleDrawerClose}>
               <ListItem button key={1}>
                 <ListItemIcon><InboxIcon /></ListItemIcon>
                 <ListItemText primary='Home' />
               </ListItem>
             </Link>
-            <Link to="/dashboard" class='nav-list-item' onClick={handleDrawerClose}>
+            <Link to="/dashboard" className='nav-list-item' onClick={handleDrawerClose}>
               <ListItem button key={2}>
                 <ListItemIcon><InboxIcon /></ListItemIcon>
                 <ListItemText primary='URL Dashboard' />
               </ListItem>
             </Link>
-            <Link to="/testquery" class='nav-list-item' onClick={handleDrawerClose}>
+            <Link to="/testquery" className='nav-list-item' onClick={handleDrawerClose}>
               <ListItem button key={3}>
                 <ListItemIcon><InboxIcon /></ListItemIcon>
                 <ListItemText primary='Test Query' />
               </ListItem>
             </Link>
-            <Link to="/loadtest" class='nav-list-item' onClick={handleDrawerClose}>
+            <Link to="/loadtest" className='nav-list-item' onClick={handleDrawerClose}>
               <ListItem button key={4}>
                 <ListItemIcon><InboxIcon /></ListItemIcon>
                 <ListItemText primary='Load Test' />

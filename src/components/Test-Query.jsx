@@ -66,8 +66,8 @@ const TestQuery = ({ url, urlID, history, runtime, avgResponseTime, getResponseT
 
   return (
     <div id='test-query' style={themeStyle}> 
-      <header class='uri'>
-        <h2>Currently connected to: {url}</h2>
+      <header className='uri'>
+        <p>Currently connected to: <span><strong>{url}</strong></span></p>
         <select
           name='queries-list' 
           id='queries-list' 
@@ -100,13 +100,13 @@ const TestQuery = ({ url, urlID, history, runtime, avgResponseTime, getResponseT
           >Send Query</Button>
       </div>
       <div id='stats'>
-        <div class='category'>
-          <div class='category-title'>Query Response Time</div>
-          <div class='category-number'>{`${runtime}ms`}</div>
+        <div className='category'>
+          <div className='category-title'>Query Response Time</div>
+          <div className='category-number'>{`${runtime}ms`}</div>
         </div>
-        <div class='category'>
-          <div class='category-title'>Average Response Time</div>
-          <div class='category-number'>{`${avgResponseTime}ms`}</div>
+        <div className='category'>
+          <div className='category-title'>Average Response Time</div>
+          <div className='category-number'>{`${avgResponseTime}ms`}</div>
         </div>
       </div>
       <div id='response-chart'> 

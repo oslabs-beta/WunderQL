@@ -65,6 +65,11 @@ body
   display: flex
   justify-content: center
   align-items: center
+  font-size: 1.5rem
+  
+  p, span
+    margin: 0
+    padding: 0
 
 
 /*/////////////////////////////////////////////////////*/
@@ -318,8 +323,9 @@ $input-height: 200px
   // margin: 1rem
   display: grid
   grid-template-columns: 33% 33% 33%
-  grid-template-rows: 10% 48% 48%
-  grid-template-areas: "uri uri uri" "one two stats" "three three stats"
+  grid-template-rows: 10% 30% 60%
+  grid-template-areas: "uri uri uri" "one two three" "four four five"
+  grid-gap: 1rem
 
 
 #line-chart 
@@ -327,10 +333,10 @@ $input-height: 200px
   height: 100%
 
 #top-left 
+  grid-area: one
   display: flex
   justify-content: center
   align-items: center
-  grid-area: one
   // /* width: 100%;
   // height: 100%; */
 
@@ -342,20 +348,24 @@ $input-height: 200px
   align-items: center
 
 
-#bottom
+#top-right
   grid-area: three
   display: flex
   justify-content: center
   align-items: center
 
 
-#left
-  grid-area: stats
+#bottom-left
+  grid-area: four
   display: flex
   flex-direction: column
   justify-content: space-evenly
   align-items: center
   // border: 1px solid black
+
+#bottom-right
+  grid-area: five
+  padding-bottom: 1rem
 
 .dashboard-stats
   // border: 2px solid blue
@@ -447,7 +457,6 @@ $input-height: 200px
   font-weight: 900
   text-align: center
 
-
 .category-number 
   margin: 1rem 0
   font-size: 2rem
@@ -473,39 +482,3 @@ $input-height: 200px
 #load-amount
   font-size: 2rem
   text-align: center
-
-
-
-/*/////////////////////////////////////////////////////*/
-/*//////////////// Previous Searches //////////////////*/
-/*/////////////////////////////////////////////////////*/
-
-#previous-searches 
-  grid-area: main
-  padding: 2rem
-  // margin: 1rem
-  overflow: scroll
-
-
-#card
-  width: 150px
-  height: 200px
-  border: 1px solid gray
-  border-radius: .5rem
-  padding: 0.5rem
-  -webkit-box-shadow: $webkit-box-shadow
-  box-shadow: $box-shadow
-  background-color: rgb(255, 255, 255)
-  user-select: none
-
-
-#cards-list 
-  display: flex
-  flex-direction: row
-  flex-wrap: wrap
-  
-  li 
-    list-style-type: none
-    margin: 0.6rem
-    font-size: 0.8rem
-  

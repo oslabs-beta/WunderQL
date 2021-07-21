@@ -1,6 +1,7 @@
 const { Pool } = require('pg');
 
-const PG_URI = 'postgres://kpqnybxo:iM9oTXIotn97vMRFFB94Fcj175lKRusx@batyr.db.elephantsql.com/kpqnybxo';
+// const PG_URI = process.env.URI;
+const PG_URI = 'postgres://vxomtddv:XG7jUmeBbs-gAMu1mI6Bc1jkjQ57eU7m@batyr.db.elephantsql.com/vxomtddv';
 
 // OLD postgres://rdkcxpwo:pI26-hSpDUGFQcUjN6Z5yUFQ0-cAVuCe@batyr.db.elephantsql.com/rdkcxpwo
 // NEW postgres://gwaljhkk:vSwCR3EcsirzCXYoppxs0e8-GAor-8_W@batyr.db.elephantsql.com/gwaljhkk
