@@ -1,6 +1,5 @@
 import PieChartComponent from './DashboardPieChart';
 import BarChartComponent from './DashboardBarChart';
-import RadarChartComponent from './DashboardRadarChart';
 import { useDarkTheme } from './ThemeContext';
 import { useEffect, useState } from 'react';
 
@@ -11,6 +10,7 @@ const Dashboard = ({ url, urlID }) => {
   const [totalUniqueQueries, setTotalUniqueQueries] = useState(0);
   const [totalLoadTestSuccesses, setTotalLoadTestSuccesses] = useState(0)
   const [totalLoadTestFailures, setTotalLoadTestFailures] = useState(0)
+  const [barChartData, setBarChartData] = useState([]);
 
   const darkTheme = useDarkTheme();
   const themeStyle = {
@@ -18,39 +18,22 @@ const Dashboard = ({ url, urlID }) => {
     color: darkTheme ? 'white' : '#333'
   }
 
-  window.api.send("dashboardToMain", urlID);
-  // obtain and set totals from BE
-  // console.log('beforeeee')
-  // useEffect(() => {
-    // console.log('insideeee')
+  useEffect(() => {
+    // Run! Like go get some data from an API.
+    window.api.send("dashboardToMain", urlID);
+  
+    // let renderBarChart;
     window.api.receive("totalsFromMain", (data) => {
-      //data = [{ _id}]
+      console.log('data: ', data)
       setTotalUniqueQueries(data.number_of_queries)
       setTotalRuntimes(data.number_of_tests)
       setTotalLoadTests(data.number_of_load_tests)
       setTotalLoadTestSuccesses(data.number_of_load_test_successes)
       setTotalLoadTestFailures(data.number_of_load_test_failures)
+      setBarChartData(data.all_queries_and_load_tests)
     })
-
-    //! WORK IN PROGRESS: configuring num queries per day for barchart
-    // window.api.send('queryTestToMain', {
-    //   urlID: urlID,
-    //   query: query,
-    //   url: url,
-    //   name: queryName,   
-    // })
-    window.api.receiveArray("responseTimesFromMain", (event, arg) => {
-      const queriesPerDay = {};
-      console.log('dashboard: all runtimes: ', arg)
-      arg.forEach((query, index) => {
-        const date = new Date(query.date).toDateString();
-        console.log('date: ', date)
-        queriesPerDay[date] = (queriesPerDay[date] || 0) + 1;
-        console.log('queriesPerDay for barchart: ', queriesPerDay)
-      })
-    })
-
-
+  }, []);
+    
   return (
     <div id='dashboard' style={themeStyle}>
       <header className='uri'>
@@ -76,7 +59,7 @@ const Dashboard = ({ url, urlID }) => {
           </div>
         </div>
         <div id='bottom-left'>
-          <BarChartComponent />
+          <BarChartComponent barChartData={barChartData} />
         </div>
         <div id='bottom-right'>
           <PieChartComponent totalLoadTestSuccesses={totalLoadTestSuccesses} totalLoadTestFailures={totalLoadTestFailures}/>

@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import { useDarkTheme } from "./ThemeContext";
 
 
-const LoadTest = ({ url, urlID, getResponseTimes, queriesList }) => {
+const LoadTest = ({ url, urlID, queriesList }) => {
 
   const [query, setQuery] = useState(null);
   const [loadTestQueryName, setloadTestQueryName] = useState('');
@@ -51,9 +51,9 @@ const LoadTest = ({ url, urlID, getResponseTimes, queriesList }) => {
     })
 
     window.api.receiveArray("loadTestResultsFromMain", (event, loadTestResults) => {
-      console.log('Listening for loadTest response from main process...')
-      console.log('loadTestResults', loadTestResults);
-      setavgResponseTime(loadTestResults[loadTestResults.length - 1].average_response_time.toFixed(2));
+      // console.log('Listening for loadTest response from main process...')
+      // console.log('loadTestResults', loadTestResults);
+      setavgResponseTime(loadTestResults[loadTestResults.length - 1].average_response_time.toFixed(1));
       setsuccessOrFailure(loadTestResults[loadTestResults.length - 1].result);
       
       // array of all load tests ran; data to send to scatter plot
@@ -87,7 +87,7 @@ const LoadTest = ({ url, urlID, getResponseTimes, queriesList }) => {
           id='uri-name' 
           placeholder='give your query a name' 
           onChange={(e)=>setloadTestQueryName(e.target.value)} 
-          // required   
+          required   
           />
 
         <input 

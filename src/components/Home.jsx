@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import { useDarkTheme } from './ThemeContext';
 
 
-const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory, setUrlID, setQueriesList, urlList, setTotalUniqueQueries, setTotalRuntimes, setTotalLoadTests }) => {
+const Home = ({ userID, url, setUrl, nickname, setNickname, setUrlID, setQueriesList, urlList }) => {
   
   const routerHistory = useHistory();
   
@@ -25,12 +25,9 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
         {url.nickname}
       </option>
   ));
-
   
   // Send URl to electron.js; receive array of objects containing dates + runtime
-  const submitUrl = () => {
-    console.log(url, ' : URL is being sent to main process...');
-    
+  const submitUrl = () => {    
     // redirect to Dashboard after 1sec delay
     setTimeout(()=>routerHistory.push('/dashboard'), 1000)
 
@@ -41,27 +38,12 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
       nickname
     });
   
-
     window.api.receive("queriesFromMain", (allQueries) => {
-      console.log("In queriesfromMain in Home.jsx", allQueries)
-      setQueriesList(allQueries)
-    })
+      setQueriesList(allQueries);
+    });
 
-
-    // obtain and set totals from BE
-    // useEffect(() => {
-      // console.log('logging right before (totalsFromMain)')
-      // window.api.receive("totalsFromMain", (data) => {
-      //   //data = [{ _id}]
-      //   console.log('totals data from be: ', data)
-      //   setTotalUniqueQueries(data.number_of_queries)
-      //   setTotalRuntimes(data.number_of_tests)
-      //   setTotalLoadTests(data.number_of_load_tests)
-      // })
-    // })
     // Receive urlID from main process
     window.api.receive("idFromMain", (id) => {
-      console.log('Within window.api.receive in Home.jsx, id: ', id);
       document.querySelector('#connected-text').style.display = 'block';
       document.querySelector('#connected-loading').style.display = 'block';
       console.log('received from main process')
@@ -113,7 +95,6 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, history, setHistory,
           }
           >
           <option 
-            // value="sheeeeesh pick one already" 
             disabled 
             selected
             hidden>(select one)</option>
