@@ -17,7 +17,7 @@
     "cross-fetch": "^3.1.4",
     "crypto-browserify": "^3.12.0",
     "d3": "^7.0.0",
-    "dotenv": "^8.2.0",
+    "dotenv": "^8.6.0",
     "electron-reload": "^1.5.0",
     "express": "^4.17.1",
     "graphql": "^15.5.1",
@@ -42,7 +42,8 @@
     "start:electron": "ELECTRON_START_URL=http://localhost:3000/ electron .",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test-original": "react-scripts test",
+    "test": "jest --verbose",
     "eject": "react-scripts eject",
     "dev-server": "cross-env NODE_ENV=development webpack serve --config ./webpack.development.js > dev-scripts/webpack-dev-server.log 2> dev-scripts/webpack-dev-server-error.log",
     "dev": "concurrently --success first \"node dev-scripts/prepareDevServer.js\" \"node dev-scripts/launchDevServer.js\" -k \"sass --watch src/stylesheets:src/stylesheets\"",
@@ -55,6 +56,11 @@
     "extends": [
       "react-app",
       "react-app/jest"
+    ]
+  },
+  "jest": {
+    "setupFiles": [
+      "./test/setup.js"
     ]
   },
   "browserslist": {
@@ -70,6 +76,8 @@
     ]
   },
   "devDependencies": {
+    "@cypress/electron-plugin": "^1.1.0",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.3",
     "babel-loader": "^8.2.2",
     "babel-plugin-module-resolver": "^4.1.0",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
@@ -78,9 +86,10 @@
     "csp-html-webpack-plugin": "^5.1.0",
     "css-loader": "^5.2.6",
     "css-minimizer-webpack-plugin": "^3.0.1",
-    "cypress": "^7.7.0",
+    "cypress": "^8.0.0",
     "electron": "^13.1.5",
     "electron-is-dev": "^2.0.0",
+    "enzyme": "^3.11.0",
     "eslint": "^7.31.0",
     "eslint-import-resolver-webpack": "^0.13.0",
     "eslint-plugin-import": "^2.22.1",
@@ -88,6 +97,7 @@
     "eslint-plugin-react": "^7.22.0",
     "html-loader": "^2.1.2",
     "html-webpack-plugin": "^5.3.1",
+    "jest": "^26.6.0",
     "style-loader": "^2.0.0",
     "url-loader": "^4.1.1",
     "wait-on": "^5.1.0",
