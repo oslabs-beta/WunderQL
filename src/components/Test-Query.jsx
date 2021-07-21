@@ -69,7 +69,7 @@ const TestQuery = ({ url, urlID, history, runtime, avgResponseTime, getResponseT
   return (
     <div id='test-query' style={themeStyle}> 
       <header className='uri'>
-        <h2>Currently connected to: {url}</h2>
+        <p>Currently connected to: <span><strong>{url}</strong></span></p>
         <select
           name='queries-list' 
           id='queries-list' 

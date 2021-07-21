@@ -126,7 +126,7 @@ const mainMenuTemplate =  [
 
 // This method will be called when Electron has finished initialization and is ready to create browser windows.
 // app.whenReady().then(createWindow);
-app.on('ready', createWindow)
+app.on('ready', createWindow);
 
 
 // Quit when all windows are closed, except on macOS. There, it's common for applications and their menu bar to stay active until the user quits
@@ -197,7 +197,7 @@ ipcMain.on('loginToMain', async (event, arg) => {
 
     //Check to see if valid username and password combination exists
     const validUsers = await db.query(validateUserQuery);
-    console.log(validUsers)
+    // console.log(validUsers);
     if(validUsers.rows.length){
       userId=validUsers.rows[0]._id;
       event.sender.send('userLoggedInFromMain', true);
@@ -205,7 +205,7 @@ ipcMain.on('loginToMain', async (event, arg) => {
       event.sender.send('userIdFromMain', userId);
     } 
 
-    console.log(userId)
+    console.log(userId);
     // should the following go inside the above conditional?
     const getUrlsQuery = {
       text: 'SELECT _id, url, nickname FROM graphqlurls WHERE user_id = $1',
@@ -408,22 +408,65 @@ ipcMain.on('dashboardToMain', async (event, arg) => {
       INNER JOIN load_test_response_times lrt ON lrt.query_id = q._id AND lrt.result = 'failure'`,
     values: [arg]
   };
+  const allQueries = {
+    text: `SELECT rt.*
+      FROM graphqlurls gu
+      INNER JOIN queries q ON q.url_id = gu._id AND gu._id = $1
+      INNER JOIN response_times rt ON rt.query_id = q._id`,
+    values: [arg]
+  };
+  const allLoadTests = {
+    text: `SELECT lrt.*
+      FROM graphqlurls gu
+      INNER JOIN queries q ON q.url_id = gu._id AND gu._id = $1
+      INNER JOIN load_test_response_times lrt ON lrt.query_id = q._id`,
+    values: [arg]
+  };
+
   const result1 = await db.query(uniqueQueries);
   const result2 = await db.query(numberOfTests);
   const result3 = await db.query(numberOfLoadTests);
   const result4 = await db.query(numberOfLoadTestSuccesses);
   const result5 = await db.query(numberOfLoadTestFailures);
+  const result6 = await db.query(allQueries);
+  const result7 = await db.query(allLoadTests);
   const number_of_queries = result1.rows[0].count;
   const number_of_tests = result2.rows[0].count;
   const number_of_load_tests = result3.rows[0].count;
   const number_of_load_test_successes = result4.rows[0].count;
-  const number_of_load_tests_failures = result5.rows[0].count;
+  const number_of_load_test_failures = result5.rows[0].count;
+  const all_queries = result6.rows;
+  const all_load_tests = result7.rows;
+
+  // aggregate all response times by date
+  const allQueriesRan = {};
+  all_queries.forEach((query, index) => {
+    const date = new Date(query.date).toDateString();
+    allQueriesRan[date] = (allQueriesRan[date] || 0) + 1;
+  });
+  // aggregate all load tests by date
+  const allLoadTestsRan = {};
+  all_load_tests.forEach((query, index) => {
+    const date = new Date(query.date).toDateString();
+    allLoadTestsRan[date] = (allLoadTestsRan[date] || 0) + 1;
+  });
+  // combine all response times and load tests into single obj by date
+  const queriesAndLoadsPerDay = [];
+  Object.keys(allQueriesRan).forEach(el => {
+    queriesAndLoadsPerDay.push({
+      date: el, 
+      query_tests: allQueriesRan[el], 
+      query_load_tests: allLoadTestsRan[el]
+    });
+  });
+
   const results = {
     number_of_queries: number_of_queries,
     number_of_tests: number_of_tests,
     number_of_load_tests: number_of_load_tests,
     number_of_load_test_successes: number_of_load_test_successes,
-    number_of_load_tests_failures: number_of_load_tests_failures,
+    number_of_load_test_failures: number_of_load_test_failures,
+    all_queries_and_load_tests: queriesAndLoadsPerDay
   };
   event.sender.send('totalsFromMain', results);
 });

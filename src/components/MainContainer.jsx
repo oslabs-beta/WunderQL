@@ -29,9 +29,6 @@ const MainContainer = ({ userID, urlList, setUrlList}) => {
   const [nickname, setNickname] = useState(null);
   const [urlID, setUrlID] = useState(0);
   const [runtime, setRuntime] = useState(0);
-  const [totalRuntimes, setTotalRuntimes] = useState(0);
-  const [totalLoadTests, setTotalLoadTests] = useState(0);
-  const [totalUniqueQueries, setTotalUniqueQueries] = useState(0);
   const [avgResponseTime, setAvgResponseTime] = useState(0);
   const [history, setHistory] = useState(null);
   const [queriesList, setQueriesList] = useState([]);
@@ -39,18 +36,13 @@ const MainContainer = ({ userID, urlList, setUrlList}) => {
   // calculate single runtime, average runtime, and line-of-best-fit; to be used in test-query
   const getResponseTimes = () => {
     window.api.receiveArray('responseTimesFromMain', (event, arg) => {
-      console.log('Listening for response from main process...');
-
       // get the runtime of the most recent query
       const currRuntime = arg[arg.length - 1].response_time.toFixed(1);
-      console.log('runtime: ', currRuntime);
       setRuntime(currRuntime);
 
       // average of all runtimes
       const responseTimeSum = arg.reduce((sum, curr) => sum += curr.response_time, 0);
-      console.log('sum of all response times: ', responseTimeSum);
       const responseTimeAvg = responseTimeSum / arg.length;
-      console.log('avg of all response times: ', responseTimeAvg);
       setAvgResponseTime(responseTimeAvg.toFixed(1));
 
       // statistical analysis to plot line-of-best-fit
@@ -82,7 +74,6 @@ const MainContainer = ({ userID, urlList, setUrlList}) => {
         });
       });
       
-      console.log('history of past runtimes (from maincontainer): ', history);
       setHistory(pastRuntimes);
     });
   };
@@ -90,78 +81,47 @@ const MainContainer = ({ userID, urlList, setUrlList}) => {
   // acquire list of queries; to be sent to test-query, load-test, previous-searches
   window.api.receiveArray('queriesFromMain', data => setQueriesList(data));
 
+  console.log('im in main Container')
   return (
     <div id='main-container'>
-      {/* trying to make frameless win draggable */}
-      {/* <div className="title-bar">
-          <div className="titlebar-drag-region"></div>
-          <div className="title">Window Header</div>
-          <div className="title-bar-btns">
-            <button id="min-btn">-</button>
-            <button id="max-btn">+</button>
-            <button id="close-btn">x</button>
-          </div>
-        </div> */}
       <Router>
         <NavBar />
         <Switch>
-          <Route exact path="/">
-            <Home 
-              url={url}
-              setUrl={setUrl} 
-              nickname={nickname}
-              setNickname={setNickname}
-              urlID={urlID} 
-              setUrlID={setUrlID}
-              // history={history} 
-              // setHistory={setHistory}
-              queriesList={queriesList}
-              setQueriesList={setQueriesList}
-              urlList={urlList}
-              setUrlList={setUrlList}
-              userID={userID}
-              setTotalRuntimes={setTotalRuntimes}
-              setTotalUniqueQueries={setTotalUniqueQueries}
-              setTotalLoadTests={setTotalLoadTests}
-            />
-          </Route>
-          <Route path="/dashboard">
-            <Dashboard 
+          <Route exact path="/dashboard">
+            <Dashboard
               url={url} 
               urlID={urlID} 
-              totalRuntimes={totalRuntimes}
-              setTotalRuntimes={setTotalRuntimes}
-              totalUniqueQueries={totalUniqueQueries}
-              setTotalUniqueQueries={setTotalUniqueQueries}
-              totalLoadTests={totalLoadTests}
-              setTotalLoadTests={setTotalLoadTests}
-              // history={history}
-            />
+            ></Dashboard>
           </Route>
-          <Route path="/testquery">
+          <Route exact path="/testquery">
             <TestQuery 
               url={url} 
               urlID={urlID} 
               history={history}
-              // setHistory={setHistory}
               runtime={runtime}
               avgResponseTime={avgResponseTime}
               getResponseTimes={getResponseTimes}
               queriesList={queriesList}
-              // setQueriesList={setQueriesList}
-            />
+            ></TestQuery>
           </Route>
-          <Route path="/loadtest">
+          <Route exact path="/loadtest">
             <LoadTest 
               url={url} 
               urlID={urlID} 
-              // history={history}
-              // setHistory={setHistory}
-              runtime={runtime}
-              setRuntime={setRuntime}
-              getResponseTimes={getResponseTimes}
               queriesList={queriesList}
-            />
+            ></LoadTest>
+          </Route>
+          <Route path="/">
+            <Home 
+              userID={userID}
+              url={url}
+              setUrl={setUrl} 
+              nickname={nickname}
+              setNickname={setNickname}
+              setUrlID={setUrlID}
+              setQueriesList={setQueriesList}
+              urlList={urlList}
+            ></Home>
           </Route>
         </Switch>
       </Router>

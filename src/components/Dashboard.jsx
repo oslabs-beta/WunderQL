@@ -1,7 +1,6 @@
-/* eslint-disable react/react-in-jsx-scope */
+import React from 'react';
 import PieChartComponent from './DashboardPieChart.jsx';
 import BarChartComponent from './DashboardBarChart.jsx';
-import RadarChartComponent from './DashboardRadarChart.jsx';
 import { useDarkTheme } from './ThemeContext.jsx';
 import { useEffect, useState } from 'react';
 
@@ -10,6 +9,9 @@ const Dashboard = ({ url, urlID }) => {
   const [totalRuntimes, setTotalRuntimes] = useState(0);
   const [totalLoadTests, setTotalLoadTests] = useState(0);
   const [totalUniqueQueries, setTotalUniqueQueries] = useState(0);
+  const [totalLoadTestSuccesses, setTotalLoadTestSuccesses] = useState(0);
+  const [totalLoadTestFailures, setTotalLoadTestFailures] = useState(0);
+  const [barChartData, setBarChartData] = useState([]);
 
   const darkTheme = useDarkTheme();
   const themeStyle = {
@@ -17,42 +19,51 @@ const Dashboard = ({ url, urlID }) => {
     color: darkTheme ? 'white' : '#333'
   };
 
-  window.api.send('dashboardToMain', urlID);
-
-  // obtain and set totals from BE
-  window.api.receive('totalsFromMain', (data) => {
-    setTotalUniqueQueries(data.number_of_queries);
-    setTotalRuntimes(data.number_of_tests);
-    setTotalLoadTests(data.number_of_load_tests);
-  });
-
+  useEffect(() => {
+    // Run! Like go get some data from an API.
+    window.api.send('dashboardToMain', urlID);
+  
+    // let renderBarChart;
+    window.api.receive('totalsFromMain', (data) => {
+      console.log('data: ', data);
+      setTotalUniqueQueries(data.number_of_queries);
+      setTotalRuntimes(data.number_of_tests);
+      setTotalLoadTests(data.number_of_load_tests);
+      setTotalLoadTestSuccesses(data.number_of_load_test_successes);
+      setTotalLoadTestFailures(data.number_of_load_test_failures);
+      setBarChartData(data.all_queries_and_load_tests);
+    });
+  }, []);
+    
   return (
     <div id='dashboard' style={themeStyle}>
       <header className='uri'>
-        <h2>Summary for: {url}</h2>
+        <p>Summary for: <span><strong>{url}</strong></span></p>
       </header>
       <div id='top-left'>
-        <RadarChartComponent />
-      </div>
-      <div id='top-mid'>
-        <PieChartComponent />
-      </div>
-      <div id='bottom'>
-        <BarChartComponent />
-      </div>
-      <div id='left'>
         <div className='dashboard-stats'>
           <div className='dash-title'><h3>Total Unique Queries</h3></div>
           <div className='dash-num'><h1>{totalUniqueQueries}</h1></div>
         </div>
+  
+      </div>
+      <div id='top-mid'>
         <div className='dashboard-stats'>
           <div className='dash-title'><h3>Total URL Calls</h3></div>
           <div className='dash-num'><h1>{totalRuntimes}</h1></div>
         </div>
+      </div>
+      <div id='top-right'>
         <div className='dashboard-stats'>
           <div className='dash-title'><h3>Total Load Tests</h3></div>
           <div className='dash-num'><h1>{totalLoadTests}</h1></div>
         </div>
+      </div>
+      <div id='bottom-left'>
+        <BarChartComponent barChartData={barChartData} />
+      </div>
+      <div id='bottom-right'>
+        <PieChartComponent totalLoadTestSuccesses={totalLoadTestSuccesses} totalLoadTestFailures={totalLoadTestFailures}/>
       </div>
     </div>
   );

@@ -1,10 +1,7 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const LineChartComponent = ({ history }) => {
-  const data = [];
   
-  console.log('linechartcomponent: data to be plotted: ', data)
-
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {  
       console.log(payload[0])
@@ -15,12 +12,10 @@ const LineChartComponent = ({ history }) => {
       return (
         <div className="custom-tooltip">
           <p className="label">{`${label}: ${payload[0].value}ms`}</p>
-          {/* <p className="intro">{getDate(label)}</p> */}
           <p className="desc">{`${getDifference()}ms from average`}</p>
         </div>
       );
     }
-  
     return null;
   };
 

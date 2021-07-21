@@ -1,11 +1,11 @@
 const { performance } = require('perf_hooks');
 const { fetch } = require('cross-fetch');
 const childProc = require('child_process');
-const db = require("../models/User");
+const db = require('../models/User');
 
 // Function that checks response time of query
 async function checkResponseTime(query, uri_ID) {
-  let time1 = performance.now()
+  const time1 = performance.now();
   await fetch(uri_ID, {
     method: 'POST',
     headers: {
@@ -16,19 +16,19 @@ async function checkResponseTime(query, uri_ID) {
         ${query}
       `,
     }),
-  })
+  });
   return performance.now() - time1;
-};
+}
 
 // Function that conducts load test on endpoint
 const loadTest = async (CHILD_PROCESSES, URL, QUERY) => {
 
-  let times = []; // array of response times of all child processes
-  let children = []; // array of all child processes created
+  const times = []; // array of response times of all child processes
+  const children = []; // array of all child processes created
 
   for (let i = 0; i < CHILD_PROCESSES; i++) {
     // Spawn the child process
-    let childProcess = childProc.spawn("node", [`${__dirname}/child.js`, `--url=${URL}`, `--query=${QUERY}`])
+    const childProcess = childProc.spawn('node', [`${__dirname}/child.js`, `--url=${URL}`, `--query=${QUERY}`]);
     children.push(childProcess);
   }
   // Map child processes into promises that resolve to true or false 
@@ -39,7 +39,7 @@ const loadTest = async (CHILD_PROCESSES, URL, QUERY) => {
         console.log(`child stdout: ${data}`);
         times.push(parseInt(data));
       });
-      child.on("exit", function (code) {
+      child.on('exit', function (code) {
         if (code === 0) {
           res(true);
         } else {
@@ -60,12 +60,12 @@ const loadTest = async (CHILD_PROCESSES, URL, QUERY) => {
     const sum = times.reduce((a, b) => a + b, 0);
     const avg = (sum / times.length) || 0;
     console.log(`average: ${avg}`);
-    console.log("success!");  
+    console.log('success!');  
     // Update load test response variables
     successOrFailure = 'success';
     averageResponseTime = avg;
   } else {
-    console.log("failures!");
+    console.log('failures!');
     // Update load test response variables
     successOrFailure = 'failure';
     averageResponseTime = 0;
@@ -75,7 +75,7 @@ const loadTest = async (CHILD_PROCESSES, URL, QUERY) => {
   return {
     successOrFailure,
     averageResponseTime
-  }
+  };
 };
 
 // Function that checks if query exists in db
@@ -105,7 +105,7 @@ async function checkIfQueryExist(queryString, urlId, queryName)  {
   } else {
     queryId = existingQueryID[0]._id;
   }
-  console.log('queryId that is returned from checkIfQueryExist' )
+  console.log('queryId that is returned from checkIfQueryExist' );
   return queryId;
 }
 
@@ -113,4 +113,4 @@ module.exports = {
   checkResponseTime,
   loadTest,
   checkIfQueryExist
-}
+};
