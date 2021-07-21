@@ -1,88 +1,56 @@
-const {
-  CleanWebpackPlugin
-} = require("clean-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const webpack = require("webpack");
-const path = require("path");
+const webpack = require('webpack');
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const BabiliPlugin = require('babili-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
-  target: "web", // Our app can run without electron
-  entry: ["./src/index.jsx"], // The entry point of our app; these entry points can be named and we can also have multiple if we'd like to split the webpack bundle into smaller files to improve script loading speed between multiple pages of our app
-  output: {
-    path: path.resolve(__dirname, "dist"), // Where all the output files get dropped after webpack is done with them
-    filename: "bundle.js", // The name of the webpack bundle that's generated
-    publicPath: "/",
-  },
-  resolve: {
-    fallback: {
-      "crypto": require.resolve("crypto-browserify"),
-      "buffer": require.resolve("buffer/"),
-      "path": require.resolve("path-browserify"),
-      "stream": require.resolve("stream-browserify")
-    }
-  },
   module: {
-    rules: [{
-        // loads .html files
-        test: /\.(html)$/,
-        include: [path.resolve(__dirname, "src")],
-        use: {
-          loader: "html-loader",
-          options: {
-            sources: {
-              "list": [{
-                "tag": "img",
-                "attribute": "data-src",
-                "type": "src"
-              }]
-            }
-          }
-        }
+    rules: [
+      {
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
-      // loads .js/jsx files
       {
         test: /\.jsx?$/,
-        include: [path.resolve(__dirname, "src")],
-        loader: "babel-loader",
-        resolve: {
-          extensions: [".js", ".jsx", ".json"]
-        }
+        use: [{ loader: 'babel-loader', options: { compact: false } }],
       },
-      // loads .css files
       {
-        //trying to figure out why styling isnt hot-reloading
-        // test: /\.css$/,
-        test: /.(css|scss|sass)$/,
-        include: [
-          path.resolve(__dirname, "src"),
-          path.resolve(__dirname, "node_modules/"),
-        ],
+        test: /\.(jpe?g|png|gif)$/,
+        use: [{ loader: 'file-loader?name=img/[name]__[hash:base64:5].[ext]' }],
+      },
+      {
+        test: /\.(eot|svg|ttf|woff|woff2)$/,
         use: [
-          MiniCssExtractPlugin.loader,
-          "css-loader"
+          { loader: 'file-loader?name=font/[name]__[hash:base64:5].[ext]' },
         ],
-        resolve: {
-          extensions: [".css"]
-        }
       },
-      // loads common image formats
-      {
-        test: /\.(eot|woff|woff2|ttf|svg|png|jpg|gif)$/,
-        use: "url-loader"
-      }
-    ]
+    ],
   },
+  target: 'electron-renderer',
   plugins: [
-    // fix "process is not defined" error;
-    // https://stackoverflow.com/a/64553486/1837080
-    new webpack.ProvidePlugin({
-      process: "process/browser.js",
+    new HtmlWebpackPlugin({ title: 'React Electron App' }),
+    new MiniCssExtractPlugin({
+      // Options similar to the same options in webpackOptions.output
+      // both options are optional
+      filename: 'bundle.css',
+      chunkFilename: '[id].css',
     }),
-    new CleanWebpackPlugin(),
-    // If you are using Webpack, you can have it load React when needed without having to explicitly require it in your code.
-    // https://stackoverflow.com/questions/32070303/uncaught-referenceerror-react-is-not-defined
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('production'),
+    }),
     new webpack.ProvidePlugin({
-      "React": "react",
-   }),
-  ]
+      'React': 'react',
+    }),
+  ],
+  stats: {
+    colors: true,
+    children: false,
+    chunks: false,
+    modules: false,
+  },
+  resolve: {
+    extensions: ['', '.js', '.jsx'],
+  }
+
 };
