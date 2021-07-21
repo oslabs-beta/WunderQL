@@ -84,7 +84,6 @@ const TestQuery = ({ url, urlID, history, runtime, avgResponseTime, getResponseT
           placeholder='Please enter a query...'
           id='text-area'
           onChange={(e) => setQuery(e.target.value)}
-          style={themeStyle}
           required
         >{query}</textarea>
         <input
