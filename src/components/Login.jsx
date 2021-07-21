@@ -10,7 +10,7 @@ const Login = ({user, setUser, setUrlList }) => {
   const [password, setPassword] = useState('');
 
   const handleLogin = (e) => {
-    console.log('HI IM HANDLE LOGIN')
+    console.log('HI IM HANDLE LOGIN');
     e.preventDefault();
 
     // display error if wrong credentials used
@@ -21,9 +21,9 @@ const Login = ({user, setUser, setUrlList }) => {
     console.log('From login user:', username,'password:', password);
 
     window.api.send('loginToMain', {username, password});
-    console.log('HELLOHELLOHELLO')
+    console.log('HELLOHELLOHELLO');
     window.api.receive('userLoggedInFromMain', (validUser) => {
-      console.log('validUser: ', validUser)
+      console.log('validUser: ', validUser);
       setUser({ loggedIn: validUser});
     });
 

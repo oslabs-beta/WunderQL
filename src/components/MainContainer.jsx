@@ -42,8 +42,8 @@ const MainContainer = ({ userID, urlList, setUrlList}) => {
 
       // average of all runtimes
       const responseTimeSum = arg.reduce((sum, curr) => sum += curr.response_time, 0);
-      const responseTimeAvg = responseTimeSum / arg.length;
-      setAvgResponseTime(responseTimeAvg.toFixed(1));
+      const responseTimeAvg = (responseTimeSum / arg.length).toFixed(1);
+      setAvgResponseTime(responseTimeAvg);
 
       // statistical analysis to plot line-of-best-fit
       const pastRuntimes = [];
@@ -81,7 +81,7 @@ const MainContainer = ({ userID, urlList, setUrlList}) => {
   // acquire list of queries; to be sent to test-query, load-test, previous-searches
   window.api.receiveArray('queriesFromMain', data => setQueriesList(data));
 
-  console.log('im in main Container')
+  console.log('im in main Container');
   return (
     <div id='main-container'>
       <Router>
