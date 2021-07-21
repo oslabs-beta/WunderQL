@@ -63,7 +63,7 @@ const loadTest = async (CHILD_PROCESSES, URL, QUERY) => {
     console.log('success!');  
     // Update load test response variables
     successOrFailure = 'success';
-    averageResponseTime = avg;
+    averageResponseTime = avg.toFixed(1);
   } else {
     console.log('failures!');
     // Update load test response variables

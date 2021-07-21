@@ -28,7 +28,8 @@ const ScatterChartComponent = ({ loadTestHistory }) => {
           name="Avg Response Time" 
           unit="ms" 
           stroke="#8884d8" 
-          domain={['dataMin - 50', 'dataMax + 50']} />
+          domain={['dataMin - 50', 'dataMax + 50']}
+          allowDecimals={false} />
         <Tooltip cursor={{ strokeDasharray: '3 3' }} />
         <Scatter yAxisId="left" name="A school" data={loadTestHistory} fill="#8884d8" />
       </ScatterChart>

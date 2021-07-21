@@ -108,7 +108,7 @@ const LoadTest = ({ url, urlID, queriesList }) => {
       </div>
       <div id='stats'>
         <div className='category'>
-          <div className='category-title'>Avg Batch Response Time for {loadAmount} Requests</div>
+          <div className='category-title'>Avg Response Time for {loadAmount} Requests</div>
           <div className='category-number'>{`${avgResponseTime} ms`}</div>
         </div>
         <div className='category'>
