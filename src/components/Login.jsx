@@ -14,7 +14,9 @@ const Login = ({user, setUser, setUrlList }) => {
     e.preventDefault();
 
     // display error if wrong credentials used
-    if (!user.loggedIn) document.querySelector('#invalid-text').style.display = 'block';
+    if (!user.loggedIn) {
+      setTimeout(()=>(document.querySelector('#invalid-text').style.display = 'block'), 500);
+    }
 
     console.log('From login user:', username,'password:', password);
 

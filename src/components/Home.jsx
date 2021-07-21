@@ -115,8 +115,8 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, setUrlID, setQueries
             onClick={submitUrl}
           >Connect to URL</Button>
           <div id='connected-div'>
-            <h3 id='connected-text'>Connected!</h3>
-            <h3 id='connected-loading'>Loading Dashboard...</h3>
+            <p id='connected-text'><strong>Connected!</strong></p>
+            <p id='connected-loading'><strong>Loading...</strong></p>
           </div>
         </div>
 
