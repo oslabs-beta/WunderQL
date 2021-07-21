@@ -94,9 +94,10 @@ const LoadTest = ({ url, urlID, queriesList }) => {
           type='number' 
           id='load-amount' 
           name='loadAmount' 
-          min='0' 
+          min='1' 
           max='1000'
           onChange={(e) => setLoadAmount(e.target.value)}
+          placeholder='1'
         ></input>
 
         <Button 
