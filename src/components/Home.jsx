@@ -1,7 +1,8 @@
+/* eslint-disable jsx-a11y/no-onchange */
 /* eslint-disable react/react-in-jsx-scope */
 import { useHistory } from 'react-router';
 import Button from '@material-ui/core/Button';
-import { useDarkTheme } from './ThemeContext';
+import { useDarkTheme } from './ThemeContext.jsx';
 
 
 const Home = ({ userID, url, setUrl, setUrlList, nickname, setNickname, history, setHistory, setUrlID, setQueriesList, urlList, setTotalUniqueQueries, setTotalRuntimes, setTotalLoadTests }) => {

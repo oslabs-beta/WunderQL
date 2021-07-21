@@ -34,39 +34,39 @@ const Login = ({user, setUser, setUrlList }) => {
         <img src={logo} alt='logo'></img>
       </div>
       <form>
-          <div className='login-div'>
-            <label htmlFor="username">Username: </label>
-            <input 
-              name="username" 
-              placeholder='Username' 
-              id="username" 
-              type="username" 
-              required 
-              onChange={(e) => setUsername(e.target.value)} 
-              />
+        <div className='login-div'>
+          <label htmlFor="username">Username: </label>
+          <input 
+            name="username" 
+            placeholder='Username' 
+            id="username" 
+            type="username" 
+            required 
+            onChange={(e) => setUsername(e.target.value)} 
+          />
+        </div>
+        <div className='login-div'>
+          <label htmlFor="password">Password: </label>
+          <input 
+            name="password" 
+            placeholder='Password' 
+            id="password" 
+            type="password" 
+            required 
+            onChange={(e) => setPassword(e.target.value)} 
+          />
+        </div>
+        <div id='login-button-div'>
+          <Button 
+            onClick={handleLogin}
+            variant="contained" 
+            id='login-button' 
+            color="primary"
+          >Login</Button>
+          <div id='signup-link-div'>Not a User?&nbsp;    
+            <Link to='/signup'>Sign Up</Link>
           </div>
-          <div className='login-div'>
-            <label htmlFor="password">Password: </label>
-            <input 
-              name="password" 
-              placeholder='Password' 
-              id="password" 
-              type="password" 
-              required 
-              onChange={(e) => setPassword(e.target.value)} 
-              />
-          </div>
-          <div id='login-button-div'>
-            <Button 
-              onClick={handleLogin}
-              variant="contained" 
-              id='login-button' 
-              color="primary"
-              >Login</Button>
-            <div id='signup-link-div'>Not a User?&nbsp;    
-              <Link to='/signup'>Sign Up</Link>
-            </div>
-          </div>
+        </div>
       </form>
       <div id='invalid-credentials'>
         <h3 id='invalid-text'>Invalid username and/or password!</h3>

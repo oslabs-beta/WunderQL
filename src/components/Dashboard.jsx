@@ -1,8 +1,8 @@
 /* eslint-disable react/react-in-jsx-scope */
-import PieChartComponent from './DashboardPieChart';
-import BarChartComponent from './DashboardBarChart';
-import RadarChartComponent from './DashboardRadarChart';
-import { useDarkTheme } from './ThemeContext';
+import PieChartComponent from './DashboardPieChart.jsx';
+import BarChartComponent from './DashboardBarChart.jsx';
+import RadarChartComponent from './DashboardRadarChart.jsx';
+import { useDarkTheme } from './ThemeContext.jsx';
 import { useEffect, useState } from 'react';
 
 const Dashboard = ({ url, urlID }) => {

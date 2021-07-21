@@ -1,15 +1,16 @@
 /* eslint-disable react/react-in-jsx-scope */
+import React from 'react';
 import { useState } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
 } from 'react-router-dom';
-import Home from './Home';
-import Dashboard from './Dashboard';
-import NavBar from './NavBar';
-import TestQuery from './Test-Query';
-import LoadTest from './LoadTest';
+import Home from './Home.jsx';
+import Dashboard from './Dashboard.jsx';
+import NavBar from './NavBar.jsx';
+import TestQuery from './Test-Query.jsx';
+import LoadTest from './LoadTest.jsx';
 
 // import { ThemeProvider, useDarkTheme } from "./src/components/ThemeContext";
 // import { ThemeProvider, useDarkTheme } from "./ThemeContext";

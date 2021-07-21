@@ -1,8 +1,8 @@
 import { useState } from "react";
-import ScatterChartComponent from "./DashboardScatterChart";
+import ScatterChartComponent from "./DashboardScatterChart.jsx";
 import Button from '@material-ui/core/Button';
-import { useDarkTheme } from "./ThemeContext";
-
+import { useDarkTheme } from "./ThemeContext.jsx";
+import React, { Component }  from 'react';
 
 const LoadTest = ({ url, urlID, getResponseTimes, queriesList }) => {
 
@@ -60,7 +60,7 @@ const LoadTest = ({ url, urlID, getResponseTimes, queriesList }) => {
 
   return (
     <div id='test-query' style={themeStyle}> 
-      <header class='uri'>
+      <header className='uri'>
         <h2>Currently connected to: {url}</h2>
         <select
           name='queries-list' 
@@ -104,17 +104,17 @@ const LoadTest = ({ url, urlID, getResponseTimes, queriesList }) => {
           >Send Query</Button>
       </div>
       <div id='stats'>
-        <div class='category'>
-          <div class='category-title'>Avg Batch Response Time for {loadAmount} Requests</div>
-          <div class='category-number'>{`${avgResponseTime} ms`}</div>
+        <div className='category'>
+          <div className='category-title'>Avg Batch Response Time for {loadAmount} Requests</div>
+          <div className='category-number'>{`${avgResponseTime} ms`}</div>
         </div>
-        <div class='category'>
-          <div class='category-title'>Result</div>
-          <div class='category-number'>{`${successOrFailure}`}</div>
+        <div className='category'>
+          <div className='category-title'>Result</div>
+          <div className='category-number'>{`${successOrFailure}`}</div>
         </div>
-        <div class='category'>
-          <div class='category-title'>Number of Null Responses</div>
-          <div class='category-number'>100</div>
+        <div className='category'>
+          <div className='category-title'>Number of Null Responses</div>
+          <div className='category-number'>100</div>
         </div>
 
       </div>

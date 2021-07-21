@@ -16,7 +16,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 
-import { useDarkTheme, useDarkThemeUpdate } from './ThemeContext';
+import { useDarkTheme, useDarkThemeUpdate } from './ThemeContext.jsx';
 
 import { Link } from 'react-router-dom';
 import FormControlLabel from '@material-ui/core/FormControlLabel';

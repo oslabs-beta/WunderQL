@@ -5,10 +5,8 @@ const { app, BrowserWindow, Menu, ipcMain } = require('electron');
 const isDev = require('electron-is-dev');
 const { checkResponseTime, loadTest, checkIfQueryExist } = require('./utils');
 const db = require('../models/User');
-// require('electron-reload')(__dirname, {
-//   electron: path.join('__dirname', '../', 'node_modules', '.bin', 'electron')
-// })
-// console.log(path.join('__dirname', '../', 'node_modules', '.bin', 'electron'))
+const url = require('url');
+
 //-------Electron Setup--------------------------------------------------------
 function createWindow() {
   // Create the browser window.
@@ -34,13 +32,30 @@ function createWindow() {
   win.setResizable(true);
 
   // and load the index.html of the app.
-  win.loadURL(
-    isDev
-      ? 'http://localhost:3000'
-      : `file://${path.join(__dirname, '../build/index.html')}`
-  );
-
+  // win.loadURL(
+  //   isDev
+  //     ? 'http://localhost:3000'
+  //     :  path.join(__dirname, 'dist', 'index.html')
+  // );
+ 
+  // win.loadFile(path.join(__dirname, 'index.html'));
+  // win.loadURL(url.format({
+  //   pathname: path.join(__dirname, 'index.html'),
+  //   protocol: 'file:',
+  //   slashes: true
+  // }));
+  // console.log(path.join(__dirname, 'index.html'))
   // Quit app when closed; closes all children windows too
+
+  const indexPath = url.format({
+    protocol: 'file:',
+    pathname: path.join(__dirname, '../dist', 'index.html'),
+    slashes: true,
+  });
+
+  win.loadURL(indexPath);
+
+
   win.on('closed', function(){
     app.quit();
   });
@@ -110,8 +125,8 @@ const mainMenuTemplate =  [
 ];
 
 // This method will be called when Electron has finished initialization and is ready to create browser windows.
-app.whenReady().then(createWindow);
-// app.on('ready', createWindow)
+// app.whenReady().then(createWindow);
+app.on('ready', createWindow)
 
 
 // Quit when all windows are closed, except on macOS. There, it's common for applications and their menu bar to stay active until the user quits

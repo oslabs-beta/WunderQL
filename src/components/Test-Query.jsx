@@ -1,8 +1,9 @@
+/* eslint-disable jsx-a11y/no-onchange */
 /* eslint-disable react/react-in-jsx-scope */
 import { useState } from 'react';
-import LineChartComponent from './DashboardLineChart';
+import LineChartComponent from './DashboardLineChart.jsx';
 import Button from '@material-ui/core/Button';
-import { useDarkTheme } from './ThemeContext';
+import { useDarkTheme } from './ThemeContext.jsx';
 
 const TestQuery = ({ url, urlID, history, runtime, avgResponseTime, getResponseTimes, queriesList }) => {
 
