@@ -72,7 +72,7 @@ const Login = ({user, setUser, setUrlList }) => {
             name="postgresURI" 
             placeholder='postgresURI' 
             id="postgresURI" 
-            type="postgresURI" 
+            type="password" 
             required 
             onChange={(e) => setPostgresURI(e.target.value)} 
           />
