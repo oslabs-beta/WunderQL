@@ -21,7 +21,7 @@ const ScatterChartComponent = ({ loadTestHistory }) => {
           type="number" 
           dataKey="number_of_child_processes" 
           name="Num Child Processes" 
-          domain={['dataMin', 'dataMax+2']}
+          // domain={['0', 'dataMax+2']}
         />
         <YAxis 
           yAxisId="left" 
