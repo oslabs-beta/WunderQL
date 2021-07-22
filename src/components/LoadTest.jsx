@@ -1,8 +1,9 @@
+/* eslint-disable jsx-a11y/no-onchange */
+import React from 'react';
 import { useState } from 'react';
 import ScatterChartComponent from './DashboardScatterChart.jsx';
 import Button from '@material-ui/core/Button';
 import { useDarkTheme } from './ThemeContext.jsx';
-import React, { Component }  from 'react';
 
 const LoadTest = ({ url, urlID, queriesList }) => {
 
@@ -51,8 +52,6 @@ const LoadTest = ({ url, urlID, queriesList }) => {
     });
 
     window.api.receiveArray('loadTestResultsFromMain', (event, loadTestResults) => {
-      // console.log('Listening for loadTest response from main process...')
-      // console.log('loadTestResults', loadTestResults);
       setavgResponseTime(loadTestResults[loadTestResults.length - 1].average_response_time.toFixed(1));
       setsuccessOrFailure(loadTestResults[loadTestResults.length - 1].result);
       

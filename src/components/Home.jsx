@@ -7,7 +7,6 @@ import { useDarkTheme } from './ThemeContext.jsx';
 
 const Home = ({ userID, url, setUrl, nickname, setNickname, setUrlID, setQueriesList, urlList }) => {
   
-  console.log('im a cat')
   const routerHistory = useHistory();
   
   const darkTheme = useDarkTheme();
@@ -57,7 +56,6 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, setUrlID, setQueries
     // fill in input boxes automatically
     function polyfillUrl(e) {
       document.querySelector('#home-uri-value').innerHTML = e.target.value;
-      // document.querySelector('#home-uri-name').innerHTML = e.target.name;
       const selectedName = e.target.selectedOptions[0].id;
       setNickname(selectedName);
       setUrl(e.target.value);
@@ -107,10 +105,10 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, setUrlID, setQueries
           </select>
         </div>
 
-        <div id='submit-connect'>
+        <div id='login-button-div'>
           <Button 
             variant="contained" 
-            id='home-send' 
+            id='login-button' 
             color="primary"
             onClick={submitUrl}
           >Connect to URL</Button>

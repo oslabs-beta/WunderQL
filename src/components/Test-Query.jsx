@@ -52,7 +52,6 @@ const TestQuery = ({ url, urlID, history, runtime, avgResponseTime, getResponseT
     console.log('queryString:', query);
     console.log('queryName:', queryName);
 
-    // setQuery(document.querySelector('#text-area').value);
     // Send uriID, uri, and query to main process
     window.api.send('queryTestToMain', {
       urlID: urlID,

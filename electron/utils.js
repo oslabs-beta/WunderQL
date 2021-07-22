@@ -1,9 +1,23 @@
 const { performance } = require('perf_hooks');
 const { fetch } = require('cross-fetch');
 const childProc = require('child_process');
-const db = require('../models/User');
-
-// Function that checks response time of query
+const { Pool } = require('pg');
+ 
+// Connects to postgreSQL db
+function connectToDb(postgresUrl) {
+  const pool = new Pool({
+    connectionString: postgresUrl
+  });
+  
+  const query = (text, params, callback) => {
+    console.log('executed query', text);
+    return pool.query(text, params, callback);
+  };
+ 
+  return query;
+}
+ 
+// Checks response time of query
 async function checkResponseTime(query, uri_ID) {
   const time1 = performance.now();
   await fetch(uri_ID, {
@@ -19,13 +33,12 @@ async function checkResponseTime(query, uri_ID) {
   });
   return performance.now() - time1;
 }
-
-// Function that conducts load test on endpoint
+ 
+// Conducts load test on endpoint
 const loadTest = async (CHILD_PROCESSES, URL, QUERY) => {
-
   const times = []; // array of response times of all child processes
   const children = []; // array of all child processes created
-
+ 
   for (let i = 0; i < CHILD_PROCESSES; i++) {
     // Spawn the child process
     const childProcess = childProc.spawn('node', [`${__dirname}/child.js`, `--url=${URL}`, `--query=${QUERY}`]);
@@ -51,7 +64,7 @@ const loadTest = async (CHILD_PROCESSES, URL, QUERY) => {
   
   // Wait until all promises have been resolved
   responses = await Promise.all(responses);
-
+ 
   // Check if all promises were resolved successfully 
   let successOrFailure;
   let averageResponseTime;
@@ -63,44 +76,40 @@ const loadTest = async (CHILD_PROCESSES, URL, QUERY) => {
     console.log('success!');  
     // Update load test response variables
     successOrFailure = 'success';
-    averageResponseTime = avg.toFixed(1);
+    averageResponseTime = avg;
   } else {
     console.log('failures!');
     // Update load test response variables
     successOrFailure = 'failure';
     averageResponseTime = 0;
   }
-
+ 
   // Return whether load test was success/failure, and the average response time
   return {
     successOrFailure,
     averageResponseTime
   };
 };
-
-// Function that checks if query exists in db
-async function checkIfQueryExist(queryString, urlId, queryName)  {
-
+ 
+// Checks if query exists in db
+async function checkIfQueryExist(queryString, urlId, queryName, query)  {
+ 
   const checkIfQueryExist = {
     text: 'select _id FROM queries WHERE query_string = $1 AND url_id = $2',
     values: [queryString, urlId]
   };
-  // console.log('queryString: ', queryString);
-  // console.log('urlId: ', urlId);
-
-  const existingQueryResult = await db.query(checkIfQueryExist);
+ 
+  const existingQueryResult = await query(checkIfQueryExist);
   const existingQueryID = await existingQueryResult.rows;
-  // console.log('existingQueryResult in checkIfQueryExist: ', existingQueryResult)
-  // console.log('existingQueryID in checkIfQueryExist: ', existingQueryID)
-
+ 
   let queryId;
-
+ 
   if (existingQueryID.length === 0) {
     const insertQuery = {
       text: 'INSERT INTO queries(query_string, url_id, query_name) VALUES ($1, $2, $3) RETURNING _id',
       values: [queryString, urlId, queryName],
     };
-    const queryResult = await db.query(insertQuery);
+    const queryResult = await query(insertQuery);
     queryId = queryResult.rows[0]._id;
   } else {
     queryId = existingQueryID[0]._id;
@@ -108,9 +117,10 @@ async function checkIfQueryExist(queryString, urlId, queryName)  {
   console.log('queryId that is returned from checkIfQueryExist' );
   return queryId;
 }
-
+ 
 module.exports = {
   checkResponseTime,
   loadTest,
-  checkIfQueryExist
+  checkIfQueryExist,
+  connectToDb
 };

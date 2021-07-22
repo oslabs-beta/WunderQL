@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useContext, createContext } from "react";
+import { useState, useContext, createContext } from 'react';
 
 const ThemeContext = createContext();
 const ThemeUpdateContext = createContext();
@@ -10,7 +10,7 @@ export const useDarkThemeUpdate = () => useContext(ThemeUpdateContext);
 export function ThemeProvider({ children }) {
   const [dark, setDark] = useState(false); // or true?
 
-  const toggleDarkMode = () => setDark(prevDarkTheme => !prevDarkTheme)
+  const toggleDarkMode = () => setDark(prevDarkTheme => !prevDarkTheme);
 
   return (
     <ThemeContext.Provider value={dark}>
@@ -18,6 +18,6 @@ export function ThemeProvider({ children }) {
         {children}
       </ThemeUpdateContext.Provider>
     </ThemeContext.Provider>
-  )
+  );
 }
 

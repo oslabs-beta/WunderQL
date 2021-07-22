@@ -1,24 +1,29 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
-import logo from '../../public/assets/logo-small.png';
+import logo from '../../electron/assets/logo-small.png';
 
 
 const Login = ({user, setUser, setUrlList }) => {
 
+  //'postgres://zerprhnt:15f4gUqwifl1AT5qtXRTHz6pxjdcy7UD@kashin.db.elephantsql.com/zerprhnt'
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
+  const [postgresURI, setPostgresURI] = useState('');
+  
   const handleLogin = (e) => {
     console.log('HI IM HANDLE LOGIN');
     e.preventDefault();
+    
 
     // display error if wrong credentials used
     if (!user.loggedIn) {
       setTimeout(()=>(document.querySelector('#invalid-text').style.display = 'block'), 500);
     }
 
-    console.log('From login user:', username,'password:', password);
+    console.log('From login user:', username,'password:', password, 'postgresURI', postgresURI);
+    window.api.send('postgresUrlToMain', postgresURI);
 
     window.api.send('loginToMain', {username, password});
     console.log('HELLOHELLOHELLO');
@@ -59,6 +64,17 @@ const Login = ({user, setUser, setUrlList }) => {
             type="password" 
             required 
             onChange={(e) => setPassword(e.target.value)} 
+          />
+        </div>
+        <div className='login-div'>
+          <label htmlFor="postgresURI">PostgresQL URL: </label>
+          <input 
+            name="postgresURI" 
+            placeholder='postgresURI' 
+            id="postgresURI" 
+            type="username" 
+            required 
+            onChange={(e) => setPostgresURI(e.target.value)} 
           />
         </div>
         <div id='login-button-div'>

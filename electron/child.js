@@ -1,12 +1,11 @@
-const axios = require("axios");
-// const argv = require('minimist')(process.argv.slice(2));
+const axios = require('axios');
 const argv = require('minimist')(process.argv);
 
 (async () => {
   
   axios.interceptors.request.use(function (config) {
     // Measure response time at the beginning of the request
-    config.metadata = { startTime: new Date()}
+    config.metadata = { startTime: new Date()};
     return config;
   }, function (error) {
     return Promise.reject(error);
@@ -14,9 +13,9 @@ const argv = require('minimist')(process.argv);
 
   axios.interceptors.response.use(function (response) {
     // Measure response time when the response is received
-    response.config.metadata.endTime = new Date()
+    response.config.metadata.endTime = new Date();
     // Calculate the response time of the request
-    response.duration = response.config.metadata.endTime - response.config.metadata.startTime
+    response.duration = response.config.metadata.endTime - response.config.metadata.startTime;
     return response;
   }, function (error) {
     return Promise.reject(error);
@@ -25,13 +24,13 @@ const argv = require('minimist')(process.argv);
   // Send graphQL API request
   axios.post(argv.url, {
     query: `${argv.query}`})
-  .then((response) => {
-    process.stdout.write(response.duration.toString());
-    process.exitCode = 0;
-  })
-  .catch((error) => {
-    process.exitCode = 1;
-  })
+    .then((response) => {
+      process.stdout.write(response.duration.toString());
+      process.exitCode = 0;
+    })
+    .catch((error) => {
+      process.exitCode = 1;
+    });
 })();
 
 

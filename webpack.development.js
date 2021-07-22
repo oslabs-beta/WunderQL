@@ -25,7 +25,7 @@ module.exports = merge(base, {
   plugins: [
     new MiniCssExtractPlugin(),
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'public/index.html'),
+      template: path.resolve(__dirname, 'electron/index.html'),
       filename: 'index.html',
       nonce: nonce  // added a new property for ejs template
     }),

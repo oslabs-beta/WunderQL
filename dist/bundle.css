@@ -85,7 +85,7 @@ body {
   margin-bottom: 0rem;
 }
 
-#username, #name, #email, #password {
+#username, #name, #email, #password, #postgresURI {
   padding: 0.5rem;
   border-radius: 1rem;
   border: 1px solid gainsboro;
@@ -249,6 +249,7 @@ body {
   grid-template-rows: 1fr 1fr;
   justify-content: center;
   align-items: center;
+  width: 5rem;
 }
 
 #home-send {
@@ -269,8 +270,9 @@ body {
 
 #connected-text, #invalid-text, #connected-loading {
   display: none;
-  margin: 5px;
+  margin: 5px 0;
   padding: 0;
+  font-weight: 500;
 }
 
 /*/////////////////////////////////////////////////////*/
@@ -474,7 +476,7 @@ body {
 /*/////////////////// Load Testing ////////////////////*/
 /*/////////////////////////////////////////////////////*/
 #load-amount {
-  font-size: 2rem;
+  font-size: 1.2rem;
   text-align: center;
 }
 

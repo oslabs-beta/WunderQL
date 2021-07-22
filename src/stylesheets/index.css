@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 .titlebar-drag-region {
   top: 6px;
   left: 6px;
@@ -84,7 +85,7 @@ body {
   margin-bottom: 0rem;
 }
 
-#username, #name, #email, #password {
+#username, #name, #email, #password, #postgresURI {
   padding: 0.5rem;
   border-radius: 1rem;
   border: 1px solid gainsboro;
@@ -248,6 +249,7 @@ body {
   grid-template-rows: 1fr 1fr;
   justify-content: center;
   align-items: center;
+  width: 5rem;
 }
 
 #home-send {
@@ -268,8 +270,9 @@ body {
 
 #connected-text, #invalid-text, #connected-loading {
   display: none;
-  margin: 5px;
+  margin: 5px 0;
   padding: 0;
+  font-weight: 500;
 }
 
 /*/////////////////////////////////////////////////////*/
@@ -473,9 +476,8 @@ body {
 /*/////////////////// Load Testing ////////////////////*/
 /*/////////////////////////////////////////////////////*/
 #load-amount {
-  font-size: 2rem;
+  font-size: 1.2rem;
   text-align: center;
 }
 
 /*# sourceMappingURL=index.css.map */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap')

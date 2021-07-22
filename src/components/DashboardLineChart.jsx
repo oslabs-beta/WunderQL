@@ -1,4 +1,4 @@
-import React from 'react';
+/* eslint-disable react/react-in-jsx-scope */
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const LineChartComponent = ({ history }) => {
@@ -37,13 +37,11 @@ const LineChartComponent = ({ history }) => {
           dataKey="date" 
           angle='0'
           tick={{fontSize: 10}}
-          // domain={['dataMax - 20', 'dataMax']}
         />
         <YAxis 
           type='number'
           label={{ value: 'time(ms)', angle: -90, position:'insideLeft' }} 
           domain={['dataMin-50', 'dataMax+50']} 
-          // domain={['Math.floor(dataMin)-100', 'Math.floor(dataMax)+100']} 
           allowDecimals='false'
         />
         <Tooltip content={<CustomTooltip />} />
@@ -52,11 +50,10 @@ const LineChartComponent = ({ history }) => {
           dataKey="runtime" 
           dot={{stroke: '#e01d1d', strokeWidth: 1}} 
           strokeWidth={0}
-          // activeDot={{ r: 8 }} 
           animationEasing='linear'
           isAnimationActive={false}
         />
-        <Line type="monotone" dataKey="best_fit" stroke="#8884d8" />
+        <Line type="monotone" dataKey="best_fit" stroke="#8884d8" dot={false}/>
       </LineChart>
     </ResponsiveContainer>
   );
