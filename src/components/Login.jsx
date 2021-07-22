@@ -6,8 +6,6 @@ import logo from '../../electron/assets/logo-small.png';
 
 const Login = ({user, setUser, setUrlList }) => {
 
-  //'postgres://zerprhnt:15f4gUqwifl1AT5qtXRTHz6pxjdcy7UD@kashin.db.elephantsql.com/zerprhnt'
-
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [postgresURI, setPostgresURI] = useState('');
@@ -44,7 +42,7 @@ const Login = ({user, setUser, setUrlList }) => {
         <img src={logo} alt='logo'></img>
       </div>
       <form>
-        <div className='login-div'>
+        <div className='signup-div'>
           <label htmlFor="username">Username: </label>
           <input 
             name="username" 
@@ -55,7 +53,7 @@ const Login = ({user, setUser, setUrlList }) => {
             onChange={(e) => setUsername(e.target.value)} 
           />
         </div>
-        <div className='login-div'>
+        <div className='signup-div'>
           <label htmlFor="password">Password: </label>
           <input 
             name="password" 
@@ -66,13 +64,12 @@ const Login = ({user, setUser, setUrlList }) => {
             onChange={(e) => setPassword(e.target.value)} 
           />
         </div>
-        <div className='login-div'>
-          <label htmlFor="postgresURI">PostgresQL URL: </label>
+        <div className='signup-div'>
+          <label htmlFor="postgresURI">PostgreSQL:</label>
           <input 
             name="postgresURI" 
-            placeholder='postgresURI' 
+            placeholder='URL' 
             id="postgresURI" 
-            type="username" 
             required 
             onChange={(e) => setPostgresURI(e.target.value)} 
           />
