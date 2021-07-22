@@ -27,7 +27,7 @@
       </ul>
     </li>
     <li>
-      <a href="#demo">Demo</a>
+      <a href="#Features">Features</a>
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
@@ -61,7 +61,7 @@ We wanted a simple, no fuss developer tool that allows the user to measure the p
 - [Cypress](https://www.cypress.io/) TBD
 
 
-## Demo
+## Features
 
 1. To measure the response time of your GraphQL server, please select the 'Test Query' option from the nav bar. You can enter in a new query or select a previous query you ran on the top right hand drop down. This will auto fill the query select form. Clicking the Send Query button will get you the response and the average response time of your query. ![Test Query](https://www.wunderql.com/static/media/gif_testquery.01e3e3de.gif)
 
@@ -71,8 +71,85 @@ We wanted a simple, no fuss developer tool that allows the user to measure the p
 ## Getting Started
 
 To get a local copy up and running, follow these steps:
+1. Clone the repo. 
+2. Run `npm install`. 
+4. Run `npm run prod` to start the application.
+5. Create or login to your [ElephantSQL](https://www.elephantsql.com/) account.
+6. Run the following script to create your local database:
+```sh
+CREATE TABLE public.response_times (
+  "_id" serial PRIMARY KEY,
+  "date" varchar NOT NULL,
+  "response_time" float NOT NULL,
+  "query_id" bigint NOT NULL,
+  FOREIGN KEY (query_id) REFERENCES queries (_id)
+) WITH (
+  OIDS=FALSE
+);
+CREATE TABLE public.load_test_response_times (
+  "_id" serial PRIMARY KEY,
+  "date" varchar NOT NULL,
+  "number_of_child_processes" bigint NOT NULL,
+  "average_response_time" float NOT NULL,
+  "result" varchar NOT NULL,
+  "query_id" bigint NOT NULL,
+  FOREIGN KEY (query_id) REFERENCES queries (_id)
+) WITH (
+  OIDS=FALSE
+);
 
-1. Create or login to your ElephantSQL account.  
+CREATE TABLE public.users (
+  "_id" serial PRIMARY KEY,
+  "name" varchar NOT NULL,
+  "email" varchar UNIQUE NOT NULL,
+  "username" varchar UNIQUE NOT NULL,
+  "password" varchar NOT NULL
+) WITH (
+  OIDS=FALSE
+);
+CREATE TABLE public.graphqlurls (
+  "_id" serial PRIMARY KEY,
+  "nickname" varchar NOT NULL,
+  "url" varchar NOT NULL,
+  "user_id" bigint NOT NULL,
+  UNIQUE (url, user_id),
+  FOREIGN KEY (user_id) REFERENCES users (_id)
+) WITH (
+  OIDS=FALSE
+);
+CREATE TABLE public.queries (
+  "_id" serial PRIMARY KEY,
+  "query_name" varchar NOT NULL,
+  "query_string" varchar NOT NULL,
+  "url_id" bigint NOT NULL,
+  UNIQUE (query_string, url_id),
+  FOREIGN KEY (url_id) REFERENCES graphqlurls (_id)
+) WITH (
+  OIDS=FALSE
+);
+CREATE TABLE public.response_times (
+  "_id" serial PRIMARY KEY,
+  "date" varchar NOT NULL,
+  "response_time" float NOT NULL,
+  "query_id" bigint NOT NULL,
+  FOREIGN KEY (query_id) REFERENCES queries (_id)
+) WITH (
+  OIDS=FALSE
+);
+CREATE TABLE public.load_test_response_times (
+  "_id" serial PRIMARY KEY,
+  "date" varchar NOT NULL,
+  "number_of_child_processes" bigint NOT NULL,
+  "average_response_time" float NOT NULL,
+  "result" varchar NOT NULL,
+  "query_id" bigint NOT NULL,
+  FOREIGN KEY (query_id) REFERENCES queries (_id)
+) WITH (
+  OIDS=FALSE
+);
+```
+6. Create a `.env` file and paste your DB_URI = '<your ElephantSQL uri>'
+
 
 
 ### Prerequisites
