@@ -2,7 +2,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/oslabs-beta/WunderQL">
-    <img src="https://i.imgur.com/3acwbvG.png" alt="Logo" length="350px" width="350px">
+    <img src="https://www.wunderql.com/static/media/wunderql-name.bc187555.png" alt="Logo" length="350px" width="350px">
   </a>
 
   <h3 align="center">WunderQL</h3> 
@@ -33,7 +33,7 @@
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
+        <li><a href="#installation">Getting Started</a></li>
       </ul>
     </li>
     <li><a href="#contributors">Contributors</a></li>
@@ -63,17 +63,16 @@ We wanted a simple, no fuss developer tool that allows the user to measure the p
 
 ## Demo
 
-DEMO!
+1. To measure the response time of your GraphQL server, please select the 'Test Query' option from the nav bar. You can enter in a new query or select a previous query you ran on the top right hand drop down. This will auto fill the query select form. Clicking the Send Query button will get you the response and the average response time of your query. ![Test Query](https://www.wunderql.com/static/media/gif_testquery.01e3e3de.gif)
+
+2. To perform a load test, select Load Test in the nav bar. Enter in your GraphQL Query, nickname for your query (to be saved for future reference) and then the number of requests per second. Click on the 'Send Query' button to get your results! ![Load test](https://www.wunderql.com/static/media/gif_loadtest.025e7bda.gif)
 
 
 ## Getting Started
 
 To get a local copy up and running, follow these steps:
 
-1. Fork and/or clone this repo to get started
-2. `npm install` in the root directory 
-3. Use either `npm run dev` or `run build`, then `npm start` 
-4. Navigate to [localhost:8080](http://localhost:8080) (or [localhost:3000](http://localhost:3000) depending on startup method, respectively)
+1. Create or login to your ElephantSQL account.  
 
 
 ### Prerequisites

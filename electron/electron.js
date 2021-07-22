@@ -63,7 +63,7 @@ function createWindow() {
 const mainMenuTemplate =  [
   // Each object is a dropdown
   {
-    label: 'Raubern',
+    label: 'Menu',
     submenu:[
       {
         label:'Add Item',
@@ -87,7 +87,7 @@ const mainMenuTemplate =  [
     ]
   },
   {
-    label: 'is',
+    label: 'Quit',
     submenu:[
       {
         label: 'Quit',
@@ -98,18 +98,6 @@ const mainMenuTemplate =  [
       }
     ]
   },
-  {
-    label: 'dumdum',
-    submenu:[
-      {
-        label: 'Quit',
-        accelerator: process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q',
-        click(){
-          app.quit();
-        }
-      }
-    ]
-  }
 ];
  
 // This method will be called when Electron has finished initialization and is ready to create browser windows.
