@@ -12,7 +12,7 @@ module.exports = merge(base, {
   plugins: [
     new MiniCssExtractPlugin(),
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'public/index.html'),
+      template: path.resolve(__dirname, 'electron/index.html'),
       filename: 'index.html',
       base: 'app://rse'
     }),

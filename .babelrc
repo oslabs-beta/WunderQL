@@ -5,12 +5,7 @@
           {
               "cwd": "babelrc",                
               "alias": {
-                  // "Constants": "./app/src/constants",
                   "Components": "./src/components",
-                  // "Core": "./app/src/core",
-                  // "Pages": "./app/src/pages",
-                  // "Redux": "./app/src/redux",
-                  // "I18n": "./app/localization"
               }
           },
           "@babel/plugin-syntax-dynamic-import"

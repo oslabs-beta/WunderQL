@@ -1,8 +1,9 @@
-import { PieChart, Pie, Sector, Cell, ResponsiveContainer, Tooltip, LabelList, Label, Legend } from 'recharts';
+/* eslint-disable react/react-in-jsx-scope */
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {  
-    console.log(payload[0])
+    console.log(payload[0]);
   
     return (
       <div className="custom-tooltip">
@@ -35,27 +36,27 @@ const PieChartComponent = ({ totalLoadTestSuccesses, totalLoadTestFailures }) =>
     {name: 'fail', value: Number(totalLoadTestFailures)}
   ];
 
-    return (
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart width={400} height={400}>
-          <Pie 
-            data={data} 
-            dataKey="value" 
-            nameKey="name"
-            cx="50%" 
-            cy="50%" 
-            fill="#82ca9d" 
-            label={renderCustomizedLabel}
-            >
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-            ))}
-            </Pie>
-          <Tooltip content={<CustomTooltip fill='white'/>} />
-          <Legend align='center'/>
-        </PieChart>
-      </ResponsiveContainer>
-    );
-}
+  return (
+    <ResponsiveContainer width="100%" height="100%">
+      <PieChart width={400} height={400}>
+        <Pie 
+          data={data} 
+          dataKey="value" 
+          nameKey="name"
+          cx="50%" 
+          cy="50%" 
+          fill="#82ca9d" 
+          label={renderCustomizedLabel}
+        >
+          {data.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+          ))}
+        </Pie>
+        <Tooltip content={<CustomTooltip fill='white'/>} />
+        <Legend align='center'/>
+      </PieChart>
+    </ResponsiveContainer>
+  );
+};
 
 export default PieChartComponent;

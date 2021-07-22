@@ -1,10 +1,9 @@
 {
-  "name": "new-react-app",
+  "name": "wunderql",
   "version": "0.1.0",
   "private": true,
-  "main": "public/electron.js",
+  "main": "electron/electron.js",
   "dependencies": {
-    "@apollo/client": "^3.3.20",
     "@material-ui/core": "^4.11.4",
     "@material-ui/data-grid": "^4.0.0-alpha.33",
     "@material-ui/icons": "^4.11.2",
@@ -12,60 +11,38 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "axios": "^0.21.1",
-    "babili-webpack-plugin": "^0.1.2",
-    "cookie-parser": "^1.4.5",
-    "cors": "^2.8.5",
     "cross-fetch": "^3.1.4",
-    "crypto-browserify": "^3.12.0",
-    "d3": "^7.0.0",
     "dotenv": "^8.6.0",
     "electron-is-dev": "^2.0.0",
     "electron-reload": "^1.5.0",
-    "express": "^4.17.1",
     "graphql": "^15.5.1",
     "is-electron": "^2.2.0",
     "minimist": "^1.2.5",
-    "mongodb": "^3.6.9",
-    "mongoose": "^5.13.0",
     "node-sass": "^6.0.1",
     "perf_hooks": "^0.0.1",
     "pg": "^8.6.0",
     "react": "^17.0.2",
     "react-beautiful-dnd": "^13.1.0",
     "react-dom": "^17.0.2",
-    "react-google-login": "^5.2.2",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "recharts": "^2.0.9",
-    "requirejs": "^2.3.6",
     "sass": "^1.35.2",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "electron-forge start",
-    "build": "react-scripts build",
-    "test-original": "react-scripts test",
-    "test": "jest --verbose",
-    "eject": "react-scripts eject",
     "dev-server": "cross-env NODE_ENV=development webpack serve --config ./webpack.development.js > dev-scripts/webpack-dev-server.log 2> dev-scripts/webpack-dev-server-error.log",
     "dev": "concurrently --success first \"node dev-scripts/prepareDevServer.js\" \"node dev-scripts/launchDevServer.js\" -k \"sass --watch src/stylesheets:src/stylesheets\"",
     "prod-build": "cross-env NODE_ENV=production npx webpack --mode=production --config ./webpack.production.js",
     "prod": "cross-env NODE_ENV=production webpack --mode production --config webpack.config.js && electron --noDevServer .",
-    "server": "node server/server.js",
-    "start2": "concurrently \"npm run start\" \"wait-on http://localhost:3000 && electron .\"",
-    "e2e": "cypress open",
-    "package": "electron-forge package",
-    "make": "electron-forge make"
+    "package-mac": "electron-packager . WunderQL --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds",
+    "package-win": "electron-packager . WunderQL --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"WunderQL\"",
+    "package-linux": "electron-packager . WunderQL --overwrite --platform=linux --arch=x64 --icon=assets/icons/png/icon.png --prune=true --out=release-builds"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
-  },
-  "jest": {
-    "setupFiles": [
-      "./test/setup.js"
     ]
   },
   "browserslist": {
@@ -81,8 +58,6 @@
     ]
   },
   "devDependencies": {
-    "@cypress/electron-plugin": "^1.1.0",
-    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.3",
     "babel-loader": "^8.2.2",
     "babel-plugin-module-resolver": "^4.1.0",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
@@ -91,9 +66,8 @@
     "csp-html-webpack-plugin": "^5.1.0",
     "css-loader": "^5.2.6",
     "css-minimizer-webpack-plugin": "^3.0.1",
-    "cypress": "^8.0.0",
     "electron": "^13.1.5",
-    "enzyme": "^3.11.0",
+    "electron-packager": "^15.3.0",
     "eslint": "^7.31.0",
     "eslint-import-resolver-webpack": "^0.13.0",
     "eslint-plugin-import": "^2.22.1",
@@ -101,7 +75,6 @@
     "eslint-plugin-react": "^7.22.0",
     "html-loader": "^2.1.2",
     "html-webpack-plugin": "^5.3.1",
-    "jest": "^26.6.0",
     "style-loader": "^2.0.0",
     "url-loader": "^4.1.1",
     "wait-on": "^5.1.0",
@@ -110,31 +83,5 @@
     "webpack-dev-server": "^3.11.2",
     "webpack-merge": "^5.8.0"
   },
-  "config": {
-    "forge": {
-      "packagerConfig": {},
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "new_react_app"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
-        }
-      ]
-    }
-  }
+  "config": {}
 }

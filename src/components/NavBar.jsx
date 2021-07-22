@@ -100,7 +100,7 @@ const NavBar = (props) => {
   const themeStyle = {
     backgroundColor: darkTheme ? '#333' : 'white',
     color: darkTheme ? '#CCC' : '#333'
-  }
+  };
 
   return (
     <div className={classes.root} style={themeStyle}>
@@ -110,7 +110,7 @@ const NavBar = (props) => {
           [classes.appBarShift]: open,
         })}
         style={{background:'linear-gradient(205deg, rgba(63,99,255,1) 0%, rgba(54,54,193,1) 21%, rgba(231,117,117,1) 100%)', 
-      }}
+        }}
       >
         <Toolbar>
           <IconButton
@@ -144,30 +144,30 @@ const NavBar = (props) => {
         </div>
         <Divider />
         <List>
-            <Link to="/" className='nav-list-item' onClick={handleDrawerClose}>
-              <ListItem button key={1}>
-                <ListItemIcon><InboxIcon /></ListItemIcon>
-                <ListItemText primary='Home' />
-              </ListItem>
-            </Link>
-            <Link to="/dashboard" className='nav-list-item' onClick={handleDrawerClose}>
-              <ListItem button key={2}>
-                <ListItemIcon><InboxIcon /></ListItemIcon>
-                <ListItemText primary='URL Dashboard' />
-              </ListItem>
-            </Link>
-            <Link to="/testquery" className='nav-list-item' onClick={handleDrawerClose}>
-              <ListItem button key={3}>
-                <ListItemIcon><InboxIcon /></ListItemIcon>
-                <ListItemText primary='Test Query' />
-              </ListItem>
-            </Link>
-            <Link to="/loadtest" className='nav-list-item' onClick={handleDrawerClose}>
-              <ListItem button key={4}>
-                <ListItemIcon><InboxIcon /></ListItemIcon>
-                <ListItemText primary='Load Test' />
-              </ListItem>
-            </Link>
+          <Link to="/" className='nav-list-item' onClick={handleDrawerClose}>
+            <ListItem button key={1}>
+              <ListItemIcon><InboxIcon /></ListItemIcon>
+              <ListItemText primary='Home' />
+            </ListItem>
+          </Link>
+          <Link to="/dashboard" className='nav-list-item' onClick={handleDrawerClose}>
+            <ListItem button key={2}>
+              <ListItemIcon><InboxIcon /></ListItemIcon>
+              <ListItemText primary='URL Dashboard' />
+            </ListItem>
+          </Link>
+          <Link to="/testquery" className='nav-list-item' onClick={handleDrawerClose}>
+            <ListItem button key={3}>
+              <ListItemIcon><InboxIcon /></ListItemIcon>
+              <ListItemText primary='Test Query' />
+            </ListItem>
+          </Link>
+          <Link to="/loadtest" className='nav-list-item' onClick={handleDrawerClose}>
+            <ListItem button key={4}>
+              <ListItemIcon><InboxIcon /></ListItemIcon>
+              <ListItemText primary='Load Test' />
+            </ListItem>
+          </Link>
         </List>    
         <Divider />  
         <FormControlLabel
@@ -180,10 +180,10 @@ const NavBar = (props) => {
             />
           }
           label="Dark Mode"
-      />
+        />
       </Drawer>
     </div>
   );
-}
+};
 
 export default NavBar;

@@ -10,14 +10,11 @@
   <p align="center">
     Performance Testing with WunderQL
     <br /><br />
-    <a href=""><strong>WunderQL.com</strong></a>
+    <a href="https://wunderql.com/"><strong>WunderQL.com</strong></a>
     <br />
     <br />
-   
   </p>
 </p>
-
-
 
 <!-- TABLE OF CONTENTS -->
 <details open="open">
@@ -49,7 +46,10 @@
 
 ## About The Project
 
-We are wonderful WunderQL. That is all.
+WunderQL is a cross-platform desktop application used for testing a GraphQL server's performance. Developed under tech accelerator OSLabs, WunderQL was created with the developer in mind.
+
+We wanted a simple, no fuss developer tool that allows the user to measure the performance of their GraphQL server throughout the development life cycle. You can measure the response time of your GraphQL queries, simulate a production environment with load testing, and search your past queries to see if there was any degradation in performance over time. 
+
 
 ### Built With
 
@@ -58,9 +58,7 @@ We are wonderful WunderQL. That is all.
 - [Node.js/Express](https://nodejs.dev)
 - [Electron](https://electronjs.org/)
 - [GraphQL](https://graphql.org/)
-- [Cypress](https://www.cypress.io/)
-- [Next.js](https://nextjs.org/)
-- [TypeScript](https://www.typescriptlang.org/)
+- [Cypress](https://www.cypress.io/) TBD
 
 
 ## Demo
@@ -77,7 +75,10 @@ To get a local copy up and running, follow these steps:
 3. Use either `npm run dev` or `run build`, then `npm start` 
 4. Navigate to [localhost:8080](http://localhost:8080) (or [localhost:3000](http://localhost:3000) depending on startup method, respectively)
 
+
 ### Prerequisites
+
+*  A [ElephantSQL](https://www.elephantsql.com/) account to host your local database
 
 
 ## Contributors
@@ -94,6 +95,7 @@ Laura Llano - [GitHub](https://github.com/ldllano) - [LinkedIn](https://www.link
 ## Looking Ahead
 
 Never look ahead. Only look at TODAY. #cheesy
+
 
 ## Badges
 <!-- if testing with cypress, can display this badge -->

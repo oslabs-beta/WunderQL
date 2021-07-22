@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 import Button from '@material-ui/core/Button';
-import logo from '../../public/assets/logo-small.png'
+import logo from '../../electron/assets/logo-small.png';
 
 
 const Signup = ({user, setUser, userID, setuserID, setUrlList }) => {
@@ -15,22 +15,21 @@ const Signup = ({user, setUser, userID, setuserID, setUrlList }) => {
   
   const handleSignup = (e) => {
     e.preventDefault();
-    //console.log("From signup user:", username,"password:", password, "email: ", "fullname: ", fullName)
 
     //send user info to backend
-    window.api.send("signUpToMain", {username, password, email, fullName});
+    window.api.send('signUpToMain', {username, password, email, fullName});
 
     //if successfully created new user, receive userID  
-    window.api.receive("userIdFromMain", (userID) => {
-      setuserID(userID)
-      console.log(userID)
-    })
+    window.api.receive('userIdFromMain', (userID) => {
+      setuserID(userID);
+      console.log(userID);
+    });
 
     //if successfully created new user, login 
-    window.api.receive("fromMainSignup", (validUser) => {
-      setUser({ loggedIn: validUser})
-    })
-  }
+    window.api.receive('fromMainSignup', (validUser) => {
+      setUser({ loggedIn: validUser});
+    });
+  };
   return (
     <div id="signup-form">
       <div id='signup'>
@@ -46,7 +45,7 @@ const Signup = ({user, setUser, userID, setuserID, setUrlList }) => {
             type="name" 
             required 
             onChange={(e) => setfullName(e.target.value)} 
-            />
+          />
         </div>
         <div className='signup-div'>
           <label htmlFor="email">Email: </label>
@@ -57,7 +56,7 @@ const Signup = ({user, setUser, userID, setuserID, setUrlList }) => {
             type="email" 
             required 
             onChange={(e) => setEmail(e.target.value)} 
-            />
+          />
         </div>
         <div className='signup-div'>
           <label htmlFor="username">Username: </label>
@@ -68,7 +67,7 @@ const Signup = ({user, setUser, userID, setuserID, setUrlList }) => {
             type="username" 
             required 
             onChange={(e) => setUsername(e.target.value)} 
-            />
+          />
         </div>
         <div className='signup-div'>
           <label htmlFor="password">Password: </label>
@@ -79,7 +78,7 @@ const Signup = ({user, setUser, userID, setuserID, setUrlList }) => {
             type="password" 
             required 
             onChange={(e) => setPassword(e.target.value)} 
-            />
+          />
         </div>
         <div id='signup-button-div'>
           <Button 
@@ -87,17 +86,17 @@ const Signup = ({user, setUser, userID, setuserID, setUrlList }) => {
             variant="contained" 
             id='cancel-button' 
             color="gray"
-            >Cancel</Button>
+          >Cancel</Button>
           <Button 
             onClick={handleSignup}
             variant="contained" 
             id='signup-button' 
             color="primary"
-            >Signup</Button>
+          >Signup</Button>
         </div>
       </form>
     </div>
-    )
-  };
+  );
+};
 
 export default Signup;

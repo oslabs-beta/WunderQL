@@ -3,11 +3,11 @@ import {
   Switch,
   Route,
 } from 'react-router-dom';
+import React  from 'react';
 import { useState } from 'react';
 import Login from './components/Login.jsx';
 import Signup from './components/Signup.jsx';
 import './stylesheets/index.css';
-import React, { Component }  from 'react';
 
 
 import { ThemeProvider, useDarkTheme } from './components/ThemeContext.jsx'; 
