@@ -62,11 +62,12 @@
     ]
   },
   "devDependencies": {
-    "@electron-forge/cli": "^6.0.0-beta.58",
+    "@electron-forge/cli": "^6.0.0-beta.54",
     "@electron-forge/maker-deb": "^6.0.0-beta.58",
     "@electron-forge/maker-rpm": "^6.0.0-beta.58",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.58",
     "@electron-forge/maker-zip": "^6.0.0-beta.58",
+    "@electron-forge/publisher-github": "^6.0.0-beta.57",
     "babel-loader": "^8.2.2",
     "babel-plugin-module-resolver": "^4.1.0",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
@@ -116,9 +117,14 @@
         {
           "name": "@electron-forge/maker-rpm",
           "config": {}
-        },
+        }
+      ],
+      "publishers": [
         {
           "name": "@electron-forge/publisher-github",
+          "platforms": [
+            "win32"
+          ],
           "config": {
             "repository": {
               "owner": "Frank Lin, Laura Llano, Raubern Totanes, Patrick Ziegler",
@@ -126,7 +132,7 @@
             },
             "prerelease": true
           }
-        }  
+        }
       ]
     }
   }

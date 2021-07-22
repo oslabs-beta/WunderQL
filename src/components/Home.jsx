@@ -105,10 +105,10 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, setUrlID, setQueries
           </select>
         </div>
 
-        <div id='login-button-div'>
+        <div id='submit-connect'>
           <Button 
             variant="contained" 
-            id='login-button' 
+            id='home-send' 
             color="primary"
             onClick={submitUrl}
           >Connect to URL</Button>

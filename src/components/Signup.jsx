@@ -51,7 +51,7 @@ const Signup = ({user, setUser, userID, setuserID, setUrlList }) => {
           <label htmlFor="email">Email: </label>
           <input 
             name="email" 
-            placeholder='email' 
+            placeholder='Email' 
             id="email" 
             type="email" 
             required 

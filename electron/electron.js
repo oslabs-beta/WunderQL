@@ -49,56 +49,15 @@ function createWindow() {
   });
   
   // Build menu from template
-  const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
+  // const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
  
-  Menu.setApplicationMenu(mainMenu);
+  // Menu.setApplicationMenu(mainMenu);
   // Open the DevTools.
   if (isDev) {
     win.webContents.openDevTools({ mode: 'detach' });
   }
  
 }
- 
-// Create menu template
-const mainMenuTemplate =  [
-  // Each object is a dropdown
-  {
-    label: 'Menu',
-    submenu:[
-      {
-        label:'Add Item',
-        click(){
-          // createAddWindow();
-        }
-      },
-      {
-        label:'Clear Items',
-      },
-      {
-        label: 'Refresh',
-      },
-      {
-        label: 'Quit',
-        accelerator: process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q',
-        click(){
-          app.quit();
-        }
-      }
-    ]
-  },
-  {
-    label: 'Quit',
-    submenu:[
-      {
-        label: 'Quit',
-        accelerator: process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q',
-        click(){
-          app.quit();
-        }
-      }
-    ]
-  },
-];
  
 // This method will be called when Electron has finished initialization and is ready to create browser windows.
 // app.whenReady().then(createWindow);

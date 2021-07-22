@@ -183,7 +183,6 @@ body {
 #home {
   grid-area: main;
   display: grid;
-  flex-direction: column;
   grid-template-columns: 50% 50%;
   grid-template-rows: 10% 55% 20%;
   justify-content: center;
@@ -249,7 +248,6 @@ body {
   grid-template-rows: 1fr 1fr;
   justify-content: center;
   align-items: center;
-  width: 5rem;
 }
 
 #home-send {
