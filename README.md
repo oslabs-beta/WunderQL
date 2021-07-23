@@ -148,7 +148,7 @@ CREATE TABLE public.load_test_response_times (
   OIDS=FALSE
 );
 ```
-6. Create a `.env` file and paste your DB_URI = '<your ElephantSQL uri>'
+
 
 
 
