@@ -77,27 +77,6 @@ To get a local copy up and running, follow these steps:
 5. Create or login to your [ElephantSQL](https://www.elephantsql.com/) account.
 6. Run the following script to create your local database:
 ```sh
-CREATE TABLE public.response_times (
-  "_id" serial PRIMARY KEY,
-  "date" varchar NOT NULL,
-  "response_time" float NOT NULL,
-  "query_id" bigint NOT NULL,
-  FOREIGN KEY (query_id) REFERENCES queries (_id)
-) WITH (
-  OIDS=FALSE
-);
-CREATE TABLE public.load_test_response_times (
-  "_id" serial PRIMARY KEY,
-  "date" varchar NOT NULL,
-  "number_of_child_processes" bigint NOT NULL,
-  "average_response_time" float NOT NULL,
-  "result" varchar NOT NULL,
-  "query_id" bigint NOT NULL,
-  FOREIGN KEY (query_id) REFERENCES queries (_id)
-) WITH (
-  OIDS=FALSE
-);
-
 CREATE TABLE public.users (
   "_id" serial PRIMARY KEY,
   "name" varchar NOT NULL,
