@@ -343,7 +343,7 @@ ipcMain.on('dashboardToMain', async (event, arg) => {
       INNER JOIN queries q ON q.url_id = gu._id AND gu._id = $1
       INNER JOIN load_test_response_times lrt ON lrt.query_id = q._id`,
     values: [arg]
-  };
+  };``
 
   const result1 = await db.query(uniqueQueries);
   const result2 = await db.query(numberOfTests);
