@@ -1,8 +1,6 @@
 import React from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-// display data of num child processes versus average response time
-
 const ScatterChartComponent = ({ loadTestHistory }) => {
   return (
     <ResponsiveContainer width="100%" height="100%">
@@ -21,7 +19,6 @@ const ScatterChartComponent = ({ loadTestHistory }) => {
           type="number" 
           dataKey="number_of_child_processes" 
           name="Num Child Processes" 
-          // domain={['0', 'dataMax+2']}
         />
         <YAxis 
           yAxisId="left" 
