@@ -6,7 +6,7 @@ const logFilePath = "./dev-scripts/webpack-dev-server.log";
 const errorLogFilePath = "./dev-scripts/webpack-dev-server-error.log";
 const interval = 100;
 
-// Poll webpack-dev-server.log until the webpack bundle has compiled successfully
+
 const intervalId = setInterval(function () {
   try {
     if (fs.existsSync(logFilePath)) {
@@ -14,14 +14,10 @@ const intervalId = setInterval(function () {
         encoding: "utf8"
       });
 
-      // "Compiled successfully." is the string we need to find
-      // to know that webpack is done bundling everything and we
-      // can load our Electron app with no issues.
       if (log.indexOf("Compiled successfully.") >= 0) {
         console.log("Webpack development server is ready, launching Electron app.");
         clearInterval(intervalId);
 
-        // Start our electron app
         const electronProcess = exec("cross-env NODE_ENV=development electron .");
         electronProcess.stdout.on("data", function(data) {
           process.stdout.write(data);
@@ -50,7 +46,7 @@ const intervalId = setInterval(function () {
       }
     }
   } catch (error) {
-    // Exit with an error code
+
     console.error("Webpack or electron fatal error" + error);
     clearInterval(intervalId);
 
