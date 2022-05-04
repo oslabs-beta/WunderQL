@@ -43,7 +43,6 @@ const LineChartComponent = ({ history }) => {
           type='number'
           label={{ value: 'time(ms)', angle: -90, position:'insideLeft' }} 
           domain={['dataMin-50', 'dataMax+50']} 
-          // domain={['Math.floor(dataMin)-100', 'Math.floor(dataMax)+100']} 
           allowDecimals='false'
         />
         <Tooltip content={<CustomTooltip />} />
@@ -52,7 +51,6 @@ const LineChartComponent = ({ history }) => {
           dataKey="runtime" 
           dot={{stroke: '#e01d1d', strokeWidth: 1}} 
           strokeWidth={0}
-          // activeDot={{ r: 8 }} 
           animationEasing='linear'
           isAnimationActive={false}
         />
