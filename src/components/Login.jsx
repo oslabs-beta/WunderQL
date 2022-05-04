@@ -13,7 +13,6 @@ const Login = ({user, setUser, setUrlList }) => {
     console.log('HI IM HANDLE LOGIN');
     e.preventDefault();
 
-    // display error if wrong credentials used
     if (!user.loggedIn) {
       setTimeout(()=>(document.querySelector('#invalid-text').style.display = 'block'), 500);
     }
@@ -27,7 +26,6 @@ const Login = ({user, setUser, setUrlList }) => {
       setUser({ loggedIn: validUser});
     });
 
-    // request URLs from the db as soon as user logs in...might need to add conditionals here
     window.api.receive('urlsFromMain', data => setUrlList(data));
     
   };
