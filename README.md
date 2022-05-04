@@ -147,10 +147,6 @@ Patrick Ziegler - [GitHub](https://github.com/pziggy3) - [LinkedIn](https://www.
 Laura Llano - [GitHub](https://github.com/ldllano) - [LinkedIn](https://www.linkedin.com/in/laura-llano/)
 
 
-## Looking Ahead
-
-Never look ahead. Only look at TODAY. #cheesy
-
 
 ## Badges
 <!-- if testing with cypress, can display this badge -->
