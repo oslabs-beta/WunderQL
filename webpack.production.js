@@ -16,8 +16,6 @@ module.exports = merge(base, {
       filename: 'index.html',
       base: 'app://rse'
     }),
-    // You can paste your CSP in this website https://csp-evaluator.withgoogle.com/
-    // for it to give you suggestions on how strong your CSP is
     new CspHtmlWebpackPlugin(
       {
         'base-uri': ['\'self\''],
@@ -37,7 +35,7 @@ module.exports = merge(base, {
   optimization: {
     minimize: true,
     minimizer: [
-      '...', // This adds default minimizers to webpack. For JS, Terser is used. // https://webpack.js.org/configuration/optimization/#optimizationminimizer
+      '...',
       new CssMinimizerPlugin()
     ]
   }
