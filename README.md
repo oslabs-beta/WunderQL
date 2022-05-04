@@ -146,9 +146,3 @@ Patrick Ziegler - [GitHub](https://github.com/pziggy3) - [LinkedIn](https://www.
 
 Laura Llano - [GitHub](https://github.com/ldllano) - [LinkedIn](https://www.linkedin.com/in/laura-llano/)
 
-
-
-## Badges
-<!-- if testing with cypress, can display this badge -->
-<!-- [![Cypress.io](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)](https://www.cypress.io/)
- -->
