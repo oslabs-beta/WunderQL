@@ -9,16 +9,16 @@ const path = require('path');
 
 module.exports = merge(base, {
   mode: 'development',
-  devtool: 'source-map', // Show the source map so we can debug when developing locally
+  devtool: 'source-map',
   devServer: {
     host: 'localhost',
     port: '3000',
-    hot: true, // Hot-reload this server if changes are detected
-    compress: true, // Compress (gzip) files that are served
-    contentBase: path.resolve(__dirname, 'dist'), // Where we serve the local dev server's files from
-    watchContentBase: true, // Watch the content base for changes
+    hot: true, 
+    compress: true, 
+    contentBase: path.resolve(__dirname, 'dist'), 
+    watchContentBase: true,
     watchOptions: {
-      ignored: /node_modules/ // Ignore this path, probably not needed since we define contentBase above
+      ignored: /node_modules/
     },
     historyApiFallback: true,
   },
@@ -27,13 +27,13 @@ module.exports = merge(base, {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'public/index.html'),
       filename: 'index.html',
-      nonce: nonce  // added a new property for ejs template
+      nonce: nonce 
     }),
     new CspHtmlWebpackPlugin({
       'base-uri': ['\'self\''],
       'object-src': ['\'none\''],
       'script-src': ['\'self\''],
-      'style-src': ['\'self\'', `'nonce-${nonce}'`],  // added a nonce for the style-src
+      'style-src': ['\'self\'', `'nonce-${nonce}'`], 
       'frame-src': ['\'none\''],
       'worker-src': ['\'none\'']
     })

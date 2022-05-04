@@ -31,8 +31,6 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({ title: 'React Electron App' }),
     new MiniCssExtractPlugin({
-      // Options similar to the same options in webpackOptions.output
-      // both options are optional
       filename: 'bundle.css',
       chunkFilename: '[id].css',
     }),
