@@ -3,7 +3,7 @@ const { fetch } = require('cross-fetch');
 const childProc = require('child_process');
 const db = require('../models/User');
 
-// Function that checks response time of query
+// Check response time of query
 async function checkResponseTime(query, uri_ID) {
   const time1 = performance.now();
   await fetch(uri_ID, {
@@ -20,7 +20,7 @@ async function checkResponseTime(query, uri_ID) {
   return performance.now() - time1;
 }
 
-// Function that conducts load test on endpoint
+// Conduct load test on endpoint
 const loadTest = async (CHILD_PROCESSES, URL, QUERY) => {
 
   const times = []; // array of response times of all child processes
@@ -78,20 +78,18 @@ const loadTest = async (CHILD_PROCESSES, URL, QUERY) => {
   };
 };
 
-// Function that checks if query exists in db
+// Check if query exists in db
 async function checkIfQueryExist(queryString, urlId, queryName)  {
 
   const checkIfQueryExist = {
     text: 'select _id FROM queries WHERE query_string = $1 AND url_id = $2',
     values: [queryString, urlId]
   };
-  // console.log('queryString: ', queryString);
-  // console.log('urlId: ', urlId);
+
 
   const existingQueryResult = await db.query(checkIfQueryExist);
   const existingQueryID = await existingQueryResult.rows;
-  // console.log('existingQueryResult in checkIfQueryExist: ', existingQueryResult)
-  // console.log('existingQueryID in checkIfQueryExist: ', existingQueryID)
+
 
   let queryId;
 
