@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/no-onchange */
-/* eslint-disable react/react-in-jsx-scope */
 import { useHistory } from 'react-router';
 import Button from '@material-ui/core/Button';
 import { useDarkTheme } from './ThemeContext.jsx';
@@ -16,7 +14,6 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, setUrlID, setQueries
     color: darkTheme ? '#CCC' : '#333'
   };
 
-  // configure url dropdown list in home
   const URLs = [];
   if (urlList) {
     urlList.map((url, index) => URLs.push(
@@ -29,13 +26,12 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, setUrlID, setQueries
         {url.nickname}
       </option>
     ));
-  
-    // Send URl to electron.js; receive array of objects containing dates + runtime
+
     const submitUrl = () => {    
-    // redirect to Dashboard after 1sec delay
+
       setTimeout(()=>routerHistory.push('/dashboard'), 1000);
 
-      // Send url to main process
+
       window.api.send('urlToMain', {
         url,
         userID,
@@ -46,7 +42,6 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, setUrlID, setQueries
         setQueriesList(allQueries);
       });
 
-      // Receive urlID from main process
       window.api.receive('idFromMain', (id) => {
         document.querySelector('#connected-text').style.display = 'block';
         document.querySelector('#connected-loading').style.display = 'block';
@@ -54,10 +49,9 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, setUrlID, setQueries
         setUrlID(id);
       });
     };
-    // fill in input boxes automatically
+
     function polyfillUrl(e) {
       document.querySelector('#home-uri-value').innerHTML = e.target.value;
-      // document.querySelector('#home-uri-name').innerHTML = e.target.name;
       const selectedName = e.target.selectedOptions[0].id;
       setNickname(selectedName);
       setUrl(e.target.value);
@@ -80,7 +74,6 @@ const Home = ({ userID, url, setUrl, nickname, setNickname, setUrlID, setQueries
           /> 
           <h3 className='prompt'>Give it a nickname!</h3>
           <input
-          // value={nickname}
             onChange={(e) => setNickname(e.target.value)}
             placeholder="URL nickname"
             id='home-uri-name'
