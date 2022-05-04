@@ -16,7 +16,6 @@
   border: 1px solid gray;
   align-items: center;
   position: relative;
-  /*-webkit-app-region: drag;*/  /*removed*/
 }
 
 .title {
@@ -280,28 +279,19 @@ body {
   grid-area: nav;
   padding: 0rem;
   margin-left: 1rem;
-  /* border: 2px dashed red; */
 }
 
 #nav-list {
   list-style-type: none;
   margin: 0;
   padding: 10px 0 0 0;
-  /* border: 2px dotted red; */
 }
 
 .nav-list-item {
   text-decoration: none;
 }
 
-/* .nav-list-item a { */
- * /* display: block; */
- * /* padding: 1rem 0; */
- * /* color: white; */
-/* } */
-/* .nav-list-item a:hover { */
- * /* cursor: pointer; */
-/* } */
+
 #dark-switch {
   margin: 1rem 0 0 1rem;
 }
@@ -464,7 +454,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* border: 2px dashed red; */
   -webkit-box-shadow: 3px 4px 1px 2px #565656;
   box-shadow: 3px 4px 6px 2px #565656;
   border-radius: 0.3rem;
