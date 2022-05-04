@@ -57,7 +57,6 @@ We wanted a simple, no fuss developer tool that allows the user to measure the p
 - [Node.js/Express](https://nodejs.dev)
 - [Electron](https://electronjs.org/)
 - [GraphQL](https://graphql.org/)
-- [Cypress](https://www.cypress.io/) TBD
 
 
 ## Features
