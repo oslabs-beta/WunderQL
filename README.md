@@ -37,7 +37,6 @@
       </ul>
     </li>
     <li><a href="#contributors">Contributors</a></li>
-    <li><a href="#looking-ahead">Looking Ahead</a></li>
   </ol>
 </details>
 
