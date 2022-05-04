@@ -20,10 +20,9 @@ const Dashboard = ({ url, urlID }) => {
   };
 
   useEffect(() => {
-    // Run! Like go get some data from an API.
     window.api.send('dashboardToMain', urlID);
   
-    // let renderBarChart;
+
     window.api.receive('totalsFromMain', (data) => {
       console.log('data: ', data);
       setTotalUniqueQueries(data.number_of_queries);
