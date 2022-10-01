@@ -3,7 +3,9 @@ const { fetch } = require('cross-fetch');
 const childProc = require('child_process');
 const db = require('../models/User');
 
-// Check response time of query
+/**
+ * Checks response time for a specific query
+ */
 async function checkResponseTime(query, uri_ID) {
   const time1 = performance.now();
   await fetch(uri_ID, {
@@ -20,7 +22,9 @@ async function checkResponseTime(query, uri_ID) {
   return performance.now() - time1;
 }
 
-// Conduct load test on endpoint
+/**
+ * Conducts load test on endpoint
+ */
 const loadTest = async (CHILD_PROCESSES, URL, QUERY) => {
 
   const times = []; // array of response times of all child processes
@@ -31,7 +35,7 @@ const loadTest = async (CHILD_PROCESSES, URL, QUERY) => {
     const childProcess = childProc.spawn('node', [`${__dirname}/child.js`, `--url=${URL}`, `--query=${QUERY}`]);
     children.push(childProcess);
   }
-  // Map child processes into promises that resolve to true or false 
+  // Map child processes into promises that resolve to true or false
   // Response times will be pushed to times array each time child process logs the response time
   let responses = children.map(function wait(child) {
     return new Promise(function c(res) {
@@ -48,19 +52,16 @@ const loadTest = async (CHILD_PROCESSES, URL, QUERY) => {
       });
     });
   });
-  
-  // Wait until all promises have been resolved
+
   responses = await Promise.all(responses);
 
-  // Check if all promises were resolved successfully 
   let successOrFailure;
   let averageResponseTime;
   if (responses.filter(Boolean).length === responses.length) {
     // Calculate average of all response times
     const sum = times.reduce((a, b) => a + b, 0);
     const avg = (sum / times.length) || 0;
-    console.log(`average: ${avg}`);
-    console.log('success!');  
+
     // Update load test response variables
     successOrFailure = 'success';
     averageResponseTime = avg.toFixed(1);
@@ -78,7 +79,9 @@ const loadTest = async (CHILD_PROCESSES, URL, QUERY) => {
   };
 };
 
-// Check if query exists in db
+/**
+ * Checks if query exists in database
+ */
 async function checkIfQueryExist(queryString, urlId, queryName)  {
 
   const checkIfQueryExist = {
